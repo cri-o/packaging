@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+set -euox pipefail
+
+source "$(dirname "${BASH_SOURCE[0]}")"/vars
+
+IMAGE=${IMAGE:-}
+TESTDIR="test/$IMAGE"
+
+if [ "$(uname)" == "Darwin" ]; then
+    PATH="/usr/local/opt/gnu-sed/libexec/gnubin:$PATH"
+    SED=gsed
+else
+    SED=sed
+fi
+
+$SED -i 's;PROJECT_PATH=.*;PROJECT_PATH='"$PROJECT_TYPE:/$PROJECT_VERSION"';g' "$TESTDIR/Vagrantfile"
+
+pushd "$TESTDIR"
+vagrant up

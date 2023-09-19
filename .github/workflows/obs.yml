@@ -1,0 +1,66 @@
+name: obs
+on:
+  workflow_dispatch:
+    inputs:
+      revision:
+        default: main
+        description: Branch or Tag to be published
+        type: string
+
+env:
+  REVISION: ${{ inputs.revision || 'main' }}
+  OBS_PASSWORD: ${{ secrets.OBS_PASSWORD }}
+
+jobs:
+  stage:
+    runs-on: ubuntu-latest
+    name: stage ${{ inputs.revision }}
+    timeout-minutes: 240
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cache/go-build
+            ~/go/pkg/mod
+          key: test-${{ hashFiles('scripts/obs') }}-${{ hashFiles('scripts/vars') }}
+      - run: scripts/obs
+
+  test:
+    runs-on: macos-12
+    timeout-minutes: 60
+    needs: stage
+    strategy:
+      matrix:
+        image: [fedora, ubuntu]
+    name: test ${{ matrix.image }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/cache@v3
+        with:
+          path: |
+            ~/.vagrant.d/boxes
+            ~/.cache/go-build
+            ~/go/pkg/mod
+          key: test-${{ hashFiles('test/fedora/Vagrantfile') }}-${{ hashFiles('test/ubuntu/Vagrantfile') }}
+      - run: brew install gnu-sed
+      - name: Run OBS package tests on ${{ matrix.image }}
+        run: scripts/test
+        env:
+          IMAGE: ${{ matrix.image }}
+
+  release:
+    runs-on: ubuntu-latest
+    name: release ${{ inputs.revision }}
+    needs: test
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cache/go-build
+            ~/go/pkg/mod
+          key: test-${{ hashFiles('scripts/obs') }}-${{ hashFiles('scripts/vars') }}
+      - run: scripts/obs
+        env:
+          RUN_RELEASE: 1

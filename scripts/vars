@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+set -euox pipefail
+
+curl_retry() {
+    curl -sSfL --retry 5 --retry-delay 3 "$@"
+}
+
+PROJECT_ROOT=isv:kubernetes:addons:cri-o
+CRIO_MAIN_BRANCH=main
+REVISION=${REVISION:-}
+
+# Change the project based on the provided revision
+if [[ "$REVISION" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+    COMMIT=
+    PROJECT_VERSION=$(echo "$REVISION" | cut -c1-5)
+    VERSION=${REVISION#v}
+    PROJECT_TYPE=stable
+elif [[ "$REVISION" =~ ^release-[0-9]+\.[0-9]+$ ]]; then
+    COMMIT=$(curl_retry "https://storage.googleapis.com/cri-o/latest-$REVISION.txt")
+    PROJECT_VERSION=v${REVISION#release-}
+    LATEST_VERSION=$(curl_retry "https://storage.googleapis.com/cri-o/latest-${REVISION#release-}.txt" || echo -n "$PROJECT_VERSION.0")
+    VERSION="${LATEST_VERSION#v}-dev"
+    PROJECT_TYPE=prerelease
+elif [[ "$REVISION" == "$CRIO_MAIN_BRANCH" ]]; then
+    COMMIT=$(curl_retry https://storage.googleapis.com/cri-o/latest-$CRIO_MAIN_BRANCH.txt)
+    PROJECT_VERSION=$CRIO_MAIN_BRANCH
+    VERSION=$(curl_retry https://raw.githubusercontent.com/cri-o/cri-o/main/internal/version/version.go | sed -n 's/^const Version = "\(.*\)"/\1-dev/p')
+    PROJECT_TYPE=prerelease
+else
+    echo "Unsupported revision: $REVISION"
+    exit 1
+fi
+
+PROJECT=$PROJECT_ROOT:$PROJECT_TYPE:$PROJECT_VERSION:build
+
+export COMMIT
+export PROJECT_VERSION
+export VERSION
+export PROJECT_TYPE
+export PROJECT

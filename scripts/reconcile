@@ -1,0 +1,76 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+OBS_PASSWORD=${OBS_PASSWORD:-}
+
+curl_retry() {
+    curl -sSfL --retry 5 --retry-delay 3 "$@"
+}
+
+install_osc() {
+    OSC_VERSION=1.3.1
+    curl_retry https://github.com/openSUSE/osc/archive/refs/tags/$OSC_VERSION.tar.gz -o- | tar xfz -
+    pushd osc-$OSC_VERSION
+    sudo ./setup.py build
+    sudo ./setup.py install
+    popd
+
+    printf "[general]\napiurl = https://api.opensuse.org\n[https://api.opensuse.org]\n" >~/.oscrc
+    echo user=cri-o-release-bot >>~/.oscrc
+    echo "pass=$OBS_PASSWORD" >>~/.oscrc
+}
+
+submit_workflow() {
+    echo "Running GitHub OBS workflow for revision: $1"
+    gh workflow run obs -F revision="$1"
+}
+
+install_osc
+
+PREFIX=cri-o_
+SUFFIX=.orig.tar.gz
+
+PACKAGES=$(osc se --package cri-o)
+PROJECT_PREFIX=isv:kubernetes:addons:cri-o
+PROJECT_PRERELEASE_PREFIX=$PROJECT_PREFIX:prerelease
+PROJECT_STABLE_PREFIX=$PROJECT_PREFIX:stable
+
+echo "Iterating prerelease packages"
+for PROJECT in $(echo "$PACKAGES" | grep "$PROJECT_PRERELEASE_PREFIX:.*:build.*cri-o" | tr -s '[:blank:]', '/'); do
+    echo "Searching project: $PROJECT"
+    VERSION=${PROJECT#"$PROJECT_PRERELEASE_PREFIX:"}
+    VERSION=${VERSION%":build/cri-o"}
+
+    BRANCH=main
+    if [[ $VERSION =~ v.* ]]; then
+        BRANCH=release-${VERSION#v}
+    fi
+
+    echo "Using branch: $BRANCH"
+    submit_workflow "$BRANCH"
+done
+
+echo "Iterating stable packages"
+for PROJECT in $(echo "$PACKAGES" | grep "$PROJECT_STABLE_PREFIX:.*:build.*cri-o" | tr -s '[:blank:]', '/'); do
+    echo "Searching project: $PROJECT"
+    VERSION=
+    for FILE in $(osc ls "$PROJECT"); do
+        if [[ $FILE =~ $PREFIX.*$SUFFIX ]]; then
+            VERSION=${FILE#"$PREFIX"}
+            VERSION=v${VERSION%"$SUFFIX"}
+        fi
+    done
+
+    if [[ $VERSION == "" ]]; then
+        echo "No version found for project: $PROJECT"
+    else
+        echo "Found latest OBS version '$VERSION' for project: $PROJECT"
+        LATEST_VERSION=$(curl_retry "https://storage.googleapis.com/cri-o/latest-$(echo "$VERSION" | cut -c2-5).txt")
+        if [[ "$LATEST_VERSION" != "$VERSION" ]]; then
+            echo "Latest release version ($LATEST_VERSION) is not matching OBS latest version ($VERSION)"
+            submit_workflow "$LATEST_VERSION"
+        else
+            echo "Latest release '$LATEST_VERSION' already available in project: $PROJECT"
+        fi
+    fi
+done
