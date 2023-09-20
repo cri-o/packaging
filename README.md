@@ -64,7 +64,15 @@ All packages are based on the static binary bundles provided by the CRI-O CI.
 
 ## Usage
 
-### RPM
+### Available Streams
+
+[![v1.29](https://img.shields.io/badge/stable-v1.29-brightgreen?logo=github)](https://build.opensuse.org/project/show/isv:kubernetes:addons:cri-o:stable:v1.29)
+[![v1.28](https://img.shields.io/badge/stable-v1.28-brightgreen?logo=github)](https://build.opensuse.org/project/show/isv:kubernetes:addons:cri-o:stable:v1.28)
+[![main](https://img.shields.io/badge/prerelease-main-blue?logo=git&logoColor=white)](https://build.opensuse.org/project/show/isv:kubernetes:addons:cri-o:prerelease:main)
+[![release-1.29](https://img.shields.io/badge/prerelease-release--1.29-blue?logo=git&logoColor=white)](https://build.opensuse.org/project/show/isv:kubernetes:addons:cri-o:prerelease:v1.29)
+[![release-1.28](https://img.shields.io/badge/prerelease-release--1.28-blue?logo=git&logoColor=white)](https://build.opensuse.org/project/show/isv:kubernetes:addons:cri-o:prerelease:v1.28)
+
+### Distributions using `rpm` packages
 
 ```bash
 # Define the Kubernetes version and used CRI-O stream
@@ -112,7 +120,7 @@ dnf install -y --repo cri-o --repo kubernetes \
 systemctl enable --now crio.service
 ```
 
-### DEB
+### Distributions using `deb` packages
 
 ```bash
 # Install dependencies for adding the repositories
