@@ -47,13 +47,24 @@ gpgcheck=1
 gpgkey=https://pkgs.k8s.io/addons:/cri-o:/$PROJECT_PATH:/build/rpm/repodata/repomd.xml.key
 EOF
 
+    # Official package dependencies
       dnf install -y \
-        cri-o \
+        conntrack \
         container-selinux \
+        ebtables \
+        ethtool \
+        iproute \
+        iptables \
+        socat
+
+      # From the added repos
+      dnf install -y \
+        --repo cri-o \
+        --repo kubernetes \
+        cri-o \
         kubeadm \
         kubectl \
-        kubelet \
-        kubernetes-cni
+        kubelet
 
       systemctl enable --now crio.service
 
