@@ -27,13 +27,9 @@ submit_workflow() {
 
 install_osc
 
-PREFIX=cri-o_
-SUFFIX=.orig.tar.gz
-
 PACKAGES=$(osc se --package cri-o)
 PROJECT_PREFIX=isv:kubernetes:addons:cri-o
 PROJECT_PRERELEASE_PREFIX=$PROJECT_PREFIX:prerelease
-PROJECT_STABLE_PREFIX=$PROJECT_PREFIX:stable
 
 echo "Iterating prerelease packages"
 for PROJECT in $(echo "$PACKAGES" | grep "$PROJECT_PRERELEASE_PREFIX:.*:build.*cri-o" | tr -s '[:blank:]', '/'); do
@@ -50,6 +46,10 @@ for PROJECT in $(echo "$PACKAGES" | grep "$PROJECT_PRERELEASE_PREFIX:.*:build.*c
     submit_workflow "$BRANCH"
 done
 
+PREFIX=cri-o_
+SUFFIX=.orig.tar.gz
+PROJECT_STABLE_PREFIX=$PROJECT_PREFIX:stable
+
 echo "Iterating stable packages"
 for PROJECT in $(echo "$PACKAGES" | grep "$PROJECT_STABLE_PREFIX:.*:build.*cri-o" | tr -s '[:blank:]', '/'); do
     echo "Searching project: $PROJECT"
@@ -62,15 +62,20 @@ for PROJECT in $(echo "$PACKAGES" | grep "$PROJECT_STABLE_PREFIX:.*:build.*cri-o
     done
 
     if [[ $VERSION == "" ]]; then
-        echo "No version found for project: $PROJECT"
+        VERSION=${PROJECT#"$PROJECT_STABLE_PREFIX:"}
+        VERSION=${VERSION%":build/cri-o"}.0
+        echo "No version found for project '$PROJECT', assuming $VERSION"
     else
         echo "Found latest OBS version '$VERSION' for project: $PROJECT"
-        LATEST_VERSION=$(curl_retry "https://storage.googleapis.com/cri-o/latest-$(echo "$VERSION" | cut -c2-5).txt")
-        if [[ "$LATEST_VERSION" != "$VERSION" ]]; then
-            echo "Latest release version ($LATEST_VERSION) is not matching OBS latest version ($VERSION)"
-            submit_workflow "$LATEST_VERSION"
-        else
-            echo "Latest release '$LATEST_VERSION' already available in project: $PROJECT"
-        fi
+    fi
+
+    LATEST_VERSION=$(curl_retry "https://storage.googleapis.com/cri-o/latest-$(echo "$VERSION" | cut -c2-5).txt" || echo -n "")
+    if [[ "$LATEST_VERSION" == "" ]]; then
+        echo "No latest release found for OBS version '$VERSION'"
+    elif [[ "$LATEST_VERSION" != "$VERSION" ]]; then
+        echo "Latest release version '$LATEST_VERSION' is not matching OBS latest version '$VERSION'"
+        submit_workflow "$LATEST_VERSION"
+    else
+        echo "Latest release '$LATEST_VERSION' already available in project: $PROJECT"
     fi
 done
