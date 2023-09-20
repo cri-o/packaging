@@ -52,7 +52,7 @@ obs_stage() {
         --submit=false \
         --nomock
 
-    echo "Waiting for the builds to complete:"
+    echo "Waiting for the builds to complete in: https://build.opensuse.org/package/show/$PROJECT/$PACKAGE"
     osc results "$PROJECT/$PACKAGE" -w
 }
 

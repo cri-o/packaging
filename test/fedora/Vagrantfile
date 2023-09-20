@@ -47,7 +47,7 @@ gpgcheck=1
 gpgkey=https://pkgs.k8s.io/addons:/cri-o:/$PROJECT_PATH:/build/rpm/repodata/repomd.xml.key
 EOF
 
-    # Official package dependencies
+      # Official package dependencies
       dnf install -y \
         conntrack \
         container-selinux \
@@ -58,9 +58,7 @@ EOF
         socat
 
       # From the added repos
-      dnf install -y \
-        --repo cri-o \
-        --repo kubernetes \
+      dnf install -y --repo cri-o --repo kubernetes \
         cri-o \
         kubeadm \
         kubectl \
