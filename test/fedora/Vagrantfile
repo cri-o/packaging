@@ -41,10 +41,10 @@ EOF
       cat <<EOF | tee /etc/yum.repos.d/cri-o.repo
 [cri-o]
 name=CRI-O
-baseurl=https://pkgs.k8s.io/addons:/cri-o:/"$PROJECT_PATH":/build/rpm/
+baseurl=https://pkgs.k8s.io/addons:/cri-o:/$PROJECT_PATH:/build/rpm/
 enabled=1
 gpgcheck=1
-gpgkey=https://pkgs.k8s.io/addons:/cri-o:/"$PROJECT_PATH":/build/rpm/repodata/repomd.xml.key
+gpgkey=https://pkgs.k8s.io/addons:/cri-o:/$PROJECT_PATH:/build/rpm/repodata/repomd.xml.key
 EOF
 
       dnf install -y \
