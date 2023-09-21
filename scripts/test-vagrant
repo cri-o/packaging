@@ -6,6 +6,11 @@ source "$(dirname "${BASH_SOURCE[0]}")"/vars
 IMAGE=${IMAGE:-}
 TESTDIR="test/$IMAGE"
 
+if [[ $IMAGE == "" ]]; then
+    echo "IMAGE is not set"
+    exit 1
+fi
+
 if [ "$(uname)" == "Darwin" ]; then
     PATH="/usr/local/opt/gnu-sed/libexec/gnubin:$PATH"
     SED=gsed
@@ -14,6 +19,5 @@ else
 fi
 
 $SED -i 's;PROJECT_PATH=.*;PROJECT_PATH='"$PROJECT_TYPE:/$PROJECT_VERSION"';g' "$TESTDIR/Vagrantfile"
-
 pushd "$TESTDIR"
 vagrant up

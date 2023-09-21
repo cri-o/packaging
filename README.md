@@ -158,5 +158,6 @@ but it is also possible to trigger the package creation at a certain point in ti
 1. Bundle the sources and [spec file](https://github.com/kubernetes/release/blob/master/cmd/krel/templates/latest/cri-o/cri-o.spec)
    into the corresponding `build` project.
 2. Wait for the OBS builders to finish.
-3. Run a [package installation and usage test](scripts/test) on Ubuntu and Fedora by using `kubeadm`.
+3. Run package installation and usage tests on [Vagrant](scripts/test-vagrant)
+   and [Docker buildx](scripts/test-docker) for Ubuntu and Fedora.
 4. Publish the packages into the top level project.

@@ -16,14 +16,28 @@ dependencies:
       - path: scripts/reconcile
         match: OSC_VERSION
 
-  - name: Fedora test machine image
-    version: 38-cloud-base
+  - name: Fedora test image
+    version: 38
     refPaths:
       - path: test/fedora/Vagrantfile
         match: config.vm.box
+      - path: test/fedora/Dockerfile
+        match: FROM
 
-  - name: Ubuntu test machine image
+  - name: Ubuntu test vagrant image
     version: ubuntu2204
     refPaths:
       - path: test/ubuntu/Vagrantfile
         match: config.vm.box
+
+  - name: Ubuntu test vagrant image
+    version: 22.04
+    refPaths:
+      - path: test/ubuntu/Dockerfile
+        match: FROM
+
+  - name: qemu
+    version: 7.2.0-1
+    refPaths:
+      - path: scripts/test-docker
+        match: QEMUVERSION

@@ -26,14 +26,16 @@ jobs:
           key: test-${{ hashFiles('scripts/obs') }}-${{ hashFiles('scripts/vars') }}
       - run: scripts/obs
 
-  test:
+  test-vagrant:
     runs-on: macos-12
     timeout-minutes: 60
     needs: stage
     strategy:
       matrix:
-        image: [fedora, ubuntu]
-    name: test ${{ matrix.image }}
+        image:
+          - fedora
+          - ubuntu
+    name: test vagrant ${{ matrix.image }} amd64
     steps:
       - uses: actions/checkout@v4
       - uses: actions/cache@v3
@@ -44,10 +46,31 @@ jobs:
             ~/go/pkg/mod
           key: test-${{ hashFiles('test/fedora/Vagrantfile') }}-${{ hashFiles('test/ubuntu/Vagrantfile') }}
       - run: brew install gnu-sed
-      - name: Run OBS package tests on ${{ matrix.image }}
-        run: scripts/test
+      - run: scripts/test-vagrant
         env:
           IMAGE: ${{ matrix.image }}
+
+  test-docker:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    needs: stage
+    strategy:
+      matrix:
+        arch:
+          - amd64
+          - arm64
+          - ppc64le
+        image:
+          - fedora
+          - ubuntu
+    name: test docker ${{ matrix.image }} ${{ matrix.arch }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+      - run: scripts/test-docker
+        env:
+          IMAGE: ${{ matrix.image }}
+          ARCH: ${{ matrix.arch }}
 
   release:
     runs-on: ubuntu-latest

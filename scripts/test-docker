@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+set -euox pipefail
+
+source "$(dirname "${BASH_SOURCE[0]}")"/vars
+
+IMAGE=${IMAGE:-}
+ARCH=${ARCH:-amd64}
+TESTDIR="test/$IMAGE"
+QEMUVERSION=7.2.0-1
+
+if [[ $IMAGE == "" ]]; then
+    echo "IMAGE is not set"
+    exit 1
+fi
+
+docker run --rm --privileged multiarch/qemu-user-static:$QEMUVERSION --reset -p yes
+docker buildx version
+BUILDER=$(docker buildx create --use)
+trap 'docker buildx rm $BUILDER' EXIT
+
+docker buildx build \
+    --pull \
+    --load \
+    --progress plain \
+    --build-arg "PROJECT_PATH=$PROJECT_TYPE:/$PROJECT_VERSION" \
+    --platform "linux/$ARCH" \
+    -t "cri-o-$IMAGE-$ARCH:latest" \
+    "$TESTDIR"
