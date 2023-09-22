@@ -101,11 +101,8 @@ EOF
 
 # Install official package dependencies
 dnf install -y \
-    conmon \
     conntrack \
     container-selinux \
-    containers-common \
-    crun \
     ebtables \
     ethtool \
     iproute \
