@@ -86,6 +86,8 @@ jobs:
             type: rpm
           - image: fedora:38
             type: deb
+          - image: fedora:38
+            arch: arm64 # takes forever
           - image: ubuntu:22.04
             type: rpm
     name: test / ${{ matrix.type }} / ${{ matrix.image }} / ${{ matrix.arch }}
