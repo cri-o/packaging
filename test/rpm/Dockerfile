@@ -1,5 +1,5 @@
-# vim: syn=dockerfile
-FROM fedora:38
+ARG FROM=fedora:38
+FROM $FROM
 
 ENV KUBERNETES_VERSION=v1.28
 ARG PROJECT_PATH=prerelease:/main
@@ -20,6 +20,15 @@ gpgcheck=1\n\
 gpgkey=https://pkgs.k8s.io/addons:/cri-o:/$PROJECT_PATH:/build/rpm/repodata/repomd.xml.key\n\
 " > /etc/yum.repos.d/cri-o.repo
 
-RUN dnf install -y iptables kubernetes-cni
-RUN dnf install -y --repo cri-o cri-o
+RUN dnf install -y \
+    conmon \
+    containers-common \
+    crun \
+    iptables \
+    kubernetes-cni
+
+RUN dnf install -y --repo cri-o --repo kubernetes \
+    cri-o \
+    kubernetes-cni
+
 RUN crio --version

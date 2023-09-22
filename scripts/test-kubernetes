@@ -3,11 +3,11 @@ set -euox pipefail
 
 source "$(dirname "${BASH_SOURCE[0]}")"/vars
 
-IMAGE=${IMAGE:-}
-TESTDIR="test/$IMAGE"
+TYPE=${TYPE:-}
+TESTDIR="test/$TYPE"
 
-if [[ $IMAGE == "" ]]; then
-    echo "IMAGE is not set"
+if [[ $TYPE == "" ]]; then
+    echo "TYPE is not set"
     exit 1
 fi
 

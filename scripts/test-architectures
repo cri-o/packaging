@@ -4,12 +4,19 @@ set -euox pipefail
 source "$(dirname "${BASH_SOURCE[0]}")"/vars
 
 IMAGE=${IMAGE:-}
+TYPE=${TYPE:-}
 ARCH=${ARCH:-amd64}
-TESTDIR="test/$IMAGE"
+
+TESTDIR="test/$TYPE"
 QEMUVERSION=7.2.0-1
 
 if [[ $IMAGE == "" ]]; then
     echo "IMAGE is not set"
+    exit 1
+fi
+
+if [[ $TYPE == "" ]]; then
+    echo "TYPE is not set"
     exit 1
 fi
 
@@ -22,7 +29,8 @@ docker buildx build \
     --pull \
     --load \
     --progress plain \
+    --build-arg "FROM=$IMAGE" \
     --build-arg "PROJECT_PATH=$PROJECT_TYPE:/$PROJECT_VERSION" \
     --platform "linux/$ARCH" \
-    -t "cri-o-$IMAGE-$ARCH:latest" \
+    -t "cri-o-$TYPE-${IMAGE/:/-}-$ARCH:latest" \
     "$TESTDIR"

@@ -3,9 +3,9 @@ dependencies:
   - name: Kubernetes test version
     version: v1.28
     refPaths:
-      - path: test/fedora/Vagrantfile
+      - path: test/rpm/Vagrantfile
         match: KUBERNETES_VERSION
-      - path: test/ubuntu/Vagrantfile
+      - path: test/deb/Vagrantfile
         match: KUBERNETES_VERSION
 
   - name: OSC
@@ -19,25 +19,35 @@ dependencies:
   - name: Fedora test image
     version: 38
     refPaths:
-      - path: test/fedora/Vagrantfile
+      - path: test/rpm/Vagrantfile
         match: config.vm.box
-      - path: test/fedora/Dockerfile
-        match: FROM
+      - path: test/rpm/Dockerfile
+        match: FROM=
+      - path: .github/workflows/obs.yml
+        match: '- fedora:'
 
   - name: Ubuntu test vagrant image
     version: ubuntu2204
     refPaths:
-      - path: test/ubuntu/Vagrantfile
+      - path: test/deb/Vagrantfile
         match: config.vm.box
 
-  - name: Ubuntu test vagrant image
+  - name: Ubuntu test container image
     version: 22.04
     refPaths:
-      - path: test/ubuntu/Dockerfile
-        match: FROM
+      - path: test/deb/Dockerfile
+        match: FROM=
+      - path: .github/workflows/obs.yml
+        match: '- ubuntu:'
+
+  - name: Debian test container image
+    version: 12
+    refPaths:
+      - path: .github/workflows/obs.yml
+        match: '- debian:'
 
   - name: qemu
     version: 7.2.0-1
     refPaths:
-      - path: scripts/test-docker
+      - path: scripts/test-architectures
         match: QEMUVERSION

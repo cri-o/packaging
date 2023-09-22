@@ -1,5 +1,5 @@
-# vim: syn=dockerfile
-FROM ubuntu:22.04
+ARG FROM=ubuntu:22.04
+FROM $FROM
 
 ENV KUBERNETES_VERSION=v1.28
 ARG PROJECT_PATH=prerelease:/main

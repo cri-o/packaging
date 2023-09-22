@@ -14,6 +14,10 @@ on:
         default: false
         description: Skip testing and only stage+release
         type: boolean
+      skip-release:
+        default: false
+        description: Skip releasing and only stage+test
+        type: boolean
 
 env:
   REVISION: ${{ inputs.revision || 'main' }}
@@ -35,16 +39,16 @@ jobs:
       - run: scripts/obs
         if: ${{ inputs.skip-stage == false }}
 
-  test-vagrant:
+  test-kubernetes:
     runs-on: macos-12
     timeout-minutes: 120
     needs: stage
     strategy:
       matrix:
-        image:
-          - fedora
-          - ubuntu
-    name: test / vagrant / ${{ matrix.image }} / amd64
+        type:
+          - deb
+          - rpm
+    name: test / kubernetes / ${{ matrix.type }} / amd64
     steps:
       - uses: actions/checkout@v4
       - uses: actions/cache@v3
@@ -53,42 +57,54 @@ jobs:
             ~/.vagrant.d/boxes
             ~/.cache/go-build
             ~/go/pkg/mod
-          key: test-${{ hashFiles('test/fedora/Vagrantfile') }}-${{ hashFiles('test/ubuntu/Vagrantfile') }}
+          key: test-${{ hashFiles('test/deb/Vagrantfile') }}-${{ hashFiles('test/rpm/Vagrantfile') }}
       - run: brew install gnu-sed
-      - run: scripts/test-vagrant
+      - run: scripts/test-kubernetes
         if: ${{ inputs.skip-tests == false }}
         env:
-          IMAGE: ${{ matrix.image }}
+          TYPE: ${{ matrix.type }}
 
-  test-docker:
+  test-architectures:
     runs-on: ubuntu-latest
     timeout-minutes: 120
     needs: stage
     strategy:
       matrix:
+        image:
+          - debian:12
+          - fedora:38
+          - ubuntu:22.04
         arch:
           - amd64
           - arm64
           - ppc64le
-        image:
-          - fedora
-          - ubuntu
-    name: test / docker / ${{ matrix.image }} / ${{ matrix.arch }}
+        type:
+          - deb
+          - rpm
+        exclude:
+          - image: debian:12
+            type: rpm
+          - image: fedora:38
+            type: deb
+          - image: ubuntu:22.04
+            type: rpm
+    name: test / ${{ matrix.type }} / ${{ matrix.image }} / ${{ matrix.arch }}
     steps:
       - uses: actions/checkout@v4
       - uses: docker/setup-buildx-action@v3
-      - run: scripts/test-docker
+      - run: scripts/test-architectures
         if: ${{ inputs.skip-tests == false }}
         env:
           IMAGE: ${{ matrix.image }}
           ARCH: ${{ matrix.arch }}
+          TYPE: ${{ matrix.type }}
 
   release:
     runs-on: ubuntu-latest
     name: release / ${{ inputs.revision }}
     needs:
-      - test-docker
-      - test-vagrant
+      - test-kubernetes
+      - test-architectures
     steps:
       - uses: actions/checkout@v4
       - uses: actions/cache@v3
@@ -98,5 +114,6 @@ jobs:
             ~/go/pkg/mod
           key: test-${{ hashFiles('scripts/obs') }}-${{ hashFiles('scripts/vars') }}
       - run: scripts/obs
+        if: ${{ inputs.skip-release == false }}
         env:
           RUN_RELEASE: 1
