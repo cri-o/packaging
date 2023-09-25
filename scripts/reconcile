@@ -30,12 +30,13 @@ install_osc
 PACKAGES=$(osc se --package cri-o)
 PROJECT_PREFIX=isv:kubernetes:addons:cri-o
 PROJECT_PRERELEASE_PREFIX=$PROJECT_PREFIX:prerelease
+BUILD_PROJECT_SUFFIX=:build/cri-o
 
 echo "Iterating prerelease packages"
 for PROJECT in $(echo "$PACKAGES" | grep "$PROJECT_PRERELEASE_PREFIX:.*:build.*cri-o" | tr -s '[:blank:]', '/'); do
     echo "Searching project: $PROJECT"
     VERSION=${PROJECT#"$PROJECT_PRERELEASE_PREFIX:"}
-    VERSION=${VERSION%":build/cri-o"}
+    VERSION=${VERSION%"$BUILD_PROJECT_SUFFIX"}
 
     BRANCH=main
     if [[ $VERSION =~ v.* ]]; then
@@ -44,6 +45,22 @@ for PROJECT in $(echo "$PACKAGES" | grep "$PROJECT_PRERELEASE_PREFIX:.*:build.*c
 
     echo "Using branch: $BRANCH"
     submit_workflow "$BRANCH"
+
+    RELEASE_PROJECT=${PROJECT%"$BUILD_PROJECT_SUFFIX"}
+    echo "Cleanup old packages in: $RELEASE_PROJECT"
+    mapfile -t RELEASE_PACKAGES < <(osc ls "$RELEASE_PROJECT")
+
+    MAX_LEN=4
+    if [[ ${#RELEASE_PACKAGES[@]} -ge $MAX_LEN ]]; then
+        for ((i = 0; i < MAX_LEN; i++)); do
+            unset 'RELEASE_PACKAGES[-1]'
+        done
+    fi
+
+    echo "Keeping last $MAX_LEN packages in project $RELEASE_PROJECT, removing the rest"
+    for PACKAGE in "${RELEASE_PACKAGES[@]}"; do
+        osc rdelete -m cleanup "$RELEASE_PROJECT" "$PACKAGE"
+    done
 done
 
 PREFIX=cri-o_
@@ -63,7 +80,7 @@ for PROJECT in $(echo "$PACKAGES" | grep "$PROJECT_STABLE_PREFIX:.*:build.*cri-o
 
     if [[ $VERSION == "" ]]; then
         VERSION=${PROJECT#"$PROJECT_STABLE_PREFIX:"}
-        VERSION=${VERSION%":build/cri-o"}.0
+        VERSION=${VERSION%"$BUILD_PROJECT_SUFFIX"}.0
         echo "No version found for project '$PROJECT', assuming $VERSION"
     else
         echo "Found latest OBS version '$VERSION' for project: $PROJECT"
