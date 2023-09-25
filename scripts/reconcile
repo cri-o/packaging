@@ -1,20 +1,11 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+source "$(dirname "${BASH_SOURCE[0]}")"/helpers
+
 OBS_PASSWORD=${OBS_PASSWORD:-}
 
-curl_retry() {
-    curl -sSfL --retry 5 --retry-delay 3 "$@"
-}
-
-install_osc() {
-    OSC_VERSION=1.3.1
-    curl_retry https://github.com/openSUSE/osc/archive/refs/tags/$OSC_VERSION.tar.gz -o- | tar xfz -
-    pushd osc-$OSC_VERSION
-    sudo ./setup.py build
-    sudo ./setup.py install
-    popd
-
+setup_osc() {
     printf "[general]\napiurl = https://api.opensuse.org\n[https://api.opensuse.org]\n" >~/.oscrc
     echo user=cri-o-release-bot >>~/.oscrc
     echo "pass=$OBS_PASSWORD" >>~/.oscrc
@@ -26,6 +17,7 @@ submit_workflow() {
 }
 
 install_osc
+setup_osc
 
 PACKAGES=$(osc se --package cri-o)
 PROJECT_PREFIX=isv:kubernetes:addons:cri-o

@@ -1,9 +1,7 @@
 #!/usr/bin/env bash
 set -euox pipefail
 
-curl_retry() {
-    curl -sSfL --retry 5 --retry-delay 3 "$@"
-}
+source "$(dirname "${BASH_SOURCE[0]}")"/helpers
 
 PROJECT_ROOT=isv:kubernetes:addons:cri-o
 CRIO_MAIN_BRANCH=main
