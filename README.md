@@ -115,9 +115,6 @@ dnf install -y --repo cri-o --repo kubernetes \
     kubeadm \
     kubectl \
     kubelet
-
-# Enable CRI-O
-systemctl enable --now crio.service
 ```
 
 ### Distributions using `deb` packages
@@ -142,9 +139,6 @@ echo "deb [signed-by=/etc/apt/keyrings/cri-o-apt-keyring.gpg] https://pkgs.k8s.i
 # Install the packages
 apt-get update
 apt-get install -y cri-o kubelet kubeadm kubectl
-
-# Enable CRI-O
-systemctl enable --now crio.service
 ```
 
 ## Publishing
