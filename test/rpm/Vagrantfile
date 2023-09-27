@@ -64,6 +64,8 @@ EOF
         kubectl \
         kubelet
 
+      systemctl start crio
+
       dnf remove -y \
         zram-generator-defaults
 

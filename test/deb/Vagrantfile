@@ -38,6 +38,8 @@ Vagrant.configure("2") do |config|
       # Install dependencies
       apt-get install -y cri-o kubelet kubeadm kubectl
 
+      systemctl start crio
+
       # Cluster
       IP=`ip route get 1.2.3.4 | cut -d ' ' -f7 | tr -d '[:space:]'`
       NODENAME=$(hostname -s)
