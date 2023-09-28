@@ -1,0 +1,15 @@
+aliases:
+  cri-o-approvers:
+    - mrunalp
+    - giuseppe
+    - umohnani8
+    - saschagrunert
+    - haircommander
+    - fidencio
+    - kolyshkin
+  cri-o-reviewers:
+    - wgahnagl
+    - QiWang19
+    - klihub
+    - sohankunkerkar
+    - hasan4791
