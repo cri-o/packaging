@@ -9,7 +9,7 @@ trap 'sudo rm -rf -- "$TMPDIR"' EXIT
 pushd "$TMPDIR"
 
 # Package options
-TEMPLATE_DIR=cmd/krel/templates/latest
+TEMPLATE_DIR="$GIT_ROOT/templates/latest"
 PACKAGE=cri-o
 RUN_RELEASE=${RUN_RELEASE:-0}
 
@@ -28,14 +28,14 @@ setup_krel() {
 obs_stage() {
     if [[ "$COMMIT" != "" ]]; then
         # Patch the package metadata to download the latest commit
-        sed -i 's;gs://cri-o/artifacts/cri-o.{{ .Architecture }}.v{{ .PackageVersion }}.tar.gz;gs://cri-o/artifacts/cri-o.{{ .Architecture }}.'"$COMMIT"'.tar.gz;g' $TEMPLATE_DIR/metadata.yaml
+        sed -i 's;gs://cri-o/artifacts/cri-o.{{ .Architecture }}.v{{ .PackageVersion }}.tar.gz;gs://cri-o/artifacts/cri-o.{{ .Architecture }}.'"$COMMIT"'.tar.gz;g' "$TEMPLATE_DIR/metadata.yaml"
     fi
 
     # Push the sources
     krel obs stage \
         --log-level debug \
         --workspace . \
-        --template-dir $TEMPLATE_DIR \
+        --template-dir "$TEMPLATE_DIR" \
         --packages "$PACKAGE" \
         --project "$PROJECT" \
         --version "$VERSION" \

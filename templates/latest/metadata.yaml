@@ -1,0 +1,5 @@
+---
+cri-o:
+  - versionConstraint: ">= 1.28.0"
+    sourceURLTemplate: "gs://cri-o/artifacts/cri-o.{{ .Architecture }}.v{{ .PackageVersion }}.tar.gz"
+    sourceTarGz: true
