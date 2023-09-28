@@ -11,13 +11,6 @@ if [[ $TYPE == "" ]]; then
     exit 1
 fi
 
-if [ "$(uname)" == "Darwin" ]; then
-    PATH="/usr/local/opt/gnu-sed/libexec/gnubin:$PATH"
-    SED=gsed
-else
-    SED=sed
-fi
-
-$SED -i 's;PROJECT_PATH=.*;PROJECT_PATH='"$PROJECT_TYPE:/$PROJECT_VERSION"';g' "$TESTDIR/Vagrantfile"
 pushd "$TESTDIR"
+echo "PROJECT_PATH=$PROJECT_TYPE:/$PROJECT_VERSION" >"env"
 vagrant up

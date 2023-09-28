@@ -16,18 +16,16 @@ Vagrant.configure("2") do |config|
     v.cpus = cpus
   end
 
-  config.vm.synced_folder '.', '/vagrant', disabled: true
+  config.vm.synced_folder ".", "/vagrant"
 
-  config.vm.provision "install-dependencies", type: "shell", run: "once" do |sh|
+  config.vm.provision "test", type: "shell", run: "once" do |sh|
     sh.inline = <<~SHELL
       set -euxo pipefail
 
-      # Use a non-localhost DNS to avoid cluster DNS lookup loops
-      echo "nameserver 8.8.8.8" > /etc/resolv.conf
-
       # Package configs
-      KUBERNETES_VERSION=v1.28
-      PROJECT_PATH=prerelease:/main
+      . /vagrant/env ||:
+      KUBERNETES_VERSION=${KUBERNETES_VERSION:-v1.28}
+      PROJECT_PATH=${PROJECT_PATH:-prerelease:/main}
 
       curl -fsSL https://pkgs.k8s.io/core:/stable:/$KUBERNETES_VERSION/deb/Release.key | gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
       echo "deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/$KUBERNETES_VERSION/deb/ /" | tee /etc/apt/sources.list.d/kubernetes.list
@@ -37,16 +35,13 @@ Vagrant.configure("2") do |config|
 
       # Install dependencies
       apt-get install -y cri-o kubelet kubeadm kubectl
-
       systemctl start crio
 
-      # Cluster
-      IP=`ip route get 1.2.3.4 | cut -d ' ' -f7 | tr -d '[:space:]'`
-      NODENAME=$(hostname -s)
+      # Cluster setup
       swapoff -a
       modprobe br_netfilter
       sysctl -w net.ipv4.ip_forward=1
-      kubeadm init --apiserver-cert-extra-sans=$IP --node-name $NODENAME
+      kubeadm init
 
       # Check cluster
       export KUBECONFIG=/etc/kubernetes/admin.conf
