@@ -105,7 +105,6 @@ dnf install -y \
     container-selinux \
     ebtables \
     ethtool \
-    iproute \
     iptables \
     socat
 

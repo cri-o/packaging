@@ -27,7 +27,7 @@ env:
 jobs:
   stage:
     runs-on: ubuntu-latest
-    name: stage / ${{ inputs.revision }}
+    name: stage / ${{ inputs.revision || 'main' }}
     timeout-minutes: 240
     steps:
       - uses: actions/checkout@v4
@@ -59,7 +59,6 @@ jobs:
             ~/.cache/go-build
             ~/go/pkg/mod
           key: test-${{ hashFiles('test/deb/Vagrantfile') }}-${{ hashFiles('test/rpm/Vagrantfile') }}
-      - run: brew install gnu-sed
       - run: scripts/test-kubernetes
         if: ${{ inputs.skip-tests == false }}
         env:
@@ -107,7 +106,7 @@ jobs:
 
   release:
     runs-on: ubuntu-latest
-    name: release / ${{ inputs.revision }}
+    name: release / ${{ inputs.revision || 'main' }}
     needs:
       - test-kubernetes
       - test-architectures

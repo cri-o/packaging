@@ -1,2 +1,4 @@
 .vagrant
 /build
+/test/deb/env
+/test/rpm/env
