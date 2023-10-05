@@ -13,4 +13,4 @@ fi
 
 pushd "$TESTDIR"
 echo "PROJECT_PATH=$PROJECT_TYPE:/$PROJECT_VERSION" >"env"
-vagrant up
+retry_3 vagrant up

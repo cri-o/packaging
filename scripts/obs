@@ -44,7 +44,7 @@ obs_stage() {
         --nomock
 
     echo "Waiting for the builds to complete in: https://build.opensuse.org/package/show/$PROJECT/$PACKAGE"
-    for i in 1 2 3; do osc results "$PROJECT/$PACKAGE" -w && break || sleep 1; done
+    retry_3 osc results "$PROJECT/$PACKAGE" -w
 }
 
 obs_release() {
