@@ -15,16 +15,6 @@ RUN_RELEASE=${RUN_RELEASE:-0}
 
 export OBS_USERNAME=cri-o-release-bot
 
-krel() {
-    go run ./cmd/krel "$@"
-}
-
-setup_krel() {
-    git clone --depth 1 https://github.com/kubernetes/release
-    pushd release
-    krel version
-}
-
 obs_stage() {
     if [[ "$COMMIT" != "" ]]; then
         # Patch the package metadata to download the latest commit
@@ -59,7 +49,7 @@ obs_release() {
 }
 
 install_osc
-setup_krel
+install_krel
 
 if [[ $RUN_RELEASE == 0 ]]; then
     obs_stage
