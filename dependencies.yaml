@@ -69,3 +69,9 @@ dependencies:
     refPaths:
       - path: Makefile
         match: SHFMT_VERSION
+
+  - name: krel
+    version: v0.16.1
+    refPaths:
+      - path: scripts/helpers
+        match: KREL_VERSION
