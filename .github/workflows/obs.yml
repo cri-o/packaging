@@ -31,12 +31,6 @@ jobs:
     timeout-minutes: 240
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/cache@v3
-        with:
-          path: |
-            ~/.cache/go-build
-            ~/go/pkg/mod
-          key: test-${{ hashFiles('scripts/obs') }}-${{ hashFiles('scripts/vars') }}
       - run: scripts/obs
         if: ${{ inputs.skip-stage == false && github.event_name != 'pull_request' }}
 
@@ -56,8 +50,6 @@ jobs:
         with:
           path: |
             ~/.vagrant.d/boxes
-            ~/.cache/go-build
-            ~/go/pkg/mod
           key: test-${{ hashFiles('test/deb/Vagrantfile') }}-${{ hashFiles('test/rpm/Vagrantfile') }}
       - run: scripts/test-kubernetes
         if: ${{ inputs.skip-tests == false }}
@@ -112,12 +104,6 @@ jobs:
       - test-architectures
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/cache@v3
-        with:
-          path: |
-            ~/.cache/go-build
-            ~/go/pkg/mod
-          key: test-${{ hashFiles('scripts/obs') }}-${{ hashFiles('scripts/vars') }}
       - run: scripts/obs
         if: ${{ inputs.skip-release == false && github.event_name != 'pull_request' }}
         env:
