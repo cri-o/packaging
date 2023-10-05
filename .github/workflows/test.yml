@@ -10,3 +10,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: make verify-dependencies
+
+  shfmt:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: make verify-shfmt
+
+  shellcheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: make verify-shellcheck
