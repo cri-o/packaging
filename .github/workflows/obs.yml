@@ -22,7 +22,8 @@ on:
 
 env:
   REVISION: ${{ inputs.revision || 'main' }}
-  OBS_PASSWORD: ${{ secrets.OBS_PASSWORD }}
+  OBS_PASSWORD: ${{ secrets.OBS_PASSWORD || '0' }}
+  NOMOCK: "${{ github.event_name == 'pull_request' && '0' || '1' }}"
 
 jobs:
   stage:
@@ -32,7 +33,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: scripts/obs
-        if: ${{ inputs.skip-stage == false && github.event_name != 'pull_request' }}
+        if: ${{ inputs.skip-stage == false }}
 
   test-kubernetes:
     runs-on: macos-12
@@ -105,6 +106,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: scripts/obs
-        if: ${{ inputs.skip-release == false && github.event_name != 'pull_request' }}
+        if: ${{ inputs.skip-release == false }}
         env:
           RUN_RELEASE: 1

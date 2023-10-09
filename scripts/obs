@@ -12,6 +12,12 @@ pushd "$TMPDIR"
 TEMPLATE_DIR="$GIT_ROOT/templates/latest"
 PACKAGE=cri-o
 RUN_RELEASE=${RUN_RELEASE:-0}
+NOMOCK=${NOMOCK:-0}
+
+NOMOCK_ARG=
+if [[ $NOMOCK == 1 ]]; then
+    NOMOCK_ARG=--nomock
+fi
 
 export OBS_USERNAME=cri-o-release-bot
 
@@ -33,7 +39,7 @@ obs_stage() {
         --architectures amd64,arm64,ppc64le \
         --submit=false \
         --wait \
-        --nomock
+        $NOMOCK_ARG
 }
 
 obs_release() {
@@ -44,7 +50,7 @@ obs_release() {
         --packages "$PACKAGE" \
         --project "$PROJECT" \
         --submit=false \
-        --nomock
+        $NOMOCK_ARG
 }
 
 install_osc
