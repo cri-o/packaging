@@ -12,15 +12,22 @@ dedicated repository, following official Kubernetes guidelines by using the
 ## Motivation
 
 The following resources are great to understand the motivation behind the latest
-deb and rpm packaging efforts within the Kubernetes community:
+`deb` and `rpm` packaging efforts within the CRI-O and Kubernetes community:
 
-- pkgs.k8s.io: Introducing Kubernetes Community-Owned Package Repositories:
-  https://kubernetes.io/blog/2023/08/15/pkgs-k8s-io-introduction/
+- **CRI-O is moving towards pkgs.k8s.io**:
 
-- Kubernetes Legacy Package Repositories Will Be Frozen On September 13, 2023:
+  https://k8s.io/blog/2023/10/10/cri-o-community-package-infrastructure
+
+- **Kubernetes Legacy Package Repositories Will Be Frozen On September 13, 2023**:
+
   https://kubernetes.io/blog/2023/08/31/legacy-package-repository-deprecation/
 
-- Installing Kubernetes via `kubeadm`:
+- **pkgs.k8s.io: Introducing Kubernetes Community-Owned Package Repositories**:
+
+  https://kubernetes.io/blog/2023/08/15/pkgs-k8s-io-introduction/
+
+- **Installing Kubernetes via `kubeadm`**:
+
   https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/#dpkg-k8s-package-repo
 
 ## Project Layout
