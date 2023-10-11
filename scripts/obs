@@ -32,7 +32,6 @@ obs_stage() {
         --version "$VERSION" \
         --architectures amd64,arm64,ppc64le \
         --submit=false \
-        --wait \
         --nomock
 }
 
