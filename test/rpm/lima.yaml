@@ -1,0 +1,88 @@
+# This template requires Lima v0.7.0 or later.
+images:
+- location: "https://download.fedoraproject.org/pub/fedora/linux/releases/38/Cloud/x86_64/images/Fedora-Cloud-Base-38-1.6.x86_64.qcow2"
+  arch: "x86_64"
+  digest: "sha256:d334670401ff3d5b4129fcc662cf64f5a6e568228af59076cc449a4945318482"
+- location: "https://download.fedoraproject.org/pub/fedora/linux/releases/38/Cloud/aarch64/images/Fedora-Cloud-Base-38-1.6.aarch64.qcow2"
+  arch: "aarch64"
+  digest: "sha256:ad71d22104a16e4f9efa93e61e8c7bce28de693f59c802586abbe85e9db55a65"
+
+memory: "8192MiB"
+cpus: 4
+
+mounts:
+- location: "/tmp/lima"
+  writable: true
+containerd:
+  system: false
+  user: false
+provision:
+- mode: system
+  script: |
+    #!/bin/bash
+    set -eux -o pipefail
+    test -e /etc/kubernetes/admin.conf && exit 0
+
+      # Package configs
+      . /tmp/lima/env ||:
+      KUBERNETES_VERSION=${KUBERNETES_VERSION:-v1.28}
+      PROJECT_PATH=${PROJECT_PATH:-prerelease:/main}
+
+      cat <<EOF | tee /etc/yum.repos.d/kubernetes.repo
+    [kubernetes]
+    name=Kubernetes
+    baseurl=https://pkgs.k8s.io/core:/stable:/$KUBERNETES_VERSION/rpm/
+    enabled=1
+    gpgcheck=1
+    gpgkey=https://pkgs.k8s.io/core:/stable:/$KUBERNETES_VERSION/rpm/repodata/repomd.xml.key
+    EOF
+
+      cat <<EOF | tee /etc/yum.repos.d/cri-o.repo
+    [cri-o]
+    name=CRI-O
+    baseurl=https://download.opensuse.org/repositories/isv:/kubernetes:/addons:/cri-o:/$PROJECT_PATH:/build/rpm/
+    enabled=1
+    gpgcheck=1
+    gpgkey=https://pkgs.k8s.io/addons:/cri-o:/$PROJECT_PATH:/build/rpm/repodata/repomd.xml.key
+    EOF
+
+      # Official package dependencies
+      dnf install -y container-selinux
+
+      dnf install -y cri-o kubelet kubeadm kubectl
+      systemctl start crio
+
+      # Disable swap
+      dnf remove -y zram-generator-defaults
+      systemctl stop dev-zram0.swap
+      swapoff -a
+
+      # Cluster setup
+      modprobe br_netfilter
+      sysctl -w net.ipv4.ip_forward=1
+      kubeadm init
+
+      # Check cluster
+      export KUBECONFIG=/etc/kubernetes/admin.conf
+      kubectl taint nodes --all node-role.kubernetes.io/control-plane-
+      kubectl wait -n kube-system --timeout=180s --for=condition=available deploy coredns
+      kubectl wait --timeout=180s --for=condition=ready pods --all -A
+      kubectl get pods -A
+      kubectl run -i --restart=Never --image debian --rm debian -- echo test | grep test
+probes:
+- description: "kubeadm to be installed"
+  script: |
+    #!/bin/bash
+    set -eux -o pipefail
+    if ! timeout 30s bash -c "until command -v kubeadm >/dev/null 2>&1; do sleep 3; done"; then
+      echo >&2 "kubeadm is not installed yet"
+      exit 1
+    fi
+- description: "kubeadm to be completed"
+  script: |
+    #!/bin/bash
+    set -eux -o pipefail
+    if ! timeout 300s bash -c "until test -f /etc/kubernetes/admin.conf; do sleep 3; done"; then
+      echo >&2 "kubernetes is not running yet"
+      exit 1
+    fi
