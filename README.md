@@ -117,23 +117,13 @@ EOF
 #### Install package dependencies from the official repositories
 
 ```bash
-dnf install -y \
-    conntrack \
-    container-selinux \
-    ebtables \
-    ethtool \
-    iptables \
-    socat
+dnf install -y container-selinux
 ```
 
-#### Install the packages from the added repositories
+#### Install the packages
 
 ```bash
-dnf install -y --repo cri-o --repo kubernetes \
-    cri-o \
-    kubeadm \
-    kubectl \
-    kubelet
+dnf install -y cri-o kubelet kubeadm kubectl
 ```
 
 #### Start CRI-O
