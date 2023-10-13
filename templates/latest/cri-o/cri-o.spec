@@ -19,7 +19,7 @@ BuildRequires: systemd-deb-macros
 # The _unitdir macro does not exist on debbuild
 %define _unitdir %{_prefix}/lib/systemd/system
 Replaces: conmon, crun, golang-github-containers-common
-Requires: kubernetes-cni or containernetworking-plugins
+Recommends: kubernetes-cni
 %else
 BuildRequires: systemd-rpm-macros
 Conflicts: conmon, crun, containers-common

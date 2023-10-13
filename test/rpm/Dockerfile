@@ -12,7 +12,7 @@ gpgkey=https://pkgs.k8s.io/addons:/cri-o:/$PROJECT_PATH:/build/rpm/repodata/repo
 " > /etc/yum.repos.d/cri-o.repo
 
 RUN dnf install -y \
-    containernetworking-plugins \
+    systemd \
     iptables
 
 RUN dnf install -y --repo cri-o cri-o
