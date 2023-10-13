@@ -64,8 +64,10 @@ install -D -m 644 -t %{buildroot}%{_datadir}/zsh/site-functions %{archive_root}/
 
 # Configurations
 install -dp %{buildroot}%{_sysconfdir}/containers
+install -dp %{buildroot}%{_sysconfdir}/containers/registries.conf.d
 install -p -m 644 %{archive_root}/contrib/policy.json %{buildroot}%{_sysconfdir}/containers/policy.json
-install -p -m 644 %{archive_root}/contrib/registries.conf %{buildroot}%{_sysconfdir}/containers/registries.conf
+echo 'unqualified-search-registries = ["docker.io", "quay.io"]' > %{archive_root}/contrib/registries-v2.conf
+install -p -m 644 %{archive_root}/contrib/registries-v2.conf %{buildroot}%{_sysconfdir}/containers/registries.conf.d/crio.conf
 install -p -m 644 %{archive_root}/etc/crictl.yaml %{buildroot}%{_sysconfdir}/crictl.yaml
 
 install -dp %{buildroot}%{_sysconfdir}/crio/crio.conf.d
@@ -118,8 +120,9 @@ install -D -m 644 -t %{buildroot}%{_mandir}/man8 %{archive_root}/man/crio.8
 
 # Configurations
 %dir %{_sysconfdir}/containers
+%dir %{_sysconfdir}/containers/registries.conf.d
 %config(noreplace) %{_sysconfdir}/containers/policy.json
-%config(noreplace) %{_sysconfdir}/containers/registries.conf
+%config(noreplace) %{_sysconfdir}/containers/registries.conf.d/crio.conf
 %config(noreplace) %{_sysconfdir}/crictl.yaml
 %dir %{_sysconfdir}/cni
 %dir %{_sysconfdir}/cni/net.d
