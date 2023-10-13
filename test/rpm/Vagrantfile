@@ -17,6 +17,8 @@ Vagrant.configure("2") do |config|
     v.cpus = cpus
   end
 
+  config.vm.synced_folder ".", "/vagrant"
+
   config.vm.provision "test", type: "shell", run: "once" do |sh|
     sh.inline = <<~SHELL
       set -euxo pipefail
@@ -45,20 +47,9 @@ gpgkey=https://pkgs.k8s.io/addons:/cri-o:/$PROJECT_PATH:/build/rpm/repodata/repo
 EOF
 
       # Official package dependencies
-      dnf install -y \
-        conntrack \
-        container-selinux \
-        ebtables \
-        ethtool \
-        iptables \
-        socat
+      dnf install -y container-selinux
 
-      # From the added repos
-      dnf install -y --repo cri-o --repo kubernetes \
-        cri-o \
-        kubeadm \
-        kubectl \
-        kubelet
+      dnf install -y cri-o kubelet kubeadm kubectl
       systemctl start crio
 
       # Disable swap
