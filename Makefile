@@ -44,4 +44,4 @@ verify-shfmt: shellfiles
 
 .PHONY: verify-shellcheck
 verify-shellcheck: shellfiles $(SHELLCHECK)
-	$(SHELLCHECK) -P scripts -x $(SHELLFILES)
+	$(SHELLCHECK) -P scripts -P scripts/bundle -x $(SHELLFILES)
