@@ -1,0 +1,204 @@
+#!/usr/bin/env bash
+set -euox pipefail
+
+source "$(dirname "${BASH_SOURCE[0]}")"/../vars
+
+TEMPLATES_DIR="$GIT_ROOT/templates/latest/cri-o/bundle"
+
+# shellcheck source=../../templates/latest/cri-o/bundle/versions
+source "$TEMPLATES_DIR/versions"
+
+ARCH_AMD64=amd64
+ARCH_ARM64=arm64
+ARCH_PPC64LE=ppc64le
+ARCH=${ARCH:-$ARCH_AMD64}
+
+if [[ $ARCH == "" ]]; then
+    echo "ARCH is not set"
+    exit 1
+fi
+
+REV_ID=$COMMIT
+if [[ $COMMIT == "" ]]; then
+    REV_ID=$REVISION
+    COMMIT=$(curl_retry https://api.github.com/repos/cri-o/cri-o/tags | jq -r '.[] | select(.name == "'"$REVISION"'") | .commit.sha')
+fi
+
+ARCHIVE="cri-o.$ARCH.$REV_ID.tar.gz"
+ARCHIVE_SHA256SUM="$ARCHIVE.sha256sum"
+ARCHIVE_PATH="$GIT_ROOT/build/bundle"
+
+mkdir -p "$ARCHIVE_PATH"
+CRIODIR=cri-o
+TMPDIR="$ARCHIVE_PATH/$CRIODIR"
+rm -rf "$TMPDIR"
+mkdir -p "$TMPDIR"/{bin,contrib,etc,man}
+
+BIN_URL="https://storage.googleapis.com/cri-o/artifacts/$COMMIT/$ARCH"
+FILES_BIN=(
+    crio
+    crio-status
+    pinns
+)
+
+for FILE in "${FILES_BIN[@]}"; do
+    DEST_PATH="$TMPDIR/bin/$FILE"
+    curl_retry "$BIN_URL/$FILE" -o "$DEST_PATH"
+    chmod +x "$DEST_PATH"
+done
+
+TMPDIR_CRIO="$(mktemp -d)"
+trap 'rm -rf -- "$TMPDIR_CRIO"' EXIT
+curl_retry "https://github.com/cri-o/cri-o/archive/$COMMIT.tar.gz" -o- |
+    tar xfz - -C "$TMPDIR_CRIO" --strip-components=1
+
+cp -r "$TMPDIR_CRIO/completions" "$TMPDIR"
+
+make -C "$TMPDIR_CRIO" docs
+FILES_MAN=(
+    "$TMPDIR_CRIO/docs/crio-status.8"
+    "$TMPDIR_CRIO/docs/crio.8"
+    "$TMPDIR_CRIO/docs/crio.conf.5"
+    "$TMPDIR_CRIO/docs/crio.conf.d.5"
+)
+
+for FILE in "${FILES_MAN[@]}"; do
+    cp "$FILE" "$TMPDIR/man"
+done
+
+FILES_ETC=(
+    "$TEMPLATES_DIR/10-crun.conf"
+    "$TMPDIR_CRIO/crictl.yaml"
+    "$TMPDIR_CRIO/crio-umount.conf"
+)
+
+for FILE in "${FILES_ETC[@]}"; do
+    cp "$FILE" "$TMPDIR/etc"
+done
+
+FILES_CONTRIB=(
+    "$TEMPLATES_DIR/11-crio-ipv4-bridge.conflist"
+    "$TEMPLATES_DIR/crio.service"
+    "$TEMPLATES_DIR/policy.json"
+    "$TEMPLATES_DIR/registries.conf"
+)
+
+for FILE in "${FILES_CONTRIB[@]}"; do
+    cp "$FILE" "$TMPDIR/contrib"
+done
+
+sed -i 's;PREFIX;/usr/local/bin;g' "$TMPDIR/contrib/crio.service"
+
+cp "$TEMPLATES_DIR/Makefile" "$TMPDIR"
+cp "$TEMPLATES_DIR/README.md" "$TMPDIR"
+cp "$TEMPLATES_DIR/install" "$TMPDIR/install"
+sed -i "s/-amd64/-$ARCH/" "$TMPDIR/install"
+cp "$TMPDIR_CRIO/LICENSE" "$TMPDIR"
+
+curl_to() {
+    curl_retry -sSfL -o "$1" "$2"
+}
+
+TMP_BIN=$TMPDIR/bin
+
+# conmon
+curl_to "$TMP_BIN/conmon" \
+    "https://github.com/containers/conmon/releases/download/${VERSIONS["conmon"]}/conmon.$ARCH"
+chmod +x "$TMP_BIN/conmon"
+
+# conmon-rs
+curl_retry https://raw.githubusercontent.com/containers/conmon-rs/main/scripts/get |
+    bash -s -- -n -a "$ARCH" -l "${VERSIONS["conmon-rs"]}" -o "$TMP_BIN/conmonrs"
+
+# runc
+curl_to "$TMP_BIN/runc" \
+    "https://github.com/opencontainers/runc/releases/download/${VERSIONS["runc"]}/runc.$ARCH"
+chmod +x "$TMP_BIN/runc"
+
+# crun
+curl_to "$TMP_BIN/crun" \
+    "https://github.com/containers/crun/releases/download/${VERSIONS["crun"]}/crun-${VERSIONS["crun"]}-linux-$ARCH"
+chmod +x "$TMP_BIN/crun"
+
+# CNI plugins
+mkdir -p "$TMPDIR/cni-plugins"
+curl_to - \
+    "https://github.com/containernetworking/plugins/releases/download/${VERSIONS["cni-plugins"]}/cni-plugins-linux-$ARCH-${VERSIONS["cni-plugins"]}.tgz" |
+    tar xfz - -C "$TMPDIR/cni-plugins"
+
+# crictl
+curl_to - \
+    "https://github.com/kubernetes-sigs/cri-tools/releases/download/${VERSIONS["cri-tools"]}/crictl-${VERSIONS["cri-tools"]}-linux-$ARCH.tar.gz" |
+    tar xfz - -C "$TMP_BIN"
+
+# Check the architectures of the binaries
+if [[ $ARCH == "$ARCH_ARM64" ]]; then
+    ELF_ARCH=aarch64
+elif [[ $ARCH == "$ARCH_PPC64LE" ]]; then
+    ELF_ARCH=PowerPC
+else
+    ELF_ARCH=x86-64
+fi
+for FILE in "$TMP_BIN"/*; do
+    if ! file "$FILE" | grep -q "$ELF_ARCH"; then
+        echo "$FILE is not of required arch $ELF_ARCH"
+        exit 1
+    fi
+    if ! file "$FILE" | grep static; then
+        echo "$FILE is not statically linked"
+        exit 1
+    fi
+    if ! file "$FILE" | grep -q stripped; then
+        echo "$FILE is not stripped"
+        exit 1
+    fi
+done
+
+# Install BOM
+BOM_VERSION=v0.5.1
+BOM="$GIT_ROOT/build/bom"
+curl_to "$BOM" \
+    "https://github.com/kubernetes-sigs/bom/releases/download/$BOM_VERSION/bom-amd64-linux"
+chmod +x "$BOM"
+
+# Create the SBOM
+pushd "$ARCHIVE_PATH"
+SPDX_FILE="$ARCHIVE.spdx"
+$BOM version
+$BOM generate \
+    -l Apache-2.0 \
+    --name CRI-O \
+    --namespace "https://storage.googleapis.com/cri-o/artifacts/$SPDX_FILE" \
+    -d "$CRIODIR" \
+    -o "$SPDX_FILE"
+
+# Create the archive
+rm -f "$ARCHIVE"
+tar cfz "$ARCHIVE" "$CRIODIR"
+rm -rf "$TMPDIR"
+echo "Created $ARCHIVE_PATH/$ARCHIVE"
+sha256sum "$ARCHIVE" >"$ARCHIVE_SHA256SUM"
+echo "Created $ARCHIVE_PATH/$ARCHIVE_SHA256SUM"
+rm -rf "$TMPDIR"
+
+# Test the archive
+echo "Testing archive"
+tar xf "$ARCHIVE"
+SPDX_PATH="$ARCHIVE_PATH/$SPDX_FILE"
+$BOM document outline "$SPDX_PATH"
+$BOM validate -e "$SPDX_PATH" -d "$CRIODIR"
+pushd "$TMPDIR"
+export DESTDIR=test/
+./install
+EXP_CNT=68
+if ! command -v runc; then
+    EXP_CNT=$((EXP_CNT + 1))
+fi
+
+ACT_CNT=$(find test | wc -l)
+if [[ "$EXP_CNT" != "$ACT_CNT" ]]; then
+    echo "install file count does not match, expected: $EXP_CNT, actual: $ACT_CNT"
+    exit 1
+fi
+popd
+rm -rf "$TMPDIR"

@@ -75,3 +75,45 @@ dependencies:
     refPaths:
       - path: scripts/helpers
         match: KREL_VERSION
+
+  - name: bom
+    version: v0.5.1
+    refPaths:
+      - path: scripts/bundle/build
+        match: BOM_VERSION
+
+  - name: cni-plugins (latest)
+    version: v1.3.0
+    refPaths:
+      - path: templates/latest/cri-o/bundle/versions
+        match: cni-plugins
+
+  - name: conmon (latest)
+    version: v2.1.8
+    refPaths:
+      - path: templates/latest/cri-o/bundle/versions
+        match: conmon
+
+  - name: conmon-rs (latest)
+    version: v0.6.1
+    refPaths:
+      - path: templates/latest/cri-o/bundle/versions
+        match: conmon-rs
+
+  - name: cri-tools (latest)
+    version: v1.28.0
+    refPaths:
+      - path: templates/latest/cri-o/bundle/versions
+        match: cri-tools
+
+  - name: runc (latest)
+    version: v1.1.9
+    refPaths:
+      - path: templates/latest/cri-o/bundle/versions
+        match: runc
+
+  - name: crun (latest)
+    version: 1.9.2
+    refPaths:
+      - path: templates/latest/cri-o/bundle/versions
+        match: crun

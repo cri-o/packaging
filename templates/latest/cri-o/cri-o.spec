@@ -66,13 +66,11 @@ install -D -m 644 -t %{buildroot}%{_datadir}/zsh/site-functions %{archive_root}/
 install -dp %{buildroot}%{_sysconfdir}/containers
 install -dp %{buildroot}%{_sysconfdir}/containers/registries.conf.d
 install -p -m 644 %{archive_root}/contrib/policy.json %{buildroot}%{_sysconfdir}/containers/policy.json
-echo 'unqualified-search-registries = ["docker.io", "quay.io"]' > %{archive_root}/contrib/registries-v2.conf
-install -p -m 644 %{archive_root}/contrib/registries-v2.conf %{buildroot}%{_sysconfdir}/containers/registries.conf.d/crio.conf
+install -p -m 644 %{archive_root}/contrib/registries.conf %{buildroot}%{_sysconfdir}/containers/registries.conf.d/crio.conf
 install -p -m 644 %{archive_root}/etc/crictl.yaml %{buildroot}%{_sysconfdir}/crictl.yaml
 
 install -dp %{buildroot}%{_sysconfdir}/crio/crio.conf.d
 install -p -m 644 %{archive_root}/etc/10-crun.conf %{buildroot}%{_sysconfdir}/crio/crio.conf.d/10-crun.conf
-install -p -m 644 %{archive_root}/etc/crio.conf %{buildroot}%{_sysconfdir}/crio/crio.conf
 
 install -dp %{buildroot}%{_datadir}/oci-umount/oci-umount.d
 install -p -m 644 %{archive_root}/etc/crio-umount.conf %{buildroot}%{_datadir}/oci-umount/oci-umount.d/crio-umount.conf
@@ -81,7 +79,7 @@ install -dp %{buildroot}%{_sysconfdir}/cni/net.d
 install -p -m 644 %{archive_root}/contrib/11-crio-ipv4-bridge.conflist %{buildroot}%{_sysconfdir}/cni/net.d/11-crio-ipv4-bridge.conflist
 
 # Fix the prefix in crio.service
-sed -i 's;/usr/local/bin;/usr/bin;g' %{archive_root}/contrib/crio.service
+sed -i 's;PREFIX;/usr/bin;g' %{archive_root}/contrib/crio.service
 install -D -m 644 -t %{buildroot}%{_unitdir} %{archive_root}/contrib/crio.service
 
 # Docs
@@ -130,7 +128,6 @@ install -D -m 644 -t %{buildroot}%{_mandir}/man8 %{archive_root}/man/crio.8
 %{_unitdir}/crio.service
 %dir %{_sysconfdir}/crio
 %dir %{_sysconfdir}/crio/crio.conf.d
-%{_sysconfdir}/crio/crio.conf
 %{_sysconfdir}/crio/crio.conf.d/10-crun.conf
 %dir %{_datadir}/oci-umount
 %dir %{_datadir}/oci-umount/oci-umount.d
