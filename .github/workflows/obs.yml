@@ -92,6 +92,7 @@ jobs:
           path: build/bundle
           destination: cri-o/artifacts
           parent: false
+          process_gcloudignore: false
       - uses: actions/upload-artifact@v3
         if: ${{ inputs.skip-bundles == false && github.event_name != 'pull_request' }}
         with:
