@@ -4,9 +4,10 @@ set -euox pipefail
 source "$(dirname "${BASH_SOURCE[0]}")"/helpers
 
 GIT_ROOT=$(git rev-parse --show-toplevel)
+ARCHIVE_PATH="$GIT_ROOT/build/bundle"
 PROJECT_ROOT=isv:kubernetes:addons:cri-o
 CRIO_MAIN_BRANCH=main
-REVISION=${REVISION:-}
+REVISION=${REVISION:-$CRIO_MAIN_BRANCH}
 
 # Change the project based on the provided revision
 if [[ "$REVISION" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
@@ -33,6 +34,7 @@ fi
 PROJECT=$PROJECT_ROOT:$PROJECT_TYPE:$PROJECT_VERSION:build
 
 export GIT_ROOT
+export ARCHIVE_PATH
 export COMMIT
 export PROJECT_VERSION
 export VERSION
