@@ -79,7 +79,7 @@ install -dp %{buildroot}%{_sysconfdir}/cni/net.d
 install -p -m 644 %{archive_root}/contrib/11-crio-ipv4-bridge.conflist %{buildroot}%{_sysconfdir}/cni/net.d/11-crio-ipv4-bridge.conflist
 
 # Fix the prefix in crio.service
-sed -i 's;PREFIX;/usr/bin;g' %{archive_root}/contrib/crio.service
+sed -i 's;/usr/local/bin;/usr/bin;g' %{archive_root}/contrib/crio.service
 install -D -m 644 -t %{buildroot}%{_unitdir} %{archive_root}/contrib/crio.service
 
 # Docs
