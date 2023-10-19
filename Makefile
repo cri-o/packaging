@@ -30,6 +30,11 @@ $(SHELLCHECK): $(BUILD_DIR)
 	$(call curl_to,https://github.com/koalaman/shellcheck/releases/download/$(SHELLCHECK_VERSION)/shellcheck-$(SHELLCHECK_VERSION).linux.x86_64.tar.xz,-) \
 		| tar xfJ - -C $(BUILD_DIR) --strip 1 shellcheck-$(SHELLCHECK_VERSION)/shellcheck
 
+.PHONY: get-script
+get-script:
+	sed -i '/# INCLUDE/q' get
+	tail -n+2 templates/latest/cri-o/bundle/install >> get
+
 .PHONY: verify-dependencies
 verify-dependencies: $(BUILD_DIR)/zeitgeist ## Verify external dependencies
 	$(ZEITGEIST) validate --local-only --base-path . --config dependencies.yaml
@@ -45,3 +50,7 @@ verify-shfmt: shellfiles
 .PHONY: verify-shellcheck
 verify-shellcheck: shellfiles $(SHELLCHECK)
 	$(SHELLCHECK) -P scripts -P scripts/bundle -x $(SHELLFILES)
+
+.PHONY: verify-get-script
+verify-get-script:
+	scripts/tree-status
