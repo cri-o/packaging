@@ -81,6 +81,8 @@ dependencies:
     refPaths:
       - path: scripts/bundle/build
         match: BOM_VERSION
+      - path: .github/workflows/test.yml
+        match: BOM_VERSION
 
   - name: cni-plugins (latest)
     version: v1.3.0
