@@ -26,7 +26,6 @@ fi
 
 ARCHIVE="cri-o.$ARCH.$REV_ID.tar.gz"
 ARCHIVE_SHA256SUM="$ARCHIVE.sha256sum"
-ARCHIVE_PATH="$GIT_ROOT/build/bundle"
 
 mkdir -p "$ARCHIVE_PATH"
 CRIODIR=cri-o

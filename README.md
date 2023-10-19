@@ -209,9 +209,10 @@ or `main`. There is a [daily cron scheduled for release branches](.github/workfl
 but it is also possible to trigger the package creation at a certain point in time. The
 `obs` pipeline will:
 
-1. Bundle the sources and [spec file](templates/latest/cri-o/cri-o.spec)
-   into the corresponding `build` project.
-2. Wait for the OBS builders to finish.
-3. Run package installation and usage tests for [Kubernetes](scripts/test-kubernetes)
+1. Build a static binary bundle which contains all necessary files.
+1. Push the bundle and [spec file](templates/latest/cri-o/cri-o.spec) into the
+   corresponding `build` project.
+1. Wait for the OBS builders to finish.
+1. Run package installation and usage tests for [Kubernetes](scripts/test-kubernetes)
    and [available architectures](scripts/test-architectures) for various Distributions.
-4. Publish the packages into the top level project.
+1. Publish the packages into the top level project.

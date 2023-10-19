@@ -9,11 +9,10 @@ fi
 
 source "$(dirname "${BASH_SOURCE[0]}")"/../vars
 
-pushd "$GIT_ROOT/build/bundle"
+pushd "$ARCHIVE_PATH"
 
 # Untar the bundle
-find . -type f -iname "cri-o.amd64.*.tar.gz" -exec mv {} cri-o.tar.gz \;
-tar xfvz cri-o.tar.gz
+find . -type f -iname "cri-o.amd64.*.tar.gz" -exec tar xfvz {} \;
 pushd cri-o
 
 # Install and prepare config
