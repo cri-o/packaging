@@ -14,6 +14,9 @@ setup_osc() {
 submit_workflow() {
     echo "Running GitHub OBS workflow for revision: $1"
     gh workflow run obs -F revision="$1"
+    echo "Giving the workflow a bit time before scheduling the next one," \
+        "otherwise we risk upload races to the Google Cloud Bucket."
+    sleep 300
 }
 
 install_osc
