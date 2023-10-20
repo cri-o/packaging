@@ -93,14 +93,14 @@ jobs:
           destination: cri-o/artifacts
           parent: false
           process_gcloudignore: false
-      - name: Create latest main bundle marker
-        if: ${{ inputs.skip-bundles == false && github.event_name != 'pull_request' && inputs.revision == 'main' }}
-        run: find . -type f -iname "cri-o.amd64.*.tar.gz" | grep -oEe "[0-9a-f]{40}" > latest-bundle-main.txt
-      - name: Upload latest main bundle marker
+      - name: Create bundle marker
+        if: ${{ inputs.skip-bundles == false && github.event_name != 'pull_request' }}
+        run: find . -type f -iname "cri-o.amd64.*.tar.gz" | sed -n 's;.*amd64.\(.*\).tar.gz;\1;p' > latest-bundle-${{ inputs.revision || 'main' }}.txt
+      - name: Upload bundle marker
         uses: google-github-actions/upload-cloud-storage@v1
-        if: ${{ inputs.skip-bundles == false && github.event_name != 'pull_request' && inputs.revision == 'main' }}
+        if: ${{ inputs.skip-bundles == false && github.event_name != 'pull_request' }}
         with:
-          path: latest-bundle-main.txt
+          path: latest-bundle-${{ inputs.revision || 'main' }}.txt
           destination: cri-o
           process_gcloudignore: false
       - uses: actions/upload-artifact@v3
