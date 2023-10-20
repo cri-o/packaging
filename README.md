@@ -216,3 +216,57 @@ but it is also possible to trigger the package creation at a certain point in ti
 1. Run package installation and usage tests for [Kubernetes](scripts/test-kubernetes)
    and [available architectures](scripts/test-architectures) for various Distributions.
 1. Publish the packages into the top level project.
+
+## Using the static binary bundles directly
+
+We always recommend to use `deb` and `rpm` packages over the static binary
+bundle, but for some reason packages may not be a good fit. Every run in the
+`obs` GitHub workflow will publish a static binary bundle on our [Google Cloud
+Storage Bucket][bucket], which contains all necessary binaries and
+configurations.
+
+[bucket]: https://console.cloud.google.com/storage/browser/cri-o/artifacts
+
+This means that the latest available CRI-O `main` commit can be installed via
+our convenience script:
+
+```console
+> curl https://raw.githubusercontent.com/cri-o/packaging/main/get | bash
+```
+
+The script automatically verifies the uploaded sigstore signatures as well, if
+the local system has [`cosign`](https://github.com/sigstore/cosign) available in
+its `$PATH`. The same applies to the [SPDX](https://spdx.org) based bill of
+materials (SBOM), which gets automatically verified if the
+[bom](https://sigs.k8s.io/bom) tool is in `$PATH`.
+
+Besides `amd64`, we also support the `arm64` and `ppc64le` bit architectures.
+This can be selected via the script, too:
+
+```shell
+curl https://raw.githubusercontent.com/cri-o/packaging/main/get | bash -s -- -a arm64
+```
+
+It is also possible to select a specific git SHA or tag by:
+
+```shell
+curl https://raw.githubusercontent.com/cri-o/packaging/main/get | bash -s -- -t v1.29.0
+```
+
+The above script resolves to the download URL of the static binary bundle
+tarball matching the format:
+
+```text
+https://storage.googleapis.com/cri-o/artifacts/cri-o.$ARCH.$REV.tar.gz
+```
+
+Where `$ARCH` can be `amd64` or `arm64` or `ppc64le` and `$REV`
+can be any git SHA or tag.
+
+We also provide a Software Bill of Materials (SBOM) in the [SPDX
+format](https://spdx.org) for each bundle. The SBOM is available at the same URL
+like the bundle itself, but suffixed with `.spdx`:
+
+```text
+https://storage.googleapis.com/cri-o/artifacts/cri-o.$ARCH.$REV.tar.gz.spdx
+```
