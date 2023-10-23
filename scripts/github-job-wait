@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+set -euox pipefail
+
+COMMIT=${COMMIT:-}
+if [[ "$COMMIT" == "" ]]; then
+    echo "No commit provided"
+    exit 1
+fi
+
+echo "Checking if job with same commit $COMMIT is already running"
+
+for ID in $(gh run list -s in_progress -w obs --json databaseId -q '.[] | .databaseId'); do
+    RUNNING_COMMIT=$(gh run view "$ID" --json jobs \
+        -q '.jobs[] | select(.name == "vars") | .steps[] | select(.name | startswith("COMMIT")) | .name' |
+        grep -oEe "[0-9a-f]{40}" || true)
+
+    if [[ "$RUNNING_COMMIT" == "$COMMIT" ]]; then
+        echo "Job for commit '$COMMIT' is already running, waiting for it to complete"
+        gh run watch "$ID"
+    fi
+done
