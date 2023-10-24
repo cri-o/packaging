@@ -19,12 +19,16 @@ dependencies:
   - name: Fedora test image
     version: 38
     refPaths:
-      - path: test/rpm/Vagrantfile
-        match: config.vm.box
       - path: test/rpm/Dockerfile
         match: FROM=
       - path: .github/workflows/obs.yml
         match: '- fedora:'
+
+  - name: CentOS test vagrant image
+    version: stream9
+    refPaths:
+      - path: test/rpm/Vagrantfile
+        match: config.vm.box
 
   - name: Ubuntu test vagrant image
     version: ubuntu2204
