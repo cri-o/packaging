@@ -3,6 +3,12 @@ set -euox pipefail
 
 source "$(dirname "${BASH_SOURCE[0]}")"/helpers
 
+GIT_ROOT=${GIT_ROOT:-}
+if [[ $GIT_ROOT != "" ]]; then
+    echo "Vars are already set, will not export them again"
+    return
+fi
+
 GIT_ROOT=$(git rev-parse --show-toplevel)
 ARCHIVE_PATH="$GIT_ROOT/build/bundle"
 PROJECT_ROOT=isv:kubernetes:addons:cri-o
@@ -11,7 +17,7 @@ REVISION=${REVISION:-$CRIO_MAIN_BRANCH}
 
 # Change the project based on the provided revision
 if [[ "$REVISION" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-    COMMIT=
+    COMMIT=$(curl_retry https://api.github.com/repos/cri-o/cri-o/tags | jq -r '.[] | select(.name == "'"$REVISION"'") | .commit.sha')
     PROJECT_VERSION=$(echo "$REVISION" | cut -c1-5)
     VERSION=${REVISION#v}
     PROJECT_TYPE=stable

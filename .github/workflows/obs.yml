@@ -29,8 +29,39 @@ env:
   OBS_PASSWORD: ${{ secrets.OBS_PASSWORD }}
 
 jobs:
+  vars:
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    outputs:
+      archive_path: ${{ steps.step.outputs.ARCHIVE_PATH }}
+      commit: ${{ steps.step.outputs.COMMIT }}
+      git_root: ${{ steps.step.outputs.GIT_ROOT }}
+      project: ${{ steps.step.outputs.PROJECT }}
+      project_type: ${{ steps.step.outputs.PROJECT_TYPE }}
+      project_version: ${{ steps.step.outputs.PROJECT_VERSION }}
+      version: ${{ steps.step.outputs.VERSION }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: step
+        run: |
+          source scripts/vars
+          echo "ARCHIVE_PATH=$ARCHIVE_PATH" >> "$GITHUB_OUTPUT"
+          echo "COMMIT=$COMMIT" >> "$GITHUB_OUTPUT"
+          echo "GIT_ROOT=$GIT_ROOT" >> "$GITHUB_OUTPUT"
+          echo "PROJECT=$PROJECT" >> "$GITHUB_OUTPUT"
+          echo "PROJECT_TYPE=$PROJECT_TYPE" >> "$GITHUB_OUTPUT"
+          echo "PROJECT_VERSION=$PROJECT_VERSION" >> "$GITHUB_OUTPUT"
+          echo "VERSION=$VERSION" >> "$GITHUB_OUTPUT"
+      - run: scripts/github-job-wait
+        env:
+          COMMIT: ${{ steps.step.outputs.commit }}
+          GH_TOKEN: ${{ github.token }}
+      - name: COMMIT=${{ steps.step.outputs.commit }}
+        run: true
+
   bundles:
     runs-on: ubuntu-latest
+    needs: vars
     strategy:
       matrix:
         arch:
@@ -45,6 +76,13 @@ jobs:
         if: ${{ inputs.skip-bundles == false }}
         env:
           ARCH: ${{ matrix.arch }}
+          ARCHIVE_PATH: ${{ needs.vars.outputs.archive_path }}
+          COMMIT: ${{ needs.vars.outputs.commit }}
+          GIT_ROOT: ${{ needs.vars.outputs.git_root }}
+          PROJECT: ${{ needs.vars.outputs.project }}
+          PROJECT_TYPE: ${{ needs.vars.outputs.project_type }}
+          PROJECT_VERSION: ${{ needs.vars.outputs.project_version }}
+          VERSION: ${{ needs.vars.outputs.version }}
       - uses: actions/upload-artifact@v3
         if: ${{ inputs.skip-bundles == false }}
         with:
@@ -54,7 +92,9 @@ jobs:
   bundle-test:
     name: bundle / test / ${{ inputs.revision || 'main' }} / amd64
     runs-on: ubuntu-latest
-    needs: bundles
+    needs:
+      - vars
+      - bundles
     steps:
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v3
@@ -64,6 +104,14 @@ jobs:
           path: build/bundle
       - run: sudo -E scripts/bundle/test
         if: ${{ inputs.skip-bundles == false }}
+        env:
+          ARCHIVE_PATH: ${{ needs.vars.outputs.archive_path }}
+          COMMIT: ${{ needs.vars.outputs.commit }}
+          GIT_ROOT: ${{ needs.vars.outputs.git_root }}
+          PROJECT: ${{ needs.vars.outputs.project }}
+          PROJECT_TYPE: ${{ needs.vars.outputs.project_type }}
+          PROJECT_VERSION: ${{ needs.vars.outputs.project_version }}
+          VERSION: ${{ needs.vars.outputs.version }}
 
   bundles-publish:
     name: bundles / publish / ${{ inputs.revision || 'main' }}
@@ -115,16 +163,28 @@ jobs:
     runs-on: ubuntu-latest
     name: stage / ${{ inputs.revision || 'main' }}
     timeout-minutes: 240
-    needs: bundles-publish
+    needs:
+      - vars
+      - bundles-publish
     steps:
       - uses: actions/checkout@v4
       - run: scripts/obs
         if: ${{ inputs.skip-stage == false && github.event_name != 'pull_request' }}
+        env:
+          ARCHIVE_PATH: ${{ needs.vars.outputs.archive_path }}
+          COMMIT: ${{ needs.vars.outputs.commit }}
+          GIT_ROOT: ${{ needs.vars.outputs.git_root }}
+          PROJECT: ${{ needs.vars.outputs.project }}
+          PROJECT_TYPE: ${{ needs.vars.outputs.project_type }}
+          PROJECT_VERSION: ${{ needs.vars.outputs.project_version }}
+          VERSION: ${{ needs.vars.outputs.version }}
 
   test-kubernetes:
     runs-on: macos-12
     timeout-minutes: 120
-    needs: stage
+    needs:
+      - vars
+      - stage
     strategy:
       matrix:
         type:
@@ -142,11 +202,20 @@ jobs:
         if: ${{ inputs.skip-tests == false }}
         env:
           TYPE: ${{ matrix.type }}
+          ARCHIVE_PATH: ${{ needs.vars.outputs.archive_path }}
+          COMMIT: ${{ needs.vars.outputs.commit }}
+          GIT_ROOT: ${{ needs.vars.outputs.git_root }}
+          PROJECT: ${{ needs.vars.outputs.project }}
+          PROJECT_TYPE: ${{ needs.vars.outputs.project_type }}
+          PROJECT_VERSION: ${{ needs.vars.outputs.project_version }}
+          VERSION: ${{ needs.vars.outputs.version }}
 
   test-architectures:
     runs-on: ubuntu-latest
     timeout-minutes: 120
-    needs: stage
+    needs:
+      - vars
+      - stage
     strategy:
       matrix:
         image:
@@ -182,11 +251,19 @@ jobs:
           IMAGE: ${{ matrix.image }}
           ARCH: ${{ matrix.arch }}
           TYPE: ${{ matrix.type }}
+          ARCHIVE_PATH: ${{ needs.vars.outputs.archive_path }}
+          COMMIT: ${{ needs.vars.outputs.commit }}
+          GIT_ROOT: ${{ needs.vars.outputs.git_root }}
+          PROJECT: ${{ needs.vars.outputs.project }}
+          PROJECT_TYPE: ${{ needs.vars.outputs.project_type }}
+          PROJECT_VERSION: ${{ needs.vars.outputs.project_version }}
+          VERSION: ${{ needs.vars.outputs.version }}
 
   release:
     runs-on: ubuntu-latest
     name: release / ${{ inputs.revision || 'main' }}
     needs:
+      - vars
       - test-kubernetes
       - test-architectures
     steps:
@@ -195,3 +272,10 @@ jobs:
         if: ${{ inputs.skip-release == false && github.event_name != 'pull_request' }}
         env:
           RUN_RELEASE: 1
+          ARCHIVE_PATH: ${{ needs.vars.outputs.archive_path }}
+          COMMIT: ${{ needs.vars.outputs.commit }}
+          GIT_ROOT: ${{ needs.vars.outputs.git_root }}
+          PROJECT: ${{ needs.vars.outputs.project }}
+          PROJECT_TYPE: ${{ needs.vars.outputs.project_type }}
+          PROJECT_VERSION: ${{ needs.vars.outputs.project_version }}
+          VERSION: ${{ needs.vars.outputs.version }}

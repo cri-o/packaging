@@ -13,18 +13,7 @@ ARCH_ARM64=arm64
 ARCH_PPC64LE=ppc64le
 ARCH=${ARCH:-$ARCH_AMD64}
 
-if [[ $ARCH == "" ]]; then
-    echo "ARCH is not set"
-    exit 1
-fi
-
-REV_ID=$COMMIT
-if [[ $COMMIT == "" ]]; then
-    REV_ID=$REVISION
-    COMMIT=$(curl_retry https://api.github.com/repos/cri-o/cri-o/tags | jq -r '.[] | select(.name == "'"$REVISION"'") | .commit.sha')
-fi
-
-ARCHIVE="cri-o.$ARCH.$REV_ID.tar.gz"
+ARCHIVE="cri-o.$ARCH.$COMMIT.tar.gz"
 ARCHIVE_SHA256SUM="$ARCHIVE.sha256sum"
 
 mkdir -p "$ARCHIVE_PATH"
