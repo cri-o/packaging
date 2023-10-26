@@ -25,7 +25,6 @@ mkdir -p "$TMPDIR"/{bin,contrib,etc,man}
 BIN_URL="https://storage.googleapis.com/cri-o/artifacts/$COMMIT/$ARCH"
 FILES_BIN=(
     crio
-    crio-status
     pinns
 )
 
@@ -44,7 +43,6 @@ cp -r "$TMPDIR_CRIO/completions" "$TMPDIR"
 
 make -C "$TMPDIR_CRIO" docs
 FILES_MAN=(
-    "$TMPDIR_CRIO/docs/crio-status.8"
     "$TMPDIR_CRIO/docs/crio.8"
     "$TMPDIR_CRIO/docs/crio.conf.5"
     "$TMPDIR_CRIO/docs/crio.conf.d.5"
@@ -178,7 +176,7 @@ $BOM validate -e "$SPDX_PATH" -d "$CRIODIR"
 pushd "$TMPDIR"
 export DESTDIR=test/
 ./install
-EXP_CNT=68
+EXP_CNT=66
 if ! command -v runc; then
     EXP_CNT=$((EXP_CNT + 1))
 fi
