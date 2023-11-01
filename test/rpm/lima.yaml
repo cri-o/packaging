@@ -1,11 +1,9 @@
 # This template requires Lima v0.7.0 or later.
 images:
-- location: "https://download.fedoraproject.org/pub/fedora/linux/releases/38/Cloud/x86_64/images/Fedora-Cloud-Base-38-1.6.x86_64.qcow2"
+- location: "https://cloud.centos.org/centos/9-stream/x86_64/images/CentOS-Stream-GenericCloud-9-latest.x86_64.qcow2"
   arch: "x86_64"
-  digest: "sha256:d334670401ff3d5b4129fcc662cf64f5a6e568228af59076cc449a4945318482"
-- location: "https://download.fedoraproject.org/pub/fedora/linux/releases/38/Cloud/aarch64/images/Fedora-Cloud-Base-38-1.6.aarch64.qcow2"
+- location: "https://cloud.centos.org/centos/9-stream/aarch64/images/CentOS-Stream-GenericCloud-9-latest.aarch64.qcow2"
   arch: "aarch64"
-  digest: "sha256:ad71d22104a16e4f9efa93e61e8c7bce28de693f59c802586abbe85e9db55a65"
 
 memory: "8192MiB"
 cpus: 4
@@ -13,6 +11,8 @@ cpus: 4
 mounts:
 - location: "/tmp/lima"
   writable: true
+firmware:
+  legacyBIOS: true
 containerd:
   system: false
   user: false
@@ -53,8 +53,6 @@ provision:
       systemctl start crio
 
       # Disable swap
-      dnf remove -y zram-generator-defaults
-      systemctl stop dev-zram0.swap
       swapoff -a
 
       # Cluster setup
