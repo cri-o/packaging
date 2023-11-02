@@ -113,7 +113,7 @@ dependencies:
         match: cri-tools
 
   - name: runc (latest)
-    version: v1.1.9
+    version: v1.1.10
     refPaths:
       - path: templates/latest/cri-o/bundle/versions
         match: runc
