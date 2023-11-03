@@ -53,6 +53,7 @@ jobs:
           echo "PROJECT_VERSION=$PROJECT_VERSION" >> "$GITHUB_OUTPUT"
           echo "VERSION=$VERSION" >> "$GITHUB_OUTPUT"
       - run: scripts/github-job-wait
+        if: ${{ github.event_name != 'pull_request' }}
         env:
           COMMIT: ${{ steps.step.outputs.commit }}
           GH_TOKEN: ${{ github.token }}
