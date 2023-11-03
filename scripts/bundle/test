@@ -25,18 +25,22 @@ systemctl is-active --quiet crio && echo CRI-O is running
 
 # Run a workload
 crictl version
-crictl run \
-    "$GIT_ROOT/test/testdata/container_redis.json" \
-    "$GIT_ROOT/test/testdata/sandbox_config.json"
+
+CONTAINER_JSON="$GIT_ROOT/test/testdata/container.json"
+POD_JSON="$GIT_ROOT/test/testdata/pod.json"
+
+crictl run "$CONTAINER_JSON" "$POD_JSON"
 
 # Test the workloads status
-if [[ ! $(crictl pods -s Ready -q) ]]; then
-    echo "No running pod found"
+POD_NAME=$(jq -r .metadata.name "$POD_JSON")
+if [[ ! $(crictl pods --name "$POD_NAME" -s Ready -q) ]]; then
+    echo "No ready pod found"
     exit 1
 fi
 
-if [[ ! $(crictl ps --state Running -q) ]]; then
-    echo "No running container found"
+CONTAINER_NAME=$(jq -r .metadata.name "$CONTAINER_JSON")
+if [[ ! $(crictl ps --name "$CONTAINER_NAME" --state Exited -q) ]]; then
+    echo "No container found"
     exit 1
 fi
 
