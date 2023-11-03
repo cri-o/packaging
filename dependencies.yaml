@@ -94,6 +94,12 @@ dependencies:
       - path: templates/latest/cri-o/bundle/versions
         match: cni-plugins
 
+  - name: debian base
+    version: bookworm-v1.0.0
+    refPaths:
+      - path: test/testdata/container.json
+        match: image
+
   - name: conmon (latest)
     version: v2.1.8
     refPaths:

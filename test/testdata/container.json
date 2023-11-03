@@ -1,0 +1,8 @@
+{
+  "metadata": {
+    "name": "container"
+  },
+  "image": {
+    "image": "registry.k8s.io/build-image/debian-base:bookworm-v1.0.0"
+  }
+}
