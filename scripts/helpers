@@ -6,11 +6,12 @@ set -x
 retry_3() {
     for _ in 1 2 3; do
         if "$@"; then
-            break
+            return
         else
             sleep 1
         fi
     done
+    exit 1
 }
 
 curl_retry() {

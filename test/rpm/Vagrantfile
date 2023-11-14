@@ -7,14 +7,14 @@ Vagrant.configure("2") do |config|
   memory = 8192
   cpus = 4
 
-  config.vm.provider :virtualbox do |v|
-    config.vm.box_url = "https://cloud.centos.org/centos/9-stream/x86_64/images/CentOS-Stream-Vagrant-9-latest.x86_64.vagrant-virtualbox.box"
+  config.vm.provider :virtualbox do |v, override|
+    override.vm.box_url = "https://cloud.centos.org/centos/9-stream/x86_64/images/CentOS-Stream-Vagrant-9-latest.x86_64.vagrant-virtualbox.box"
     v.memory = memory
     v.cpus = cpus
   end
 
-  config.vm.provider :libvirt do |v|
-    config.vm.box_url = "https://cloud.centos.org/centos/9-stream/x86_64/images/CentOS-Stream-Vagrant-9-latest.x86_64.vagrant-libvirt.box"
+  config.vm.provider :libvirt do |v, override|
+    override.vm.box_url = "https://cloud.centos.org/centos/9-stream/x86_64/images/CentOS-Stream-Vagrant-9-latest.x86_64.vagrant-libvirt.box"
     v.memory = memory
     v.cpus = cpus
   end
