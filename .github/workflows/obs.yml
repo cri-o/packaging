@@ -268,8 +268,10 @@ jobs:
     name: release / ${{ inputs.revision || 'main' }}
     needs:
       - vars
-      - test-kubernetes
       - test-architectures
+      # TODO(saschagrunert): re-enable when
+      # https://github.com/actions/runner-images/issues/8730 is resolved
+      # - test-kubernetes
     steps:
       - uses: actions/checkout@v4
       - run: scripts/obs
