@@ -1,4 +1,4 @@
-ZEITGEIST_VERSION = v0.4.1
+ZEITGEIST_VERSION = v0.4.3
 SHFMT_VERSION := v3.7.0
 SHELLCHECK_VERSION := v0.9.0
 
@@ -19,7 +19,7 @@ clean:
 	rm -rf $(BUILD_DIR)
 
 $(ZEITGEIST): $(BUILD_DIR)
-	$(call curl_to,https://github.com/kubernetes-sigs/zeitgeist/releases/download/$(ZEITGEIST_VERSION)/zeitgeist_$(ZEITGEIST_VERSION:v%=%)_linux_amd64,$(ZEITGEIST))
+	$(call curl_to,https://github.com/kubernetes-sigs/zeitgeist/releases/download/$(ZEITGEIST_VERSION)/zeitgeist-amd64-linux,$(ZEITGEIST))
 	chmod +x $(ZEITGEIST)
 
 $(SHFMT): $(BUILD_DIR)

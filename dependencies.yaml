@@ -1,5 +1,11 @@
 ---
 dependencies:
+  - name: zeitgeist
+    version: v0.4.3
+    refPaths:
+      - path: Makefile
+        match: ZEITGEIST_VERSION
+
   - name: Kubernetes test version
     version: v1.28
     refPaths:
