@@ -19,16 +19,15 @@ Vagrant.configure("2") do |config|
     v.cpus = cpus
   end
 
-  config.vm.synced_folder ".", "/vagrant"
+  config.vm.synced_folder ".", "/vagrant", disabled: true
 
   config.vm.provision "test", type: "shell", run: "once" do |sh|
     sh.inline = <<~SHELL
       set -euxo pipefail
 
       # Package configs
-      . /vagrant/env ||:
-      KUBERNETES_VERSION=${KUBERNETES_VERSION:-v1.28}
-      PROJECT_PATH=${PROJECT_PATH:-prerelease:/main}
+      KUBERNETES_VERSION=v1.28
+      PROJECT_PATH=prerelease:/main
 
       cat <<EOF | tee /etc/yum.repos.d/kubernetes.repo
 [kubernetes]

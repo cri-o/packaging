@@ -12,5 +12,6 @@ if [[ $TYPE == "" ]]; then
 fi
 
 pushd "$TESTDIR"
-echo "PROJECT_PATH=$PROJECT_TYPE:/$PROJECT_VERSION" >"env"
+sed -i 's;PROJECT_PATH=.*;'"PROJECT_PATH=$PROJECT_TYPE:/$PROJECT_VERSION"';g' Vagrantfile
+
 retry_3 vagrant up
