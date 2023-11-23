@@ -181,9 +181,6 @@ jobs:
           VERSION: ${{ needs.vars.outputs.version }}
 
   test-kubernetes:
-    # TODO(saschagrunert): re-enable when
-    # https://github.com/actions/runner-images/issues/8730 is resolved
-    if: false
     runs-on: macos-12
     timeout-minutes: 120
     needs:
@@ -269,9 +266,7 @@ jobs:
     needs:
       - vars
       - test-architectures
-      # TODO(saschagrunert): re-enable when
-      # https://github.com/actions/runner-images/issues/8730 is resolved
-      # - test-kubernetes
+      - test-kubernetes
     steps:
       - uses: actions/checkout@v4
       - run: scripts/obs
