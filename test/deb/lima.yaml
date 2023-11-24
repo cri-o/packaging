@@ -22,9 +22,8 @@ provision:
     test -e /etc/kubernetes/admin.conf && exit 0
 
       # Package configs
-      . /tmp/lima/env ||:
-      KUBERNETES_VERSION=${KUBERNETES_VERSION:-v1.28}
-      PROJECT_PATH=${PROJECT_PATH:-prerelease:/main}
+      KUBERNETES_VERSION=v1.28
+      PROJECT_PATH=prerelease:/main
 
       curl -fsSL https://pkgs.k8s.io/core:/stable:/$KUBERNETES_VERSION/deb/Release.key | gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
       echo "deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/$KUBERNETES_VERSION/deb/ /" | tee /etc/apt/sources.list.d/kubernetes.list

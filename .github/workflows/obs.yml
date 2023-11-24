@@ -181,7 +181,7 @@ jobs:
           VERSION: ${{ needs.vars.outputs.version }}
 
   test-kubernetes:
-    runs-on: macos-12
+    runs-on: ubuntu-latest
     timeout-minutes: 120
     needs:
       - vars
@@ -194,12 +194,9 @@ jobs:
     name: test / kubernetes / ${{ matrix.type }} / amd64
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/cache@v3
-        with:
-          path: |
-            ~/.vagrant.d/boxes
-          key: test-${{ hashFiles('test/deb/Vagrantfile') }}-${{ hashFiles('test/rpm/Vagrantfile') }}
-      - run: scripts/test-kubernetes
+      - run: sudo scripts/github-actions-setup
+        if: ${{ inputs.skip-tests == false }}
+      - run: sudo -E scripts/test-kubernetes
         if: ${{ inputs.skip-tests == false }}
         env:
           TYPE: ${{ matrix.type }}
