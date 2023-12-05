@@ -95,7 +95,7 @@ dependencies:
         match: BOM_VERSION
 
   - name: cni-plugins (latest)
-    version: v1.3.0
+    version: v1.4.0
     refPaths:
       - path: templates/latest/cri-o/bundle/versions
         match: cni-plugins
