@@ -119,7 +119,7 @@ dependencies:
         match: conmon-rs
 
   - name: cri-tools (latest)
-    version: v1.28.0
+    version: v1.29.0
     refPaths:
       - path: templates/latest/cri-o/bundle/versions
         match: cri-tools
