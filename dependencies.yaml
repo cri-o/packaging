@@ -7,11 +7,15 @@ dependencies:
         match: ZEITGEIST_VERSION
 
   - name: Kubernetes test version
-    version: v1.28
+    version: v1.29
     refPaths:
       - path: test/rpm/Vagrantfile
         match: KUBERNETES_VERSION
       - path: test/deb/Vagrantfile
+        match: KUBERNETES_VERSION
+      - path: test/deb/lima.yaml
+        match: KUBERNETES_VERSION
+      - path: test/rpm/lima.yaml
         match: KUBERNETES_VERSION
       - path: README.md
         match: KUBERNETES_VERSION
