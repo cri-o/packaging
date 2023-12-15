@@ -84,7 +84,7 @@ jobs:
           PROJECT_TYPE: ${{ needs.vars.outputs.project_type }}
           PROJECT_VERSION: ${{ needs.vars.outputs.project_version }}
           VERSION: ${{ needs.vars.outputs.version }}
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: ${{ inputs.skip-bundles == false }}
         with:
           name: bundles
@@ -152,7 +152,7 @@ jobs:
           path: latest-bundle-${{ inputs.revision || 'main' }}.txt
           destination: cri-o
           process_gcloudignore: false
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: ${{ inputs.skip-bundles == false && github.event_name != 'pull_request' }}
         with:
           name: signatures
