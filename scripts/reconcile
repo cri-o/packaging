@@ -70,10 +70,12 @@ for PROJECT in $(echo "$PACKAGES" | grep "$PROJECT_STABLE_PREFIX:.*:build.*cri-o
         fi
     done
 
+    NO_VERSION_FOUND=0
     if [[ $VERSION == "" ]]; then
         VERSION=${PROJECT#"$PROJECT_STABLE_PREFIX:"}
         VERSION=${VERSION%"$BUILD_PROJECT_SUFFIX"}.0
         echo "No version found for project '$PROJECT', assuming $VERSION"
+        NO_VERSION_FOUND=1
     else
         echo "Found latest OBS version '$VERSION' for project: $PROJECT"
     fi
@@ -83,6 +85,9 @@ for PROJECT in $(echo "$PACKAGES" | grep "$PROJECT_STABLE_PREFIX:.*:build.*cri-o
         echo "No latest release found for OBS version '$VERSION'"
     elif [[ "$LATEST_VERSION" != "$VERSION" ]]; then
         echo "Latest release version '$LATEST_VERSION' is not matching OBS latest version '$VERSION'"
+        submit_workflow "$LATEST_VERSION"
+    elif [[ $NO_VERSION_FOUND == 1 ]]; then
+        echo "Latest release version '$LATEST_VERSION' is not existing in OBS"
         submit_workflow "$LATEST_VERSION"
     else
         echo "Latest release '$LATEST_VERSION' already available in project: $PROJECT"
