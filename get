@@ -198,8 +198,8 @@ ARCH=${ARCH:-amd64}
 install $SELINUX -d -m 755 "$DESTDIR$CNIDIR"
 install $SELINUX -D -m 755 -t "$DESTDIR$OPT_CNI_BIN_DIR" cni-plugins/*
 install $SELINUX -D -m 644 -t "$DESTDIR$CNIDIR" contrib/11-crio-ipv4-bridge.conflist
-install $SELINUX -D -m 755 -t "$DESTDIR$BINDIR" bin/conmon
-install $SELINUX -D -m 755 -t "$DESTDIR$BINDIR" bin/conmonrs
+install $SELINUX -D -m 755 -t "$DESTDIR$BINDIR" bin/crio-conmon
+install $SELINUX -D -m 755 -t "$DESTDIR$BINDIR" bin/crio-conmonrs
 install $SELINUX -D -m 755 -t "$DESTDIR$BINDIR" bin/crictl
 install $SELINUX -d -m 755 "$DESTDIR$BASHINSTALLDIR"
 install $SELINUX -d -m 755 "$DESTDIR$FISHINSTALLDIR"
@@ -218,32 +218,27 @@ install $SELINUX -D -m 644 -t "$DESTDIR$FISHINSTALLDIR" completions/fish/crio.fi
 install $SELINUX -D -m 644 -t "$DESTDIR$ZSHINSTALLDIR" completions/zsh/_crio
 install $SELINUX -D -m 644 -t "$DESTDIR$SYSTEMDDIR" contrib/crio.service
 install $SELINUX -D -m 755 -t "$DESTDIR$BINDIR" bin/pinns
-install $SELINUX -D -m 755 -t "$DESTDIR$BINDIR" bin/crun
+install $SELINUX -D -m 755 -t "$DESTDIR$BINDIR" bin/crio-crun
+install $SELINUX -D -m 755 -t "$DESTDIR$BINDIR" bin/crio-runc
 install $SELINUX -D -m 644 -t "$DESTDIR$CONTAINERS_REGISTRIES_CONFD_DIR" contrib/registries.conf
+
+# Update the DESTDIR in the CRI-O configuration
+sed -i 's;/usr/bin;'"$DESTDIR$BINDIR"';g' "$DESTDIR$ETCDIR/crio/crio.conf.d/10-crun.conf"
 
 if [ ! -f "$DESTDIR$CONTAINERS_DIR/policy.json" ]; then
     install $SELINUX -D -m 644 -t "$DESTDIR$CONTAINERS_DIR" contrib/policy.json
-fi
-
-# only install runc if it's not already in the path
-if ! command -v runc; then
-    install $SELINUX -D -m 755 -t "$DESTDIR$BINDIR" bin/runc
 fi
 
 if [ -n "$SELINUX" ]; then
     if command -v chcon >/dev/null; then
         chcon -u system_u -r object_r -t container_runtime_exec_t \
             "$DESTDIR$BINDIR/crio" \
-            "$DESTDIR$BINDIR/crun"
-
-        if [ "$ARCH" = amd64 ]; then
-            chcon -u system_u -r object_r -t container_runtime_exec_t \
-                "$DESTDIR$BINDIR/runc"
-        fi
+            "$DESTDIR$BINDIR/crio-crun" \
+            "$DESTDIR$BINDIR/crio-runc"
 
         chcon -u system_u -r object_r -t bin_t \
-            "$DESTDIR$BINDIR/conmon" \
-            "$DESTDIR$BINDIR/conmonrs" \
+            "$DESTDIR$BINDIR/crio-conmon" \
+            "$DESTDIR$BINDIR/crio-conmonrs" \
             "$DESTDIR$BINDIR/crictl" \
             "$DESTDIR$BINDIR/pinns"
 

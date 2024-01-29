@@ -18,11 +18,11 @@ Group: admin
 BuildRequires: systemd-deb-macros
 # The _unitdir macro does not exist on debbuild
 %define _unitdir %{_prefix}/lib/systemd/system
-Replaces: conmon, crun, golang-github-containers-common
+Replaces: golang-github-containers-common
 Recommends: kubernetes-cni
 %else
 BuildRequires: systemd-rpm-macros
-Conflicts: conmon, crun, containers-common
+Conflicts: containers-common
 Recommends: kubernetes-cni
 %endif
 
@@ -49,8 +49,8 @@ install -dp %{buildroot}%{_sharedstatedir}/crio
 install -dp %{buildroot}%{_bindir}
 install -p -m 755 %{archive_root}/bin/crio %{buildroot}%{_bindir}/crio
 install -p -m 755 %{archive_root}/bin/pinns %{buildroot}%{_bindir}/pinns
-install -p -m 755 %{archive_root}/bin/crun %{buildroot}%{_bindir}/crun
-install -p -m 755 %{archive_root}/bin/conmon %{buildroot}%{_bindir}/conmon
+install -p -m 755 %{archive_root}/bin/crio-crun %{buildroot}%{_bindir}/crio-crun
+install -p -m 755 %{archive_root}/bin/crio-conmon %{buildroot}%{_bindir}/crio-conmon
 
 # Completions
 install -d -m 755 %{buildroot}%{_datadir}/bash-completion/completions
@@ -103,9 +103,9 @@ install -D -m 644 -t %{buildroot}%{_mandir}/man8 %{archive_root}/man/crio.8
 
 # Binaries
 %{_bindir}/crio
+%{_bindir}/crio-conmon
+%{_bindir}/crio-crun
 %{_bindir}/pinns
-%{_bindir}/conmon
-%{_bindir}/crun
 
 # Completions
 %{_datadir}/bash-completion/completions/crio

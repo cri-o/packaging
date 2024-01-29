@@ -92,23 +92,23 @@ curl_to() {
 TMP_BIN=$TMPDIR/bin
 
 # conmon
-curl_to "$TMP_BIN/conmon" \
+curl_to "$TMP_BIN/crio-conmon" \
     "https://github.com/containers/conmon/releases/download/${VERSIONS["conmon"]}/conmon.$ARCH"
-chmod +x "$TMP_BIN/conmon"
+chmod +x "$TMP_BIN/crio-conmon"
 
 # conmon-rs
 curl_retry https://raw.githubusercontent.com/containers/conmon-rs/main/scripts/get |
-    bash -s -- -n -a "$ARCH" -l "${VERSIONS["conmon-rs"]}" -o "$TMP_BIN/conmonrs"
+    bash -s -- -n -a "$ARCH" -l "${VERSIONS["conmon-rs"]}" -o "$TMP_BIN/crio-conmonrs"
 
 # runc
-curl_to "$TMP_BIN/runc" \
+curl_to "$TMP_BIN/crio-runc" \
     "https://github.com/opencontainers/runc/releases/download/${VERSIONS["runc"]}/runc.$ARCH"
-chmod +x "$TMP_BIN/runc"
+chmod +x "$TMP_BIN/crio-runc"
 
 # crun
-curl_to "$TMP_BIN/crun" \
+curl_to "$TMP_BIN/crio-crun" \
     "https://github.com/containers/crun/releases/download/${VERSIONS["crun"]}/crun-${VERSIONS["crun"]}-linux-$ARCH"
-chmod +x "$TMP_BIN/crun"
+chmod +x "$TMP_BIN/crio-crun"
 
 # CNI plugins
 mkdir -p "$TMPDIR/cni-plugins"
@@ -180,7 +180,7 @@ $BOM validate -e "$SPDX_PATH" -d "$CRIODIR"
 pushd "$TMPDIR"
 export DESTDIR=test/
 ./install
-EXP_CNT=66
+EXP_CNT=67
 if ! command -v runc; then
     EXP_CNT=$((EXP_CNT + 1))
 fi
