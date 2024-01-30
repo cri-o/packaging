@@ -57,7 +57,7 @@ for FILE in "${FILES_MAN[@]}"; do
 done
 
 FILES_ETC=(
-    "$TEMPLATES_DIR/10-crun.conf"
+    "$TEMPLATES_DIR/10-crio.conf"
     "$TMPDIR_CRIO/crictl.yaml"
     "$TMPDIR_CRIO/crio-umount.conf"
 )
