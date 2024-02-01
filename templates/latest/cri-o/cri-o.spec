@@ -18,11 +18,9 @@ Group: admin
 BuildRequires: systemd-deb-macros
 # The _unitdir macro does not exist on debbuild
 %define _unitdir %{_prefix}/lib/systemd/system
-Replaces: golang-github-containers-common
 Recommends: kubernetes-cni
 %else
 BuildRequires: systemd-rpm-macros
-Conflicts: containers-common
 Recommends: kubernetes-cni
 %endif
 
@@ -65,12 +63,12 @@ install -D -m 644 -t %{buildroot}%{_datadir}/zsh/site-functions %{archive_root}/
 # Configurations
 install -dp %{buildroot}%{_sysconfdir}/containers
 install -dp %{buildroot}%{_sysconfdir}/containers/registries.conf.d
-install -p -m 644 %{archive_root}/contrib/policy.json %{buildroot}%{_sysconfdir}/containers/policy.json
 install -p -m 644 %{archive_root}/contrib/registries.conf %{buildroot}%{_sysconfdir}/containers/registries.conf.d/crio.conf
 install -p -m 644 %{archive_root}/etc/crictl.yaml %{buildroot}%{_sysconfdir}/crictl.yaml
 
 install -dp %{buildroot}%{_sysconfdir}/crio/crio.conf.d
-install -p -m 644 %{archive_root}/etc/10-crun.conf %{buildroot}%{_sysconfdir}/crio/crio.conf.d/10-crun.conf
+install -p -m 644 %{archive_root}/etc/10-crio.conf %{buildroot}%{_sysconfdir}/crio/crio.conf.d/10-crio.conf
+install -p -m 644 %{archive_root}/contrib/policy.json %{buildroot}%{_sysconfdir}/crio/policy.json
 
 install -dp %{buildroot}%{_datadir}/oci-umount/oci-umount.d
 install -p -m 644 %{archive_root}/etc/crio-umount.conf %{buildroot}%{_datadir}/oci-umount/oci-umount.d/crio-umount.conf
@@ -119,7 +117,6 @@ install -D -m 644 -t %{buildroot}%{_mandir}/man8 %{archive_root}/man/crio.8
 # Configurations
 %dir %{_sysconfdir}/containers
 %dir %{_sysconfdir}/containers/registries.conf.d
-%config(noreplace) %{_sysconfdir}/containers/policy.json
 %config(noreplace) %{_sysconfdir}/containers/registries.conf.d/crio.conf
 %config(noreplace) %{_sysconfdir}/crictl.yaml
 %dir %{_sysconfdir}/cni
@@ -128,7 +125,8 @@ install -D -m 644 -t %{buildroot}%{_mandir}/man8 %{archive_root}/man/crio.8
 %{_unitdir}/crio.service
 %dir %{_sysconfdir}/crio
 %dir %{_sysconfdir}/crio/crio.conf.d
-%{_sysconfdir}/crio/crio.conf.d/10-crun.conf
+%{_sysconfdir}/crio/crio.conf.d/10-crio.conf
+%{_sysconfdir}/crio/policy.json
 %dir %{_datadir}/oci-umount
 %dir %{_datadir}/oci-umount/oci-umount.d
 %{_datadir}/oci-umount/oci-umount.d/crio-umount.conf

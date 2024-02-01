@@ -4,6 +4,7 @@ set -ex
 DESTDIR=${DESTDIR:-}
 PREFIX=${PREFIX:-/usr/local}
 ETCDIR=${ETCDIR:-/etc}
+ETC_CRIO_DIR=${ETC_CRIO_DIR:-$ETCDIR/crio}
 CONTAINERS_DIR=${CONTAINERS_DIR:-$ETCDIR/containers}
 CONTAINERS_REGISTRIES_CONFD_DIR=${CONTAINERS_REGISTRIES_CONFD_DIR:-$CONTAINERS_DIR/registries.conf.d}
 CNIDIR=${CNIDIR:-$ETCDIR/cni/net.d}
@@ -39,12 +40,12 @@ install $SELINUX -D -m 755 -t "$DESTDIR$BINDIR" bin/crictl
 install $SELINUX -d -m 755 "$DESTDIR$BASHINSTALLDIR"
 install $SELINUX -d -m 755 "$DESTDIR$FISHINSTALLDIR"
 install $SELINUX -d -m 755 "$DESTDIR$ZSHINSTALLDIR"
-install $SELINUX -d -m 755 "$DESTDIR$CONTAINERS_DIR"
 install $SELINUX -d -m 755 "$DESTDIR$CONTAINERS_REGISTRIES_CONFD_DIR"
 install $SELINUX -D -m 755 -t "$DESTDIR$BINDIR" bin/crio
 install $SELINUX -D -m 644 -t "$DESTDIR$ETCDIR" etc/crictl.yaml
 install $SELINUX -D -m 644 -t "$DESTDIR$OCIDIR" etc/crio-umount.conf
-install $SELINUX -D -m 644 -t "$DESTDIR$ETCDIR/crio/crio.conf.d" etc/10-crun.conf
+install $SELINUX -D -m 644 -t "$DESTDIR$ETC_CRIO_DIR" contrib/policy.json
+install $SELINUX -D -m 644 -t "$DESTDIR$ETC_CRIO_DIR/crio.conf.d" etc/10-crio.conf
 install $SELINUX -D -m 644 -t "$DESTDIR$MANDIR/man5" man/crio.conf.5
 install $SELINUX -D -m 644 -t "$DESTDIR$MANDIR/man5" man/crio.conf.d.5
 install $SELINUX -D -m 644 -t "$DESTDIR$MANDIR/man8" man/crio.8
@@ -58,11 +59,8 @@ install $SELINUX -D -m 755 -t "$DESTDIR$BINDIR" bin/crio-runc
 install $SELINUX -D -m 644 -t "$DESTDIR$CONTAINERS_REGISTRIES_CONFD_DIR" contrib/registries.conf
 
 # Update the DESTDIR in the CRI-O configuration
-sed -i 's;/usr/bin;'"$DESTDIR$BINDIR"';g' "$DESTDIR$ETCDIR/crio/crio.conf.d/10-crun.conf"
-
-if [ ! -f "$DESTDIR$CONTAINERS_DIR/policy.json" ]; then
-    install $SELINUX -D -m 644 -t "$DESTDIR$CONTAINERS_DIR" contrib/policy.json
-fi
+sed -i 's;/usr/bin;'"$DESTDIR$BINDIR"';g' "$DESTDIR$ETC_CRIO_DIR/crio.conf.d/10-crio.conf"
+sed -i 's;/etc/crio;'"$DESTDIR$ETC_CRIO_DIR"';g' "$DESTDIR$ETC_CRIO_DIR/crio.conf.d/10-crio.conf"
 
 if [ -n "$SELINUX" ]; then
     if command -v chcon >/dev/null; then
@@ -81,7 +79,7 @@ if [ -n "$SELINUX" ]; then
             "$DESTDIR$OPT_CNI_BIN_DIR"
 
         chcon -R -u system_u -r object_r -t container_config_t \
-            "$DESTDIR$ETCDIR/crio" \
+            "$DESTDIR$ETC_CRIO_DIR" \
             "$DESTDIR$OCIDIR/crio-umount.conf"
 
         chcon -R -u system_u -r object_r -t systemd_unit_file_t \
