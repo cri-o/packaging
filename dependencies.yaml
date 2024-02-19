@@ -85,7 +85,7 @@ dependencies:
         match: SHFMT_VERSION
 
   - name: krel
-    version: v0.16.4
+    version: v0.16.5
     refPaths:
       - path: scripts/helpers
         match: KREL_VERSION
