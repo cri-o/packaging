@@ -246,8 +246,8 @@ its `$PATH`. The same applies to the [SPDX](https://spdx.org) based bill of
 materials (SBOM), which gets automatically verified if the
 [bom](https://sigs.k8s.io/bom) tool is in `$PATH`.
 
-Besides `amd64`, we also support the `arm64` and `ppc64le` bit architectures.
-This can be selected via the script, too:
+Besides `amd64`, we also support the `arm64`, `ppc64le` and `s390x` bit
+architectures. This can be selected via the script, too:
 
 ```shell
 curl https://raw.githubusercontent.com/cri-o/packaging/main/get | bash -s -- -a arm64
@@ -266,7 +266,7 @@ tarball matching the format:
 https://storage.googleapis.com/cri-o/artifacts/cri-o.$ARCH.$REV.tar.gz
 ```
 
-Where `$ARCH` can be `amd64` or `arm64` or `ppc64le` and `$REV`
+Where `$ARCH` can be `amd64`, `arm64`, `ppc64le` or `s390x` and `$REV`
 can be any git SHA or tag.
 
 We also provide a Software Bill of Materials (SBOM) in the [SPDX

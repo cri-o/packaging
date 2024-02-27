@@ -4,6 +4,7 @@ set -euo pipefail
 ARCH_AMD64=amd64
 ARCH_ARM64=arm64
 ARCH_PPC64LE=ppc64le
+ARCH_S390X=s390x
 ARCH=
 VERSION=
 GCB_URL=https://storage.googleapis.com/cri-o
@@ -53,6 +54,8 @@ parse_args() {
             ARCH=$ARCH_ARM64
         elif [[ "$LOCAL_ARCH" == "$ARCH_PPC64LE" ]]; then
             ARCH=$ARCH_PPC64LE
+        elif [[ "$LOCAL_ARCH" == "$ARCH_S390X" ]]; then
+            ARCH=$ARCH_S390X
         else
             echo "Unsupported local architecture: $LOCAL_ARCH"
             exit 1
