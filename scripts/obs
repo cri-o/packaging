@@ -30,7 +30,6 @@ obs_stage() {
         --packages "$PACKAGE" \
         --project "$PROJECT" \
         --version "$VERSION" \
-        --architectures amd64,arm64,ppc64le \
         --submit=false \
         --nomock
 }
