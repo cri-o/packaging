@@ -11,6 +11,7 @@ source "$TEMPLATES_DIR/versions"
 ARCH_AMD64=amd64
 ARCH_ARM64=arm64
 ARCH_PPC64LE=ppc64le
+ARCH_S390X=s390x
 ARCH=${ARCH:-$ARCH_AMD64}
 
 ARCHIVE_ID=$COMMIT
@@ -126,6 +127,8 @@ if [[ $ARCH == "$ARCH_ARM64" ]]; then
     ELF_ARCH=aarch64
 elif [[ $ARCH == "$ARCH_PPC64LE" ]]; then
     ELF_ARCH=PowerPC
+elif [[ $ARCH == "$ARCH_S390X" ]]; then
+    ELF_ARCH=S/390
 else
     ELF_ARCH=x86-64
 fi

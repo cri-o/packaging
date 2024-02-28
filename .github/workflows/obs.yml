@@ -69,6 +69,7 @@ jobs:
           - amd64
           - arm64
           - ppc64le
+          - s390x
     name: bundle / build / ${{ inputs.revision || 'main' }} / ${{ matrix.arch }}
     steps:
       - uses: actions/checkout@v4
@@ -103,6 +104,10 @@ jobs:
         with:
           name: bundles-amd64
           path: build/bundle
+      - name: Install criu dependency
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y criu
       - run: sudo -E scripts/bundle/test
         if: ${{ inputs.skip-bundles == false }}
         env:
@@ -142,6 +147,11 @@ jobs:
         if: ${{ inputs.skip-bundles == false && github.event_name != 'pull_request' }}
         with:
           name: bundles-ppc64le
+          path: build/bundle
+      - uses: actions/download-artifact@v4
+        if: ${{ inputs.skip-bundles == false && github.event_name != 'pull_request' }}
+        with:
+          name: bundles-s390x
           path: build/bundle
       - run: scripts/sign-artifacts
         if: ${{ inputs.skip-bundles == false && github.event_name != 'pull_request' }}
@@ -239,6 +249,7 @@ jobs:
           - amd64
           - arm64
           - ppc64le
+          # - s390x # TODO: enable when first packages are built
         exclude:
           - run:
               image: fedora:38
