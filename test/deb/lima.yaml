@@ -31,6 +31,9 @@ provision:
       echo "deb [signed-by=/etc/apt/keyrings/cri-o-apt-keyring.gpg] https://download.opensuse.org/repositories/isv:/kubernetes:/addons:/cri-o:/$PROJECT_PATH:/build/deb/ /" | tee /etc/apt/sources.list.d/cri-o.list
       apt-get update
 
+      # Official package dependencies
+      apt-get install -y criu
+
       apt-get install -y cri-o kubelet kubeadm kubectl
       systemctl start crio
 
