@@ -29,7 +29,7 @@ crictl version
 CONTAINER_JSON="$GIT_ROOT/test/testdata/container.json"
 POD_JSON="$GIT_ROOT/test/testdata/pod.json"
 
-crictl run "$CONTAINER_JSON" "$POD_JSON"
+crictl -t=1m run "$CONTAINER_JSON" "$POD_JSON"
 
 # Test the workloads status
 POD_NAME=$(jq -r .metadata.name "$POD_JSON")
@@ -45,5 +45,5 @@ if [[ ! $(crictl ps --name "$CONTAINER_NAME" --state Exited -q) ]]; then
 fi
 
 # Cleanup
-crictl rmp -fa
+crictl -t=1m rmp -fa
 systemctl stop crio
