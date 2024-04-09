@@ -46,7 +46,7 @@ provision:
     EOF
 
       # Official package dependencies
-      dnf install -y container-selinux criu
+      dnf install -y container-selinux
 
       dnf install -y cri-o kubelet kubeadm kubectl
       systemctl start crio
