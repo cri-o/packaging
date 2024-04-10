@@ -47,12 +47,12 @@ for PROJECT in $(echo "$PACKAGES" | grep "$PROJECT_PRERELEASE_PREFIX:.*:build.*c
         for ((i = 0; i < MAX_LEN; i++)); do
             unset 'RELEASE_PACKAGES[-1]'
         done
-    fi
 
-    echo "Keeping last $MAX_LEN packages in project $RELEASE_PROJECT, removing the rest"
-    for PACKAGE in "${RELEASE_PACKAGES[@]}"; do
-        osc rdelete -m cleanup "$RELEASE_PROJECT" "$PACKAGE"
-    done
+        echo "Keeping last $MAX_LEN packages in project $RELEASE_PROJECT, removing the rest"
+        for PACKAGE in "${RELEASE_PACKAGES[@]}"; do
+            osc rdelete -m cleanup "$RELEASE_PROJECT" "$PACKAGE"
+        done
+    fi
 done
 
 PREFIX=cri-o_
