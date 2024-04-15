@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -euox pipefail
 
+source "$(dirname "${BASH_SOURCE[0]}")"/helpers
+
 COMMIT=${COMMIT:-}
 if [[ "$COMMIT" == "" ]]; then
     echo "No commit provided"
@@ -16,6 +18,6 @@ for ID in $(gh run list -s in_progress -w obs --json databaseId -q '.[] | .datab
 
     if [[ "$RUNNING_COMMIT" == "$COMMIT" ]]; then
         echo "Job for commit '$COMMIT' is already running, waiting for it to complete"
-        gh run watch "$ID"
+        retry_3 gh run watch "$ID"
     fi
 done
