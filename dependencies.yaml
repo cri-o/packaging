@@ -7,7 +7,7 @@ dependencies:
         match: ZEITGEIST_VERSION
 
   - name: Kubernetes test version
-    version: v1.29
+    version: v1.30
     refPaths:
       - path: test/rpm/Vagrantfile
         match: KUBERNETES_VERSION
@@ -85,7 +85,7 @@ dependencies:
         match: SHFMT_VERSION
 
   - name: krel
-    version: v0.16.6
+    version: v0.16.8
     refPaths:
       - path: scripts/helpers
         match: KREL_VERSION
@@ -123,7 +123,7 @@ dependencies:
         match: conmon-rs
 
   - name: cri-tools (latest)
-    version: v1.29.0
+    version: v1.30.0
     refPaths:
       - path: templates/latest/cri-o/bundle/versions
         match: cri-tools

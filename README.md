@@ -90,7 +90,7 @@ All packages are based on the static binary bundles provided by the CRI-O CI.
 #### Define the Kubernetes version and used CRI-O stream
 
 ```bash
-KUBERNETES_VERSION=v1.29
+KUBERNETES_VERSION=v1.30
 PROJECT_PATH=prerelease:/main
 ```
 
@@ -160,7 +160,7 @@ apt-get install -y software-properties-common curl
 #### Define the Kubernetes version and used CRI-O stream
 
 ```bash
-KUBERNETES_VERSION=v1.29
+KUBERNETES_VERSION=v1.30
 PROJECT_PATH=prerelease:/main
 ```
 
