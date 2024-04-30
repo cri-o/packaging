@@ -248,7 +248,7 @@ jobs:
           - amd64
           - arm64
           - ppc64le
-          # - s390x # TODO: enable when first packages are built
+          - s390x
         exclude:
           - run:
               image: fedora:38
