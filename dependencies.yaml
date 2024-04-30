@@ -111,7 +111,7 @@ dependencies:
         match: image
 
   - name: conmon (latest)
-    version: v2.1.10
+    version: v2.1.11
     refPaths:
       - path: templates/latest/cri-o/bundle/versions
         match: conmon
