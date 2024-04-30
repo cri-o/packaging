@@ -117,7 +117,7 @@ dependencies:
         match: conmon
 
   - name: conmon-rs (latest)
-    version: v0.6.2
+    version: v0.6.3
     refPaths:
       - path: templates/latest/cri-o/bundle/versions
         match: conmon-rs
