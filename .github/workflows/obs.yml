@@ -41,7 +41,7 @@ jobs:
       project_version: ${{ steps.step.outputs.PROJECT_VERSION }}
       version: ${{ steps.step.outputs.VERSION }}
     steps:
-      - uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4.1.4
+      - uses: actions/checkout@44c2b7a8a4ea60a981eaca3cf939b5f4305c123b # v4.1.5
       - id: step
         run: |
           source scripts/vars
@@ -73,7 +73,7 @@ jobs:
           - s390x
     name: bundle / build / ${{ inputs.revision || 'main' }} / ${{ matrix.arch }}
     steps:
-      - uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4.1.4
+      - uses: actions/checkout@44c2b7a8a4ea60a981eaca3cf939b5f4305c123b # v4.1.5
       - uses: sigstore/cosign-installer@59acb6260d9c0ba8f4a2f9d9b48431a222b68e20 # v3.5.0
       - run: scripts/bundle/build
         if: ${{ inputs.skip-bundles == false }}
@@ -99,7 +99,7 @@ jobs:
       - vars
       - bundles
     steps:
-      - uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4.1.4
+      - uses: actions/checkout@44c2b7a8a4ea60a981eaca3cf939b5f4305c123b # v4.1.5
       - uses: actions/download-artifact@65a9edc5881444af0b9093a5e628f2fe47ea3b2e # v4.1.7
         if: ${{ inputs.skip-bundles == false }}
         with:
@@ -123,7 +123,7 @@ jobs:
     permissions:
       id-token: write
     steps:
-      - uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4.1.4
+      - uses: actions/checkout@44c2b7a8a4ea60a981eaca3cf939b5f4305c123b # v4.1.5
       - uses: google-github-actions/auth@55bd3a7c6e2ae7cf1877fd1ccb9d54c0503c457c # v2.1.2
         if: ${{ inputs.skip-bundles == false && github.event_name != 'pull_request' }}
         with:
@@ -185,7 +185,7 @@ jobs:
       - vars
       - bundles-publish
     steps:
-      - uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4.1.4
+      - uses: actions/checkout@44c2b7a8a4ea60a981eaca3cf939b5f4305c123b # v4.1.5
       - run: scripts/obs
         if: ${{ inputs.skip-stage == false && github.event_name != 'pull_request' }}
         env:
@@ -211,7 +211,7 @@ jobs:
           - rpm
     name: test / ${{ matrix.type }} / kubernetes / amd64
     steps:
-      - uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4.1.4
+      - uses: actions/checkout@44c2b7a8a4ea60a981eaca3cf939b5f4305c123b # v4.1.5
       - run: sudo scripts/github-actions-setup
         if: ${{ inputs.skip-tests == false }}
       - run: sudo -E scripts/test-kubernetes
@@ -255,7 +255,7 @@ jobs:
             arch: arm64  # takes forever
     name: test / ${{ matrix.run.type }} / ${{ matrix.run.image }} / ${{ matrix.arch }}
     steps:
-      - uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4.1.4
+      - uses: actions/checkout@44c2b7a8a4ea60a981eaca3cf939b5f4305c123b # v4.1.5
       - uses: docker/setup-buildx-action@d70bba72b1f3fd22344832f00baa16ece964efeb # v3.0.0
       - run: scripts/test-architectures
         if: ${{ inputs.skip-tests == false }}
@@ -279,7 +279,7 @@ jobs:
       - test-architectures
       - test-kubernetes
     steps:
-      - uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4.1.4
+      - uses: actions/checkout@44c2b7a8a4ea60a981eaca3cf939b5f4305c123b # v4.1.5
       - run: scripts/obs
         if: ${{ inputs.skip-release == false && github.event_name != 'pull_request' }}
         env:
