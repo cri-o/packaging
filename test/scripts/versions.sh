@@ -4,4 +4,5 @@
 
 # Package configs
 KUBERNETES_VERSION=v1.30
-PROJECT_PATH=prerelease:/main
+# allows to be set externally e.g. from a Dockerfile
+PROJECT_PATH=${PROJECT_PATH:-prerelease:/main}
