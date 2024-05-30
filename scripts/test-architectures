@@ -32,5 +32,6 @@ docker buildx build \
     --build-arg "FROM=$IMAGE" \
     --build-arg "PROJECT_PATH=$PROJECT_TYPE:/$PROJECT_VERSION" \
     --platform "linux/$ARCH" \
-    -t "cri-o-$TYPE-${IMAGE/:/-}-$ARCH:latest" \
-    "$TESTDIR"
+    --tag "cri-o-$TYPE-${IMAGE/:/-}-$ARCH:latest" \
+    --file "$TESTDIR/Dockerfile" \
+    test/scripts
