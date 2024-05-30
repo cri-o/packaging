@@ -21,6 +21,7 @@ Vagrant.configure("2") do |config|
 
   config.vm.synced_folder ".", "/vagrant", disabled: true
 
-  config.vm.provision "install packages", type: "shell", path:"../scripts/install-rpm.sh", run: "once"
-  config.vm.provision "run tests", type: "shell", path:"../scripts/test.sh", run: "once"
+  config.vm.provision "file", source: "../scripts", destination: "/tmp/provision"
+  config.vm.provision "install packages", type: "shell", inline: "cd /tmp/provision && ./install-rpm.sh", run: "once"
+  config.vm.provision "run tests", type: "shell", inline: "/tmp/provision/test.sh", run: "once"
 end

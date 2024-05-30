@@ -9,9 +9,7 @@ dependencies:
   - name: Kubernetes test version
     version: v1.30
     refPaths:
-      - path: test/scripts/install-deb.sh
-        match: KUBERNETES_VERSION
-      - path: test/scripts/install-rpm.sh
+      - path: test/scripts/versions.sh
         match: KUBERNETES_VERSION
       - path: test/deb/lima.yaml
         match: KUBERNETES_VERSION

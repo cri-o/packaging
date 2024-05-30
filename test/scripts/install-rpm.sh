@@ -5,9 +5,7 @@ set -euxo pipefail
 # This script installs the required deb packages to bootstrap a Kubernetes cluster
 # It is referenced from ../rpm/Vagrantfile
 
-# Package configs
-KUBERNETES_VERSION=v1.30
-PROJECT_PATH=prerelease:/main
+source versions.sh
 
 cat <<EOF | tee /etc/yum.repos.d/kubernetes.repo
 [kubernetes]
