@@ -49,7 +49,7 @@ verify-shfmt: shellfiles
 
 .PHONY: verify-shellcheck
 verify-shellcheck: shellfiles $(SHELLCHECK)
-	$(SHELLCHECK) -P scripts -P scripts/bundle -P test/scripts -x $(SHELLFILES)
+	$(SHELLCHECK) -P scripts -P scripts/bundle -x $(SHELLFILES)
 
 .PHONY: verify-get-script
 verify-get-script:

@@ -5,7 +5,8 @@ set -euxo pipefail
 # This script installs the required deb packages to bootstrap a Kubernetes cluster
 # It is referenced from ../rpm/Vagrantfile
 
-source versions.sh
+# shellcheck source=test/scripts/versions.sh
+source ./versions.sh
 
 cat <<EOF | tee /etc/yum.repos.d/kubernetes.repo
 [kubernetes]
