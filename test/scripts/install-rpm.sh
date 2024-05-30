@@ -8,19 +8,19 @@ set -euxo pipefail
 
 CRIO_ONLY=
 while [ $# -gt 0 ]; do
-  case $1 in
+    case $1 in
     --crio-only)
-      CRIO_ONLY=1
-      shift
-      ;;
-  esac
+        CRIO_ONLY=1
+        shift
+        ;;
+    esac
 done
 
 # shellcheck source=test/scripts/versions.sh
 source ./versions.sh
 
 if [ -z $CRIO_ONLY ]; then
-  cat <<EOF | tee /etc/yum.repos.d/kubernetes.repo
+    cat <<EOF | tee /etc/yum.repos.d/kubernetes.repo
 [kubernetes]
 name=Kubernetes
 baseurl=https://pkgs.k8s.io/core:/stable:/$KUBERNETES_VERSION/rpm/
@@ -41,5 +41,5 @@ EOF
 
 dnf install -y cri-o
 if [ -z $CRIO_ONLY ]; then
-  dnf install -y container-selinux kubelet kubeadm kubectl
+    dnf install -y container-selinux kubelet kubeadm kubectl
 fi
