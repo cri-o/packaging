@@ -83,9 +83,13 @@ sed -i 's;/usr/local/bin;/usr/bin;g' %{archive_root}/contrib/crio.service
 
 # Fix the /etc/sysconfig path for debian based distributions
 %if "%{_vendor}" == "debbuild"
-sed -i 's;/etc/sysconfig/crio;/etc/default/crio;g' %{archive_root}/contrib/crio.service
+sed -i 's;/etc/sysconfig/crio;/etc/default/crio;g' %{archive_root}/contrib/crio.service %{archive_root}/etc/crio
+%define systemconfigdir default
+%else
+%define systemconfigdir sysconfig
 %endif
-
+install -dp %{buildroot}%{_sysconfdir}/%{systemconfigdir}
+install -p -m 644 %{archive_root}/etc/crio %{buildroot}%{_sysconfdir}/%{systemconfigdir}/crio
 install -D -m 644 -t %{buildroot}%{_unitdir} %{archive_root}/contrib/crio.service
 
 # Docs

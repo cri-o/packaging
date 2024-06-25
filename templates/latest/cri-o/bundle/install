@@ -16,6 +16,14 @@ FISHINSTALLDIR=${FISHINSTALLDIR:-$PREFIX/share/fish/completions}
 ZSHINSTALLDIR=${ZSHINSTALLDIR:-$PREFIX/share/zsh/site-functions}
 OPT_CNI_BIN_DIR=${OPT_CNI_BIN_DIR:-/opt/cni/bin}
 
+# Adjust SYSCONFIGDIR if we're running on debian based distributions
+if dpkg -l > /dev/null 2>&1; then
+    SYSCONFIGDIR=${SYSCONFIGDIR:-$ETCDIR/default}
+    sed -i "s;sysconfig/crio;default/crio;g" etc/crio
+else
+    SYSCONFIGDIR=${SYSCONFIGDIR:-$ETCDIR/sysconfig}
+fi
+
 # Update systemddir based on OS
 source /etc/os-release
 if { [[ "${ID}" == "fedora" ]] && [[ "${VARIANT_ID}" == "coreos" ]]; } ||
@@ -44,6 +52,7 @@ install $SELINUX -d -m 755 "$DESTDIR$CONTAINERS_REGISTRIES_CONFD_DIR"
 install $SELINUX -D -m 755 -t "$DESTDIR$BINDIR" bin/crio
 install $SELINUX -D -m 644 -t "$DESTDIR$ETCDIR" etc/crictl.yaml
 install $SELINUX -D -m 644 -t "$DESTDIR$OCIDIR" etc/crio-umount.conf
+install $SELINUX -D -m 644 -t "$DESTDIR$SYSCONFIGDIR" etc/crio
 install $SELINUX -D -m 644 -t "$DESTDIR$ETC_CRIO_DIR" contrib/policy.json
 install $SELINUX -D -m 644 -t "$DESTDIR$ETC_CRIO_DIR/crio.conf.d" etc/10-crio.conf
 install $SELINUX -D -m 644 -t "$DESTDIR$MANDIR/man5" man/crio.conf.5
