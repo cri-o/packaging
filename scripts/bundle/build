@@ -61,6 +61,7 @@ FILES_ETC=(
     "$TEMPLATES_DIR/10-crio.conf"
     "$TMPDIR_CRIO/crictl.yaml"
     "$TMPDIR_CRIO/crio-umount.conf"
+    "$TMPDIR_CRIO/contrib/sysconfig/crio"
 )
 
 for FILE in "${FILES_ETC[@]}"; do
@@ -183,7 +184,7 @@ $BOM validate -e "$SPDX_PATH" -d "$CRIODIR"
 pushd "$TMPDIR"
 export DESTDIR=test/
 ./install
-EXP_CNT=69
+EXP_CNT=71
 if ! command -v runc; then
     EXP_CNT=$((EXP_CNT + 1))
 fi
