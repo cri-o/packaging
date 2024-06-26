@@ -130,9 +130,11 @@ install -D -m 644 -t %{buildroot}%{_mandir}/man8 %{archive_root}/man/crio.8
 
 # Configurations
 %dir %{_sysconfdir}/containers
+%dir %{_sysconfdir}/%{systemconfigdir}
 %dir %{_sysconfdir}/containers/registries.conf.d
 %config(noreplace) %{_sysconfdir}/containers/registries.conf.d/crio.conf
 %config(noreplace) %{_sysconfdir}/crictl.yaml
+%config(noreplace) %{_sysconfdir}/%{systemconfigdir}/crio
 %dir %{_sysconfdir}/cni
 %dir %{_sysconfdir}/cni/net.d
 %config(noreplace) %{_sysconfdir}/cni/net.d/11-crio-ipv4-bridge.conflist
