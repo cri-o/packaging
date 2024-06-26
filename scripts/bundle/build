@@ -149,7 +149,7 @@ for FILE in "$TMP_BIN"/*; do
 done
 
 # Install BOM
-BOM_VERSION=v0.5.1
+BOM_VERSION=v0.6.0
 BOM="$GIT_ROOT/build/bom"
 curl_to "$BOM" \
     "https://github.com/kubernetes-sigs/bom/releases/download/$BOM_VERSION/bom-amd64-linux"

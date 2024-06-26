@@ -38,7 +38,7 @@ jobs:
       - run: make verify-get-script
       - name: Install BOM
         run: |
-          BOM_VERSION=v0.5.1
+          BOM_VERSION=v0.6.0
           curl -sSfL --retry 5 --retry-delay 3 -o bom \
             https://github.com/kubernetes-sigs/bom/releases/download/$BOM_VERSION/bom-amd64-linux
           chmod +x bom

@@ -89,7 +89,7 @@ dependencies:
         match: KREL_VERSION
 
   - name: bom
-    version: v0.5.1
+    version: v0.6.0
     refPaths:
       - path: scripts/bundle/build
         match: BOM_VERSION
