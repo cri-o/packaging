@@ -256,7 +256,7 @@ jobs:
     name: test / ${{ matrix.run.type }} / ${{ matrix.run.image }} / ${{ matrix.arch }}
     steps:
       - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
-      - uses: docker/setup-buildx-action@d70bba72b1f3fd22344832f00baa16ece964efeb # v3.0.0
+      - uses: docker/setup-buildx-action@4fd812986e6c8c2a69e18311145f9371337f27d4 # v3.4.0
       - run: scripts/test-architectures
         if: ${{ inputs.skip-tests == false }}
         env:
