@@ -1,5 +1,11 @@
 ---
 dependencies:
+  - name: CRI-O
+    version: v1.30
+    refPaths:
+      - path: README.md
+        match: CRIO_VERSION
+
   - name: zeitgeist
     version: v0.5.3
     refPaths:
