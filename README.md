@@ -92,14 +92,14 @@ All packages are based on the static binary bundles provided by the CRI-O CI.
 [![release-1.29](https://img.shields.io/badge/prerelease-release--1.29-blue?logo=git&logoColor=white)](https://build.opensuse.org/project/show/isv:kubernetes:addons:cri-o:prerelease:v1.29)
 [![release-1.28](https://img.shields.io/badge/prerelease-release--1.28-blue?logo=git&logoColor=white)](https://build.opensuse.org/project/show/isv:kubernetes:addons:cri-o:prerelease:v1.28)
 
-### Distributions using `rpm` packages
-
 #### Define the Kubernetes version and used CRI-O stream
 
 ```bash
 KUBERNETES_VERSION=v1.30
-PROJECT_PATH=prerelease:/main
+CRIO_VERSION=v1.30
 ```
+
+### Distributions using `rpm` packages
 
 #### Add the Kubernetes repository
 
@@ -120,10 +120,10 @@ EOF
 cat <<EOF | tee /etc/yum.repos.d/cri-o.repo
 [cri-o]
 name=CRI-O
-baseurl=https://pkgs.k8s.io/addons:/cri-o:/$PROJECT_PATH/rpm/
+baseurl=https://pkgs.k8s.io/addons:/cri-o:/stable:/$CRIO_VERSION/rpm/
 enabled=1
 gpgcheck=1
-gpgkey=https://pkgs.k8s.io/addons:/cri-o:/$PROJECT_PATH/rpm/repodata/repomd.xml.key
+gpgkey=https://pkgs.k8s.io/addons:/cri-o:/stable:/$CRIO_VERSION/rpm/repodata/repomd.xml.key
 EOF
 ```
 
@@ -164,13 +164,6 @@ apt-get update
 apt-get install -y software-properties-common curl
 ```
 
-#### Define the Kubernetes version and used CRI-O stream
-
-```bash
-KUBERNETES_VERSION=v1.30
-PROJECT_PATH=prerelease:/main
-```
-
 #### Add the Kubernetes repository
 
 ```bash
@@ -184,10 +177,10 @@ echo "deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.
 #### Add the CRI-O repository
 
 ```bash
-curl -fsSL https://pkgs.k8s.io/addons:/cri-o:/$PROJECT_PATH/deb/Release.key |
+curl -fsSL https://pkgs.k8s.io/addons:/cri-o:/stable:/$CRIO_VERSION/deb/Release.key |
     gpg --dearmor -o /etc/apt/keyrings/cri-o-apt-keyring.gpg
 
-echo "deb [signed-by=/etc/apt/keyrings/cri-o-apt-keyring.gpg] https://pkgs.k8s.io/addons:/cri-o:/$PROJECT_PATH/deb/ /" |
+echo "deb [signed-by=/etc/apt/keyrings/cri-o-apt-keyring.gpg] https://pkgs.k8s.io/addons:/cri-o:/stable:/$CRIO_VERSION/deb/ /" |
     tee /etc/apt/sources.list.d/cri-o.list
 ```
 
