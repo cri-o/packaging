@@ -88,6 +88,12 @@ dependencies:
       - path: Makefile
         match: SHFMT_VERSION
 
+  - name: mdtoc
+    version: v1.4.0
+    refPaths:
+      - path: Makefile
+        match: MDTOC_VERSION
+
   - name: krel
     version: v0.17.1
     refPaths:
