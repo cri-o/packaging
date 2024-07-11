@@ -9,6 +9,32 @@ The intention of this project is to encapsulate CRI-O's packaging efforts into a
 dedicated repository, following official Kubernetes guidelines by using the
 [openSUSE Build Service (OBS)](https://build.opensuse.org).
 
+<!-- toc -->
+- [Motivation](#motivation)
+- [Project Layout](#project-layout)
+  - [Stable Versions](#stable-versions)
+  - [Prereleases](#prereleases)
+- [Usage](#usage)
+  - [Available Streams](#available-streams)
+    - [Define the Kubernetes version and used CRI-O stream](#define-the-kubernetes-version-and-used-cri-o-stream)
+  - [Distributions using <code>rpm</code> packages](#distributions-using-rpm-packages)
+    - [Add the Kubernetes repository](#add-the-kubernetes-repository)
+    - [Add the CRI-O repository](#add-the-cri-o-repository)
+    - [Install package dependencies from the official repositories](#install-package-dependencies-from-the-official-repositories)
+    - [Install the packages](#install-the-packages)
+    - [Start CRI-O](#start-cri-o)
+    - [Bootstrap a cluster](#bootstrap-a-cluster)
+  - [Distributions using <code>deb</code> packages](#distributions-using-deb-packages)
+    - [Install the dependencies for adding repositories](#install-the-dependencies-for-adding-repositories)
+    - [Add the Kubernetes repository](#add-the-kubernetes-repository-1)
+    - [Add the CRI-O repository](#add-the-cri-o-repository-1)
+    - [Install the packages](#install-the-packages-1)
+    - [Start CRI-O](#start-cri-o-1)
+    - [Bootstrap a cluster](#bootstrap-a-cluster-1)
+- [Publishing](#publishing)
+- [Using the static binary bundles directly](#using-the-static-binary-bundles-directly)
+<!-- /toc -->
+
 ## Motivation
 
 The following resources are great to understand the motivation behind the latest

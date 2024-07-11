@@ -1,11 +1,13 @@
 ZEITGEIST_VERSION = v0.5.3
 SHFMT_VERSION := v3.7.0
 SHELLCHECK_VERSION := v0.9.0
+MDTOC_VERSION := v1.4.0
 
 BUILD_DIR := build
 ZEITGEIST := $(BUILD_DIR)/zeitgeist
 SHFMT := $(BUILD_DIR)/shfmt
 SHELLCHECK := $(BUILD_DIR)/shellcheck
+MDTOC := $(BUILD_DIR)/mdtoc
 
 define curl_to
     curl -sSfL --retry 5 --retry-delay 3 "$(1)" -o $(2)
@@ -19,7 +21,7 @@ clean:
 	rm -rf $(BUILD_DIR)
 
 $(ZEITGEIST): $(BUILD_DIR)
-	$(call curl_to,https://github.com/kubernetes-sigs/zeitgeist/releases/download/$(ZEITGEIST_VERSION)/zeitgeist-amd64-linux,$(ZEITGEIST))
+	$(call curl_to,https://storage.googleapis.com/k8s-artifacts-sig-release/kubernetes-sigs/zeitgeist/$(ZEITGEIST_VERSION)/zeitgeist-amd64-linux,$(ZEITGEIST))
 	chmod +x $(ZEITGEIST)
 
 $(SHFMT): $(BUILD_DIR)
@@ -29,6 +31,10 @@ $(SHFMT): $(BUILD_DIR)
 $(SHELLCHECK): $(BUILD_DIR)
 	$(call curl_to,https://github.com/koalaman/shellcheck/releases/download/$(SHELLCHECK_VERSION)/shellcheck-$(SHELLCHECK_VERSION).linux.x86_64.tar.xz,-) \
 		| tar xfJ - -C $(BUILD_DIR) --strip 1 shellcheck-$(SHELLCHECK_VERSION)/shellcheck
+
+$(MDTOC): $(BUILD_DIR)
+	$(call curl_to,https://storage.googleapis.com/k8s-artifacts-sig-release/kubernetes-sigs/mdtoc/$(MDTOC_VERSION)/mdtoc-amd64-linux,$(MDTOC))
+	chmod +x $(MDTOC)
 
 .PHONY: get-script
 get-script:
@@ -53,4 +59,9 @@ verify-shellcheck: shellfiles $(SHELLCHECK)
 
 .PHONY: verify-get-script
 verify-get-script:
+	scripts/tree-status
+
+.PHONY: verify-mdtoc
+verify-mdtoc: $(MDTOC)
+	git grep --name-only '<!-- toc -->' | grep -v Makefile | xargs $(MDTOC) -i
 	scripts/tree-status
