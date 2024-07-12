@@ -48,10 +48,12 @@ install -dp %{buildroot}%{_sharedstatedir}/crio
 install -dp %{buildroot}%{_bindir}
 install -p -m 755 %{archive_root}/bin/crio %{buildroot}%{_bindir}/crio
 install -p -m 755 %{archive_root}/bin/pinns %{buildroot}%{_bindir}/pinns
-install -p -m 755 %{archive_root}/bin/crio-crun %{buildroot}%{_bindir}/crio-crun
-install -p -m 755 %{archive_root}/bin/crio-runc %{buildroot}%{_bindir}/crio-runc
-install -p -m 755 %{archive_root}/bin/crio-conmon %{buildroot}%{_bindir}/crio-conmon
-install -p -m 755 %{archive_root}/bin/crio-conmonrs %{buildroot}%{_bindir}/crio-conmonrs
+
+install -dp %{buildroot}%{_libexecdir}/crio
+install -p -m 755 %{archive_root}/bin/crun %{buildroot}%{_libexecdir}/crio/crun
+install -p -m 755 %{archive_root}/bin/runc %{buildroot}%{_libexecdir}/crio/runc
+install -p -m 755 %{archive_root}/bin/conmon %{buildroot}%{_libexecdir}/crio/conmon
+install -p -m 755 %{archive_root}/bin/conmonrs %{buildroot}%{_libexecdir}/crio/conmonrs
 
 # Completions
 install -d -m 755 %{buildroot}%{_datadir}/bash-completion/completions
@@ -114,11 +116,12 @@ install -D -m 644 -t %{buildroot}%{_mandir}/man8 %{archive_root}/man/crio.8
 
 # Binaries
 %{_bindir}/crio
-%{_bindir}/crio-conmon
-%{_bindir}/crio-conmonrs
-%{_bindir}/crio-crun
-%{_bindir}/crio-runc
 %{_bindir}/pinns
+%{_libexecdir}/crio
+%{_libexecdir}/crio/conmon
+%{_libexecdir}/crio/conmonrs
+%{_libexecdir}/crio/crun
+%{_libexecdir}/crio/runc
 
 # Completions
 %{_datadir}/bash-completion/completions/crio
