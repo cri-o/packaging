@@ -49,11 +49,13 @@ install -dp %{buildroot}%{_bindir}
 install -p -m 755 %{archive_root}/bin/crio %{buildroot}%{_bindir}/crio
 install -p -m 755 %{archive_root}/bin/pinns %{buildroot}%{_bindir}/pinns
 
-install -dp %{buildroot}%{_libexecdir}/crio
-install -p -m 755 %{archive_root}/bin/crun %{buildroot}%{_libexecdir}/crio/crun
-install -p -m 755 %{archive_root}/bin/runc %{buildroot}%{_libexecdir}/crio/runc
-install -p -m 755 %{archive_root}/bin/conmon %{buildroot}%{_libexecdir}/crio/conmon
-install -p -m 755 %{archive_root}/bin/conmonrs %{buildroot}%{_libexecdir}/crio/conmonrs
+# Manually set libexecdir since %{_libexecdir} defaults to /usr/lib for RPM builders
+%define libexecdir /usr/libexec
+install -dp %{buildroot}%{libexecdir}/crio
+install -p -m 755 %{archive_root}/bin/crun %{buildroot}%{libexecdir}/crio/crun
+install -p -m 755 %{archive_root}/bin/runc %{buildroot}%{libexecdir}/crio/runc
+install -p -m 755 %{archive_root}/bin/conmon %{buildroot}%{libexecdir}/crio/conmon
+install -p -m 755 %{archive_root}/bin/conmonrs %{buildroot}%{libexecdir}/crio/conmonrs
 
 # Completions
 install -d -m 755 %{buildroot}%{_datadir}/bash-completion/completions
@@ -117,11 +119,12 @@ install -D -m 644 -t %{buildroot}%{_mandir}/man8 %{archive_root}/man/crio.8
 # Binaries
 %{_bindir}/crio
 %{_bindir}/pinns
-%{_libexecdir}/crio
-%{_libexecdir}/crio/conmon
-%{_libexecdir}/crio/conmonrs
-%{_libexecdir}/crio/crun
-%{_libexecdir}/crio/runc
+%dir %{libexecdir}
+%dir %{libexecdir}/crio
+%{libexecdir}/crio/conmon
+%{libexecdir}/crio/conmonrs
+%{libexecdir}/crio/crun
+%{libexecdir}/crio/runc
 
 # Completions
 %{_datadir}/bash-completion/completions/crio
