@@ -238,7 +238,7 @@ jobs:
         run:
           - image: almalinux:9.2
             type: rpm
-          - image: fedora:38
+          - image: fedora:39
             type: rpm
           - image: debian:12
             type: deb
@@ -251,7 +251,7 @@ jobs:
           - s390x
         exclude:
           - run:
-              image: fedora:38
+              image: fedora:39
             arch: arm64  # takes forever
     name: test / ${{ matrix.run.type }} / ${{ matrix.run.image }} / ${{ matrix.arch }}
     steps:
