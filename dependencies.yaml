@@ -31,7 +31,7 @@ dependencies:
         match: OSC_VERSION
 
   - name: Fedora test image
-    version: 38
+    version: 39
     refPaths:
       - path: test/rpm/Dockerfile
         match: FROM=
