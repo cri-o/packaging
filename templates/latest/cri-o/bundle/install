@@ -4,6 +4,8 @@ set -ex
 DESTDIR=${DESTDIR:-}
 PREFIX=${PREFIX:-/usr/local}
 ETCDIR=${ETCDIR:-/etc}
+LIBEXECDIR=${LIBEXECDIR:-/usr/libexec}
+LIBEXEC_CRIO_DIR=${LIBEXEC_CRIO_DIR:-$LIBEXECDIR/crio}
 ETC_CRIO_DIR=${ETC_CRIO_DIR:-$ETCDIR/crio}
 CONTAINERS_DIR=${CONTAINERS_DIR:-$ETCDIR/containers}
 CONTAINERS_REGISTRIES_CONFD_DIR=${CONTAINERS_REGISTRIES_CONFD_DIR:-$CONTAINERS_DIR/registries.conf.d}
@@ -17,7 +19,7 @@ ZSHINSTALLDIR=${ZSHINSTALLDIR:-$PREFIX/share/zsh/site-functions}
 OPT_CNI_BIN_DIR=${OPT_CNI_BIN_DIR:-/opt/cni/bin}
 
 # Adjust SYSCONFIGDIR if we're running on debian based distributions
-if dpkg -l > /dev/null 2>&1; then
+if dpkg -l >/dev/null 2>&1; then
     SYSCONFIGDIR=${SYSCONFIGDIR:-$ETCDIR/default}
     sed -i "s;sysconfig/crio;default/crio;g" etc/crio
 else
@@ -42,14 +44,18 @@ ARCH=${ARCH:-amd64}
 install $SELINUX -d -m 755 "$DESTDIR$CNIDIR"
 install $SELINUX -D -m 755 -t "$DESTDIR$OPT_CNI_BIN_DIR" cni-plugins/*
 install $SELINUX -D -m 644 -t "$DESTDIR$CNIDIR" contrib/11-crio-ipv4-bridge.conflist
-install $SELINUX -D -m 755 -t "$DESTDIR$BINDIR" bin/crio-conmon
-install $SELINUX -D -m 755 -t "$DESTDIR$BINDIR" bin/crio-conmonrs
-install $SELINUX -D -m 755 -t "$DESTDIR$BINDIR" bin/crictl
+install $SELINUX -d -m 755 "$DESTDIR$LIBEXEC_CRIO_DIR"
+install $SELINUX -D -m 755 -t "$DESTDIR$LIBEXEC_CRIO_DIR" bin/conmon
+install $SELINUX -D -m 755 -t "$DESTDIR$LIBEXEC_CRIO_DIR" bin/conmonrs
+install $SELINUX -D -m 755 -t "$DESTDIR$LIBEXEC_CRIO_DIR" bin/crun
+install $SELINUX -D -m 755 -t "$DESTDIR$LIBEXEC_CRIO_DIR" bin/runc
 install $SELINUX -d -m 755 "$DESTDIR$BASHINSTALLDIR"
 install $SELINUX -d -m 755 "$DESTDIR$FISHINSTALLDIR"
 install $SELINUX -d -m 755 "$DESTDIR$ZSHINSTALLDIR"
 install $SELINUX -d -m 755 "$DESTDIR$CONTAINERS_REGISTRIES_CONFD_DIR"
 install $SELINUX -D -m 755 -t "$DESTDIR$BINDIR" bin/crio
+install $SELINUX -D -m 755 -t "$DESTDIR$BINDIR" bin/pinns
+install $SELINUX -D -m 755 -t "$DESTDIR$BINDIR" bin/crictl
 install $SELINUX -D -m 644 -t "$DESTDIR$ETCDIR" etc/crictl.yaml
 install $SELINUX -D -m 644 -t "$DESTDIR$OCIDIR" etc/crio-umount.conf
 install $SELINUX -D -m 644 -t "$DESTDIR$SYSCONFIGDIR" etc/crio
@@ -62,30 +68,29 @@ install $SELINUX -D -m 644 -t "$DESTDIR$BASHINSTALLDIR" completions/bash/crio
 install $SELINUX -D -m 644 -t "$DESTDIR$FISHINSTALLDIR" completions/fish/crio.fish
 install $SELINUX -D -m 644 -t "$DESTDIR$ZSHINSTALLDIR" completions/zsh/_crio
 install $SELINUX -D -m 644 -t "$DESTDIR$SYSTEMDDIR" contrib/crio.service
-install $SELINUX -D -m 755 -t "$DESTDIR$BINDIR" bin/pinns
-install $SELINUX -D -m 755 -t "$DESTDIR$BINDIR" bin/crio-crun
-install $SELINUX -D -m 755 -t "$DESTDIR$BINDIR" bin/crio-runc
 install $SELINUX -D -m 644 -t "$DESTDIR$CONTAINERS_REGISTRIES_CONFD_DIR" contrib/registries.conf
 
 # Update the DESTDIR in the CRI-O configuration
 sed -i 's;/usr/bin;'"$DESTDIR$BINDIR"';g' "$DESTDIR$ETC_CRIO_DIR/crio.conf.d/10-crio.conf"
+sed -i 's;/usr/libexec;'"$DESTDIR$LIBEXECDIR"';g' "$DESTDIR$ETC_CRIO_DIR/crio.conf.d/10-crio.conf"
 sed -i 's;/etc/crio;'"$DESTDIR$ETC_CRIO_DIR"';g' "$DESTDIR$ETC_CRIO_DIR/crio.conf.d/10-crio.conf"
 
 if [ -n "$SELINUX" ]; then
     if command -v chcon >/dev/null; then
         chcon -u system_u -r object_r -t container_runtime_exec_t \
             "$DESTDIR$BINDIR/crio" \
-            "$DESTDIR$BINDIR/crio-crun" \
-            "$DESTDIR$BINDIR/crio-runc"
+            "$DESTDIR$LIBEXEC_CRIO_DIR/crun" \
+            "$DESTDIR$LIBEXEC_CRIO_DIR/runc"
 
         chcon -u system_u -r object_r -t bin_t \
-            "$DESTDIR$BINDIR/crio-conmon" \
-            "$DESTDIR$BINDIR/crio-conmonrs" \
+            "$DESTDIR$LIBEXEC_CRIO_DIR/conmon" \
+            "$DESTDIR$LIBEXEC_CRIO_DIR/conmonrs" \
             "$DESTDIR$BINDIR/crictl" \
             "$DESTDIR$BINDIR/pinns"
 
         chcon -R -u system_u -r object_r -t bin_t \
-            "$DESTDIR$OPT_CNI_BIN_DIR"
+            "$DESTDIR$OPT_CNI_BIN_DIR" \
+            "$DESTDIR$LIBEXEC_CRIO_DIR"
 
         chcon -R -u system_u -r object_r -t container_config_t \
             "$DESTDIR$ETC_CRIO_DIR" \
