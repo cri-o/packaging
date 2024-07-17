@@ -108,17 +108,18 @@ dependencies:
       - path: .github/workflows/test.yml
         match: BOM_VERSION
 
+  - name: debian base
+    version: bookworm-v1.0.3
+    refPaths:
+      - path: test/testdata/container.json
+        match: image
+
   - name: cni-plugins (latest)
     version: v1.5.1
     refPaths:
       - path: templates/latest/cri-o/bundle/versions
         match: cni-plugins
 
-  - name: debian base
-    version: bookworm-v1.0.0
-    refPaths:
-      - path: test/testdata/container.json
-        match: image
 
   - name: conmon (latest)
     version: v2.1.12
