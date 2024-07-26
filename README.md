@@ -282,7 +282,7 @@ curl https://raw.githubusercontent.com/cri-o/packaging/main/get | bash -s -- -a 
 It is also possible to select a specific git SHA or tag by:
 
 ```shell
-curl https://raw.githubusercontent.com/cri-o/packaging/main/get | bash -s -- -t v1.29.0
+curl https://raw.githubusercontent.com/cri-o/packaging/main/get | bash -s -- -t v1.30.0
 ```
 
 The above script resolves to the download URL of the static binary bundle

@@ -5,6 +5,8 @@ dependencies:
     refPaths:
       - path: README.md
         match: CRIO_VERSION
+      - path: README.md
+        match: bash -s -- -t
 
   - name: zeitgeist
     version: v0.5.3
