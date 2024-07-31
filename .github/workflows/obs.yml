@@ -28,6 +28,8 @@ env:
   REVISION: ${{ inputs.revision || 'main' }}
   OBS_PASSWORD: ${{ secrets.OBS_PASSWORD }}
 
+run-name: publish on OBS / ${{ inputs.revision || 'main' }}
+
 jobs:
   vars:
     runs-on: ubuntu-latest
