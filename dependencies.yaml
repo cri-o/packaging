@@ -27,7 +27,7 @@ dependencies:
         match: KUBERNETES_VERSION
 
   - name: OSC
-    version: 1.8.0
+    version: 1.8.3
     refPaths:
       - path: scripts/helpers
         match: OSC_VERSION
@@ -79,13 +79,13 @@ dependencies:
         match: QEMUVERSION
 
   - name: shellcheck
-    version: v0.9.0
+    version: v0.10.0
     refPaths:
       - path: Makefile
         match: SHELLCHECK_VERSION
 
-  - name: shellcheck
-    version: v3.7.0
+  - name: shellfmt
+    version: v3.8.0
     refPaths:
       - path: Makefile
         match: SHFMT_VERSION
