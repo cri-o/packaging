@@ -121,7 +121,7 @@ All packages are based on the static binary bundles provided by the CRI-O CI.
 #### Define the Kubernetes version and used CRI-O stream
 
 ```bash
-KUBERNETES_VERSION=v1.30
+KUBERNETES_VERSION=v1.31
 CRIO_VERSION=v1.30
 ```
 
