@@ -23,6 +23,8 @@ systemctl daemon-reload
 systemctl start crio || (journalctl -xeu crio.service && exit 1)
 systemctl is-active --quiet crio && echo CRI-O is running
 
+crio version -j | jq -e '.gitCommit == "'"$COMMIT"'"'
+
 # Run a workload
 crictl version
 
