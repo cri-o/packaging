@@ -38,7 +38,7 @@ dependencies:
       - path: test/rpm/Dockerfile
         match: FROM=
       - path: .github/workflows/obs.yml
-        match: '- image: fedora'
+        match: "- image: fedora"
 
   - name: CentOS test vagrant image
     version: stream9
@@ -58,19 +58,19 @@ dependencies:
       - path: test/deb/Dockerfile
         match: FROM=
       - path: .github/workflows/obs.yml
-        match: '- image: ubuntu'
+        match: "- image: ubuntu"
 
   - name: Debian test container image
     version: 12
     refPaths:
       - path: .github/workflows/obs.yml
-        match: '- image: debian'
+        match: "- image: debian"
 
   - name: AlmaLinux test container image
-    version: '9.2'
+    version: "9.2"
     refPaths:
       - path: .github/workflows/obs.yml
-        match: '- image: almalinux'
+        match: "- image: almalinux"
 
   - name: qemu
     version: 7.2.0-1
@@ -121,7 +121,6 @@ dependencies:
     refPaths:
       - path: templates/latest/cri-o/bundle/versions
         match: cni-plugins
-
 
   - name: conmon (latest)
     version: v2.1.12

@@ -10,6 +10,7 @@ dedicated repository, following official Kubernetes guidelines by using the
 [openSUSE Build Service (OBS)](https://build.opensuse.org).
 
 <!-- toc -->
+
 - [Motivation](#motivation)
 - [Project Layout](#project-layout)
   - [Stable Versions](#stable-versions)
