@@ -254,7 +254,7 @@ jobs:
         exclude:
           - run:
               image: fedora:39
-            arch: arm64  # takes forever
+            arch: arm64 # takes forever
     name: test / ${{ matrix.run.type }} / ${{ matrix.run.image }} / ${{ matrix.arch }}
     steps:
       - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
