@@ -1,3 +1,5 @@
+CONTAINER_RUNTIME ?= podman
+
 ZEITGEIST_VERSION = v0.5.3
 SHFMT_VERSION := v3.9.0
 SHELLCHECK_VERSION := v0.10.0
@@ -41,6 +43,11 @@ get-script:
 	sed -i '/# INCLUDE/q' get
 	tail -n+2 templates/latest/cri-o/bundle/install >> get
 
+.PHONY: prettier
+prettier:
+	$(CONTAINER_RUNTIME) run -it -v ${PWD}:/w -w /w --entrypoint bash node:latest -c \
+		'npm install -g prettier && prettier -w .'
+
 .PHONY: verify-dependencies
 verify-dependencies: $(BUILD_DIR)/zeitgeist ## Verify external dependencies
 	$(ZEITGEIST) validate --local-only --base-path . --config dependencies.yaml
@@ -58,10 +65,14 @@ verify-shellcheck: shellfiles $(SHELLCHECK)
 	$(SHELLCHECK) -P scripts -P scripts/bundle -x $(SHELLFILES)
 
 .PHONY: verify-get-script
-verify-get-script:
+verify-get-script: get-script
 	scripts/tree-status
 
 .PHONY: verify-mdtoc
 verify-mdtoc: $(MDTOC)
 	git grep --name-only '<!-- toc -->' | grep -v Makefile | xargs $(MDTOC) -i
+	scripts/tree-status
+
+.PHONY: verify-prettier
+verify-prettier: prettier
 	scripts/tree-status
