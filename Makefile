@@ -45,7 +45,7 @@ get-script:
 
 .PHONY: prettier
 prettier:
-	$(CONTAINER_RUNTIME) run -it -v ${PWD}:/w -w /w --entrypoint bash node:latest -c \
+	$(CONTAINER_RUNTIME) run -it --privileged -v ${PWD}:/w -w /w --entrypoint bash node:latest -c \
 		'npm install -g prettier && prettier -w .'
 
 .PHONY: verify-dependencies
