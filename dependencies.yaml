@@ -97,7 +97,7 @@ dependencies:
         match: MDTOC_VERSION
 
   - name: krel
-    version: v0.17.2
+    version: v0.17.3
     refPaths:
       - path: scripts/helpers
         match: KREL_VERSION
@@ -111,7 +111,7 @@ dependencies:
         match: BOM_VERSION
 
   - name: debian base
-    version: bookworm-v1.0.3
+    version: bookworm-v1.0.4
     refPaths:
       - path: test/testdata/container.json
         match: image
