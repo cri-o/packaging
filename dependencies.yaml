@@ -97,7 +97,7 @@ dependencies:
         match: MDTOC_VERSION
 
   - name: krel
-    version: v0.17.3
+    version: v0.17.7
     refPaths:
       - path: scripts/helpers
         match: KREL_VERSION
