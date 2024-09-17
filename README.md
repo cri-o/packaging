@@ -67,6 +67,8 @@ This project contains a bunch of other [subprojects](https://build.opensuse.org/
 ### Stable Versions
 
 - [`isv:kubernetes:addons:cri-o:stable`](https://build.opensuse.org/project/show/isv:kubernetes:addons:cri-o:stable): Stable Packages (Umbrella)
+  - [`isv:kubernetes:addons:cri-o:stable:v1.32`](https://build.opensuse.org/project/show/isv:kubernetes:addons:cri-o:stable:v1.32): `v1.32.z` tags (Stable)
+    - [`isv:kubernetes:addons:cri-o:stable:v1.32:build`](https://build.opensuse.org/project/show/isv:kubernetes:addons:cri-o:stable:v1.32:build): `v1.32.z` tags (Builder)
   - [`isv:kubernetes:addons:cri-o:stable:v1.31`](https://build.opensuse.org/project/show/isv:kubernetes:addons:cri-o:stable:v1.31): `v1.31.z` tags (Stable)
     - [`isv:kubernetes:addons:cri-o:stable:v1.31:build`](https://build.opensuse.org/project/show/isv:kubernetes:addons:cri-o:stable:v1.31:build): `v1.31.z` tags (Builder)
   - [`isv:kubernetes:addons:cri-o:stable:v1.30`](https://build.opensuse.org/project/show/isv:kubernetes:addons:cri-o:stable:v1.30): `v1.30.z` tags (Stable)
@@ -110,6 +112,7 @@ All packages are based on the static binary bundles provided by the CRI-O CI.
 
 ### Available Streams
 
+[![v1.32](https://img.shields.io/badge/stable-v1.32-yellow?logo=github)](https://build.opensuse.org/project/show/isv:kubernetes:addons:cri-o:stable:v1.32)
 [![v1.31](https://img.shields.io/badge/stable-v1.31-brightgreen?logo=github)](https://build.opensuse.org/project/show/isv:kubernetes:addons:cri-o:stable:v1.31)
 [![v1.30](https://img.shields.io/badge/stable-v1.30-brightgreen?logo=github)](https://build.opensuse.org/project/show/isv:kubernetes:addons:cri-o:stable:v1.30)
 [![v1.29](https://img.shields.io/badge/stable-v1.29-brightgreen?logo=github)](https://build.opensuse.org/project/show/isv:kubernetes:addons:cri-o:stable:v1.29)
