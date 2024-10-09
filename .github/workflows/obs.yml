@@ -88,7 +88,7 @@ jobs:
           PROJECT_TYPE: ${{ needs.vars.outputs.project_type }}
           PROJECT_VERSION: ${{ needs.vars.outputs.project_version }}
           VERSION: ${{ needs.vars.outputs.version }}
-      - uses: actions/upload-artifact@604373da6381bf24206979c74d06a550515601b9 # v4.4.1
+      - uses: actions/upload-artifact@84480863f228bb9747b473957fcc9e309aa96097 # v4.4.2
         if: ${{ inputs.skip-bundles == false }}
         with:
           name: bundles-${{ matrix.arch }}
@@ -171,7 +171,7 @@ jobs:
           path: latest-bundle-${{ inputs.revision || 'main' }}.txt
           destination: cri-o
           process_gcloudignore: false
-      - uses: actions/upload-artifact@604373da6381bf24206979c74d06a550515601b9 # v4.4.1
+      - uses: actions/upload-artifact@84480863f228bb9747b473957fcc9e309aa96097 # v4.4.2
         if: ${{ inputs.skip-bundles == false && github.event_name != 'pull_request' }}
         with:
           name: signatures
