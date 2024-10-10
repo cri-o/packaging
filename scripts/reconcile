@@ -24,11 +24,19 @@ PROJECT_PREFIX=isv:kubernetes:addons:cri-o
 PROJECT_PRERELEASE_PREFIX=$PROJECT_PREFIX:prerelease
 BUILD_PROJECT_SUFFIX=:build/cri-o
 
+ACTIVE_VERSIONS=$(curl_retry https://raw.githubusercontent.com/cri-o/cri-o/refs/heads/main/internal/version/version.go | sed -En "s/.*ReleaseMinorVersions.*\{(.*)\}/\1/p")
+echo "Found active versions: $ACTIVE_VERSIONS"
+
 echo "Iterating prerelease packages"
 for PROJECT in $(echo "$PACKAGES" | grep "$PROJECT_PRERELEASE_PREFIX:.*:build.*cri-o" | tr -s '[:blank:]', '/'); do
     echo "Searching project: $PROJECT"
     VERSION=${PROJECT#"$PROJECT_PRERELEASE_PREFIX:"}
     VERSION=${VERSION%"$BUILD_PROJECT_SUFFIX"}
+
+    if [[ "$ACTIVE_VERSIONS" != *"${VERSION#v}"* ]]; then
+        echo "Skipping unsupported prerelease version: $VERSION"
+        continue
+    fi
 
     BRANCH=main
     if [[ $VERSION =~ v.* ]]; then
