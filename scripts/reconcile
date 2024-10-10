@@ -23,9 +23,14 @@ PACKAGES=$(osc se --package cri-o)
 PROJECT_PREFIX=isv:kubernetes:addons:cri-o
 PROJECT_PRERELEASE_PREFIX=$PROJECT_PREFIX:prerelease
 BUILD_PROJECT_SUFFIX=:build/cri-o
+BRANCH_MAIN=main
 
-ACTIVE_VERSIONS=$(curl_retry https://raw.githubusercontent.com/cri-o/cri-o/refs/heads/main/internal/version/version.go | sed -En "s/.*ReleaseMinorVersions.*\{(.*)\}/\1/p")
+VERSION_URL=https://raw.githubusercontent.com/cri-o/cri-o/refs/heads/${BRANCH_MAIN}/internal/version/version.go
+ACTIVE_VERSIONS=$(curl_retry $VERSION_URL | sed -En "s/.*ReleaseMinorVersions.*\{(.*)\}/\1/p")
 echo "Found active versions: $ACTIVE_VERSIONS"
+
+NEXT_VERSION=$(curl_retry $VERSION_URL | sed -En "s/.*const Version = \"([0-9]+\.[0-9]+).*\"/\1/p")
+echo "Found next version: $NEXT_VERSION"
 
 echo "Iterating prerelease packages"
 for PROJECT in $(echo "$PACKAGES" | grep "$PROJECT_PRERELEASE_PREFIX:.*:build.*cri-o" | tr -s '[:blank:]', '/'); do
@@ -33,12 +38,12 @@ for PROJECT in $(echo "$PACKAGES" | grep "$PROJECT_PRERELEASE_PREFIX:.*:build.*c
     VERSION=${PROJECT#"$PROJECT_PRERELEASE_PREFIX:"}
     VERSION=${VERSION%"$BUILD_PROJECT_SUFFIX"}
 
-    if [[ "$ACTIVE_VERSIONS" != *"${VERSION#v}"* ]]; then
+    if [[ "$VERSION" != "$BRANCH_MAIN" && "${VERSION#v}" != "$NEXT_VERSION" && "$ACTIVE_VERSIONS" != *"${VERSION#v}"* ]]; then
         echo "Skipping unsupported prerelease version: $VERSION"
         continue
     fi
 
-    BRANCH=main
+    BRANCH=$BRANCH_MAIN
     if [[ $VERSION =~ v.* ]]; then
         BRANCH=release-${VERSION#v}
     fi
