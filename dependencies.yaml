@@ -9,7 +9,7 @@ dependencies:
         match: bash -s -- -t
 
   - name: zeitgeist
-    version: v0.5.3
+    version: v0.5.4
     refPaths:
       - path: Makefile
         match: ZEITGEIST_VERSION
