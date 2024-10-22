@@ -141,13 +141,13 @@ dependencies:
         match: cri-tools
 
   - name: runc (latest)
-    version: v1.1.15
+    version: v1.2.0
     refPaths:
       - path: templates/latest/cri-o/bundle/versions
         match: runc
 
   - name: crun (latest)
-    version: 1.17
+    version: 1.18
     refPaths:
       - path: templates/latest/cri-o/bundle/versions
         match: crun
