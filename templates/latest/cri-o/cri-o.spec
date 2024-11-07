@@ -81,7 +81,7 @@ install -dp %{buildroot}%{_datadir}/oci-umount/oci-umount.d
 install -p -m 644 %{archive_root}/etc/crio-umount.conf %{buildroot}%{_datadir}/oci-umount/oci-umount.d/crio-umount.conf
 
 install -dp %{buildroot}%{_sysconfdir}/cni/net.d
-install -p -m 644 %{archive_root}/contrib/11-crio-ipv4-bridge.conflist %{buildroot}%{_sysconfdir}/cni/net.d/11-crio-ipv4-bridge.conflist
+install -p -m 644 %{archive_root}/contrib/10-crio-bridge.conflist %{buildroot}%{_sysconfdir}/cni/net.d/10-crio-bridge.conflist
 
 # Fix the prefix in crio.service
 sed -i 's;/usr/local/bin;/usr/bin;g' %{archive_root}/contrib/crio.service
@@ -144,7 +144,7 @@ install -D -m 644 -t %{buildroot}%{_mandir}/man8 %{archive_root}/man/crio.8
 %config(noreplace) %{_sysconfdir}/%{systemconfigdir}/crio
 %dir %{_sysconfdir}/cni
 %dir %{_sysconfdir}/cni/net.d
-%config(noreplace) %{_sysconfdir}/cni/net.d/11-crio-ipv4-bridge.conflist
+%config(noreplace) %{_sysconfdir}/cni/net.d/10-crio-bridge.conflist
 %{_unitdir}/crio.service
 %dir %{_sysconfdir}/crio
 %dir %{_sysconfdir}/crio/crio.conf.d

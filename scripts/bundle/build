@@ -69,7 +69,7 @@ for FILE in "${FILES_ETC[@]}"; do
 done
 
 FILES_CONTRIB=(
-    "$TEMPLATES_DIR/11-crio-ipv4-bridge.conflist"
+    "$TEMPLATES_DIR/10-crio-bridge.conflist"
     "$TEMPLATES_DIR/crio.service"
     "$TEMPLATES_DIR/policy.json"
     "$TEMPLATES_DIR/registries.conf"
