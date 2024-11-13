@@ -28,7 +28,7 @@ echo "deb [signed-by=/etc/apt/keyrings/cri-o-apt-keyring.gpg] https://download.o
 
 apt-get update
 
-apt-get install -y cri-o
+apt-get install -y cri-o jq
 if [ -z $CRIO_ONLY ]; then
     apt-get install -y kubelet kubeadm kubectl
 fi
