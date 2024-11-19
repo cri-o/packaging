@@ -39,7 +39,7 @@ gpgcheck=1
 gpgkey=https://download.opensuse.org/repositories/isv:/kubernetes:/addons:/cri-o:/$PROJECT_PATH:/build/rpm/repodata/repomd.xml.key
 EOF
 
-dnf install -y cri-o
+dnf install -y cri-o jq
 if [ -z $CRIO_ONLY ]; then
     dnf install -y container-selinux kubelet kubeadm kubectl
 fi
