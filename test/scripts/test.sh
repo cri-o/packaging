@@ -7,9 +7,8 @@ set -euxo pipefail
 # It is referenced from ../deb/Vagrantfile and ../rpm/Vagrantfile
 
 # Disable IPv6 for CI
-CNI_CONFIG=/etc/cni/net.d/10-crio-bridge.conflist
-jq 'del(.plugins[0].ipam.routes[1], .plugins[0].ipam.ranges[1])' $CNI_CONFIG >tmp
-mv tmp $CNI_CONFIG
+CNI_CONFIG_PATH=/etc/cni/net.d
+jq 'del(.plugins[0].ipam.routes[1], .plugins[0].ipam.ranges[1])' $CNI_CONFIG_PATH/10-crio-bridge.conflist.disabled >$CNI_CONFIG_PATH/10-crio-bridge.conflist
 
 systemctl start crio
 
