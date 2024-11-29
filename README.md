@@ -23,6 +23,7 @@ dedicated repository, following official Kubernetes guidelines by using the
     - [Add the CRI-O repository](#add-the-cri-o-repository)
     - [Install package dependencies from the official repositories](#install-package-dependencies-from-the-official-repositories)
     - [Install the packages](#install-the-packages)
+    - [Configure a Container Network Interface (CNI) plugin](#configure-a-container-network-interface-cni-plugin)
     - [Start CRI-O](#start-cri-o)
     - [Bootstrap a cluster](#bootstrap-a-cluster)
   - [Distributions using <code>deb</code> packages](#distributions-using-deb-packages)
@@ -173,6 +174,22 @@ dnf install -y container-selinux
 ```bash
 dnf install -y cri-o kubelet kubeadm kubectl
 ```
+
+#### Configure a Container Network Interface (CNI) plugin
+
+CRI-O is capable of working with different [CNI plugins](https://github.com/containernetworking/cni),
+which may require a custom configuration. The CRI-O package ships a default
+[IPv4 and IPv6 (dual stack) configuration](templates/latest/cri-o/bundle/10-crio-bridge.conflist.disabled)
+for the [`bridge`](https://www.cni.dev/plugins/current/main/bridge) plugin,
+which is disabled by default. The configuration can be enabled by renaming the
+disabled configuration file in `/etc/cni/net.d`:
+
+```bash
+mv /etc/cni/net.d/10-crio-bridge.conflist.disabled /etc/cni/net.d/10-crio-bridge.conflist
+```
+
+The bridge plugin is suitable for single-node clusters in CI and testing
+environments. Different CNI plugins are recommended to use CRI-O in production.
 
 #### Start CRI-O
 
