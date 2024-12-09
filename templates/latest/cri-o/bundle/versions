@@ -7,7 +7,7 @@ declare -A VERSIONS=(
     ["conmon"]=v2.1.12
     ["conmon-rs"]=v0.6.6
     ["cri-tools"]=v1.32.0
-    ["crun"]=1.18.2
+    ["crun"]=1.19
     ["runc"]=v1.2.2
 )
 export VERSIONS
