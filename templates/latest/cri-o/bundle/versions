@@ -6,7 +6,7 @@ declare -A VERSIONS=(
     ["cni-plugins"]=v1.6.1
     ["conmon"]=v2.1.12
     ["conmon-rs"]=v0.6.6
-    ["cri-tools"]=v1.31.1
+    ["cri-tools"]=v1.32.0
     ["crun"]=1.18.2
     ["runc"]=v1.2.2
 )
