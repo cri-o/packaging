@@ -1,10 +1,8 @@
 #!/usr/bin/env bash
 set -euox pipefail
 
-apt-get update
-apt-get install -y \
-    libvirt-daemon-system \
-    qemu-kvm \
-    vagrant
+curl -fsSL https://apt.releases.hashicorp.com/gpg | gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
+echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | tee /etc/apt/sources.list.d/hashicorp.list
 
-systemctl enable --now libvirtd
+apt-get update
+apt-get install -y vagrant virtualbox
