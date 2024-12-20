@@ -131,8 +131,8 @@ All packages are based on the static binary bundles provided by the CRI-O CI.
 #### Define the Kubernetes version and used CRI-O stream
 
 ```bash
-KUBERNETES_VERSION=v1.31
-CRIO_VERSION=v1.31
+KUBERNETES_VERSION=v1.32
+CRIO_VERSION=v1.32
 ```
 
 ### Distributions using `rpm` packages
@@ -308,7 +308,7 @@ curl https://raw.githubusercontent.com/cri-o/packaging/main/get | bash -s -- -a 
 It is also possible to select a specific git SHA or tag by:
 
 ```shell
-curl https://raw.githubusercontent.com/cri-o/packaging/main/get | bash -s -- -t v1.31.0
+curl https://raw.githubusercontent.com/cri-o/packaging/main/get | bash -s -- -t v1.32.0
 ```
 
 The above script resolves to the download URL of the static binary bundle
