@@ -1,7 +1,7 @@
 ---
 dependencies:
   - name: CRI-O
-    version: v1.31
+    version: v1.32
     refPaths:
       - path: README.md
         match: CRIO_VERSION
@@ -15,7 +15,7 @@ dependencies:
         match: ZEITGEIST_VERSION
 
   - name: Kubernetes test version
-    version: v1.31
+    version: v1.32
     refPaths:
       - path: test/scripts/versions.sh
         match: KUBERNETES_VERSION
