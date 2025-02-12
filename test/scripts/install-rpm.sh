@@ -33,10 +33,10 @@ fi
 cat <<EOF | tee /etc/yum.repos.d/cri-o.repo
 [cri-o]
 name=CRI-O
-baseurl=https://download.opensuse.org/repositories/isv:/kubernetes:/addons:/cri-o:/$PROJECT_PATH:/build/rpm/
+baseurl=https://download.opensuse.org/repositories/isv:/cri-o:/$PROJECT_PATH:/build/rpm/
 enabled=1
 gpgcheck=1
-gpgkey=https://download.opensuse.org/repositories/isv:/kubernetes:/addons:/cri-o:/$PROJECT_PATH:/build/rpm/repodata/repomd.xml.key
+gpgkey=https://download.opensuse.org/repositories/isv:/cri-o:/$PROJECT_PATH:/build/rpm/repodata/repomd.xml.key
 EOF
 
 dnf install -y cri-o jq

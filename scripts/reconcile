@@ -20,7 +20,7 @@ install_osc
 setup_osc
 
 PACKAGES=$(osc se --package cri-o)
-PROJECT_PREFIX=isv:kubernetes:addons:cri-o
+PROJECT_PREFIX=isv:cri-o
 PROJECT_PRERELEASE_PREFIX=$PROJECT_PREFIX:prerelease
 BUILD_PROJECT_SUFFIX=:build/cri-o
 BRANCH_MAIN=main
