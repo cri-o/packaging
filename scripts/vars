@@ -11,7 +11,7 @@ fi
 
 GIT_ROOT=$(git rev-parse --show-toplevel)
 ARCHIVE_PATH="$GIT_ROOT/build/bundle"
-PROJECT_ROOT=isv:kubernetes:addons:cri-o
+PROJECT_ROOT=isv:cri-o
 CRIO_MAIN_BRANCH=main
 REVISION=${REVISION:-$CRIO_MAIN_BRANCH}
 

@@ -11,12 +11,15 @@ dedicated repository, following official Kubernetes guidelines by using the
 
 <!-- toc -->
 
-- [Motivation](#motivation)
 - [Project Layout](#project-layout)
   - [Stable Versions](#stable-versions)
   - [Prereleases](#prereleases)
 - [Usage](#usage)
   - [Available Streams](#available-streams)
+    - [Stable](#stable)
+      - [Deprecated](#deprecated)
+    - [Prerelease](#prerelease)
+      - [Deprecated](#deprecated-1)
     - [Define the Kubernetes version and used CRI-O stream](#define-the-kubernetes-version-and-used-cri-o-stream)
   - [Distributions using <code>rpm</code> packages](#distributions-using-rpm-packages)
     - [Add the Kubernetes repository](#add-the-kubernetes-repository)
@@ -35,71 +38,57 @@ dedicated repository, following official Kubernetes guidelines by using the
     - [Bootstrap a cluster](#bootstrap-a-cluster-1)
 - [Publishing](#publishing)
 - [Using the static binary bundles directly](#using-the-static-binary-bundles-directly)
+- [More to read](#more-to-read)
 <!-- /toc -->
-
-## Motivation
-
-The following resources are great to understand the motivation behind the latest
-`deb` and `rpm` packaging efforts within the CRI-O and Kubernetes community:
-
-- **CRI-O is moving towards pkgs.k8s.io**:
-
-  https://k8s.io/blog/2023/10/10/cri-o-community-package-infrastructure
-
-- **Kubernetes Legacy Package Repositories Will Be Frozen On September 13, 2023**:
-
-  https://kubernetes.io/blog/2023/08/31/legacy-package-repository-deprecation/
-
-- **pkgs.k8s.io: Introducing Kubernetes Community-Owned Package Repositories**:
-
-  https://kubernetes.io/blog/2023/08/15/pkgs-k8s-io-introduction/
-
-- **Installing Kubernetes via `kubeadm`**:
-
-  https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/#dpkg-k8s-package-repo
 
 ## Project Layout
 
 CRI-O uses the same basic project layout in OBS as Kubernetes, but lives in a
-dedicated umbrella subproject called [`isv:kubernetes:addons:cri-o`](https://build.opensuse.org/project/show/isv:kubernetes:addons:cri-o).
+dedicated umbrella subproject called [`isv:cri-o`](https://build.opensuse.org/project/show/isv:cri-o).
 
-This project contains a bunch of other [subprojects](https://build.opensuse.org/project/subprojects/isv:kubernetes:addons:cri-o):
+This project contains a bunch of other [subprojects](https://build.opensuse.org/project/subprojects/isv:cri-o):
+
+> [!CAUTION]
+> We switched from `https://pkgs.k8s.io/addons:/cri-o` to a new subproject
+> `https://download.opensuse.org/repositories/isv:/cri-o` to work independently
+> from the pkgs.k8s.io CDN. Please switch over if you haven't already (see the
+> examples below).
 
 ### Stable Versions
 
-- [`isv:kubernetes:addons:cri-o:stable`](https://build.opensuse.org/project/show/isv:kubernetes:addons:cri-o:stable): Stable Packages (Umbrella)
-  - [`isv:kubernetes:addons:cri-o:stable:v1.33`](https://build.opensuse.org/project/show/isv:kubernetes:addons:cri-o:stable:v1.33): `v1.33.z` tags (Stable)
-    - [`isv:kubernetes:addons:cri-o:stable:v1.33:build`](https://build.opensuse.org/project/show/isv:kubernetes:addons:cri-o:stable:v1.33:build): `v1.33.z` tags (Builder)
-  - [`isv:kubernetes:addons:cri-o:stable:v1.32`](https://build.opensuse.org/project/show/isv:kubernetes:addons:cri-o:stable:v1.32): `v1.32.z` tags (Stable)
-    - [`isv:kubernetes:addons:cri-o:stable:v1.32:build`](https://build.opensuse.org/project/show/isv:kubernetes:addons:cri-o:stable:v1.32:build): `v1.32.z` tags (Builder)
-  - [`isv:kubernetes:addons:cri-o:stable:v1.31`](https://build.opensuse.org/project/show/isv:kubernetes:addons:cri-o:stable:v1.31): `v1.31.z` tags (Stable)
-    - [`isv:kubernetes:addons:cri-o:stable:v1.31:build`](https://build.opensuse.org/project/show/isv:kubernetes:addons:cri-o:stable:v1.31:build): `v1.31.z` tags (Builder)
-  - [`isv:kubernetes:addons:cri-o:stable:v1.30`](https://build.opensuse.org/project/show/isv:kubernetes:addons:cri-o:stable:v1.30): `v1.30.z` tags (Stable)
-    - [`isv:kubernetes:addons:cri-o:stable:v1.30:build`](https://build.opensuse.org/project/show/isv:kubernetes:addons:cri-o:stable:v1.30:build): `v1.30.z` tags (Builder)
+- [`isv:cri-o:stable`](https://build.opensuse.org/project/show/isv:cri-o:stable): Stable Packages (Umbrella)
+  - [`isv:cri-o:stable:v1.33`](https://build.opensuse.org/project/show/isv:cri-o:stable:v1.33): `v1.33.z` tags (Stable)
+    - [`isv:cri-o:stable:v1.33:build`](https://build.opensuse.org/project/show/isv:cri-o:stable:v1.33:build): `v1.33.z` tags (Builder)
+  - [`isv:cri-o:stable:v1.32`](https://build.opensuse.org/project/show/isv:cri-o:stable:v1.32): `v1.32.z` tags (Stable)
+    - [`isv:cri-o:stable:v1.32:build`](https://build.opensuse.org/project/show/isv:cri-o:stable:v1.32:build): `v1.32.z` tags (Builder)
+  - [`isv:cri-o:stable:v1.31`](https://build.opensuse.org/project/show/isv:cri-o:stable:v1.31): `v1.31.z` tags (Stable)
+    - [`isv:cri-o:stable:v1.31:build`](https://build.opensuse.org/project/show/isv:cri-o:stable:v1.31:build): `v1.31.z` tags (Builder)
+  - [`isv:cri-o:stable:v1.30`](https://build.opensuse.org/project/show/isv:cri-o:stable:v1.30): `v1.30.z` tags (Stable)
+    - [`isv:cri-o:stable:v1.30:build`](https://build.opensuse.org/project/show/isv:cri-o:stable:v1.30:build): `v1.30.z` tags (Builder)
   - **End of life:**
-    - [`isv:kubernetes:addons:cri-o:stable:v1.29`](https://build.opensuse.org/project/show/isv:kubernetes:addons:cri-o:stable:v1.29): `v1.29.z` tags (Stable)
-      - [`isv:kubernetes:addons:cri-o:stable:v1.29:build`](https://build.opensuse.org/project/show/isv:kubernetes:addons:cri-o:stable:v1.29:build): `v1.29.z` tags (Builder)
-    - [`isv:kubernetes:addons:cri-o:stable:v1.28`](https://build.opensuse.org/project/show/isv:kubernetes:addons:cri-o:stable:v1.28): `v1.28.z` tags (Stable)
-      - [`isv:kubernetes:addons:cri-o:stable:v1.28:build`](https://build.opensuse.org/project/show/isv:kubernetes:addons:cri-o:stable:v1.28:build): `v1.28.z` tags (Builder)
+    - [`isv:cri-o:stable:v1.29`](https://build.opensuse.org/project/show/isv:cri-o:stable:v1.29): `v1.29.z` tags (Stable)
+      - [`isv:cri-o:stable:v1.29:build`](https://build.opensuse.org/project/show/isv:cri-o:stable:v1.29:build): `v1.29.z` tags (Builder)
+    - [`isv:cri-o:stable:v1.28`](https://build.opensuse.org/project/show/isv:cri-o:stable:v1.28): `v1.28.z` tags (Stable)
+      - [`isv:cri-o:stable:v1.28:build`](https://build.opensuse.org/project/show/isv:cri-o:stable:v1.28:build): `v1.28.z` tags (Builder)
 
 ### Prereleases
 
-- [`isv:kubernetes:addons:cri-o:prerelease`](https://build.opensuse.org/project/show/isv:kubernetes:addons:cri-o:prerelease): Prerelease Packages (Umbrella)
-  - [`isv:kubernetes:addons:cri-o:prerelease:main`](https://build.opensuse.org/project/show/isv:kubernetes:addons:cri-o:prerelease:main): [`main`](https://github.com/cri-o/cri-o/commits/main) branch (Prerelease)
-    - [`isv:kubernetes:addons:cri-o:prerelease:main:build`](https://build.opensuse.org/project/show/isv:kubernetes:addons:cri-o:prerelease:main:build): [`main`](https://github.com/cri-o/cri-o/commits/main) branch (Builder)
-  - [`isv:kubernetes:addons:cri-o:prerelease:v1.33`](https://build.opensuse.org/project/show/isv:kubernetes:addons:cri-o:prerelease:v1.33): [`release-1.33`](https://github.com/cri-o/cri-o/commits/release-1.33) branch (Prerelease)
-    - [`isv:kubernetes:addons:cri-o:prerelease:v1.33:build`](https://build.opensuse.org/project/show/isv:kubernetes:addons:cri-o:prerelease:v1.33:build): [`release-1.33`](https://github.com/cri-o/cri-o/commits/release-1.33) branch (Builder)
-  - [`isv:kubernetes:addons:cri-o:prerelease:v1.32`](https://build.opensuse.org/project/show/isv:kubernetes:addons:cri-o:prerelease:v1.32): [`release-1.32`](https://github.com/cri-o/cri-o/commits/release-1.32) branch (Prerelease)
-    - [`isv:kubernetes:addons:cri-o:prerelease:v1.32:build`](https://build.opensuse.org/project/show/isv:kubernetes:addons:cri-o:prerelease:v1.32:build): [`release-1.32`](https://github.com/cri-o/cri-o/commits/release-1.32) branch (Builder)
-  - [`isv:kubernetes:addons:cri-o:prerelease:v1.31`](https://build.opensuse.org/project/show/isv:kubernetes:addons:cri-o:prerelease:v1.31): [`release-1.31`](https://github.com/cri-o/cri-o/commits/release-1.31) branch (Prerelease)
-    - [`isv:kubernetes:addons:cri-o:prerelease:v1.31:build`](https://build.opensuse.org/project/show/isv:kubernetes:addons:cri-o:prerelease:v1.31:build): [`release-1.31`](https://github.com/cri-o/cri-o/commits/release-1.31) branch (Builder)
-  - [`isv:kubernetes:addons:cri-o:prerelease:v1.30`](https://build.opensuse.org/project/show/isv:kubernetes:addons:cri-o:prerelease:v1.30): [`release-1.30`](https://github.com/cri-o/cri-o/commits/release-1.30) branch (Prerelease)
-    - [`isv:kubernetes:addons:cri-o:prerelease:v1.30:build`](https://build.opensuse.org/project/show/isv:kubernetes:addons:cri-o:prerelease:v1.30:build): [`release-1.30`](https://github.com/cri-o/cri-o/commits/release-1.30) branch (Builder)
+- [`isv:cri-o:prerelease`](https://build.opensuse.org/project/show/isv:cri-o:prerelease): Prerelease Packages (Umbrella)
+  - [`isv:cri-o:prerelease:main`](https://build.opensuse.org/project/show/isv:cri-o:prerelease:main): [`main`](https://github.com/cri-o/cri-o/commits/main) branch (Prerelease)
+    - [`isv:cri-o:prerelease:main:build`](https://build.opensuse.org/project/show/isv:cri-o:prerelease:main:build): [`main`](https://github.com/cri-o/cri-o/commits/main) branch (Builder)
+  - [`isv:cri-o:prerelease:v1.33`](https://build.opensuse.org/project/show/isv:cri-o:prerelease:v1.33): [`release-1.33`](https://github.com/cri-o/cri-o/commits/release-1.33) branch (Prerelease)
+    - [`isv:cri-o:prerelease:v1.33:build`](https://build.opensuse.org/project/show/isv:cri-o:prerelease:v1.33:build): [`release-1.33`](https://github.com/cri-o/cri-o/commits/release-1.33) branch (Builder)
+  - [`isv:cri-o:prerelease:v1.32`](https://build.opensuse.org/project/show/isv:cri-o:prerelease:v1.32): [`release-1.32`](https://github.com/cri-o/cri-o/commits/release-1.32) branch (Prerelease)
+    - [`isv:cri-o:prerelease:v1.32:build`](https://build.opensuse.org/project/show/isv:cri-o:prerelease:v1.32:build): [`release-1.32`](https://github.com/cri-o/cri-o/commits/release-1.32) branch (Builder)
+  - [`isv:cri-o:prerelease:v1.31`](https://build.opensuse.org/project/show/isv:cri-o:prerelease:v1.31): [`release-1.31`](https://github.com/cri-o/cri-o/commits/release-1.31) branch (Prerelease)
+    - [`isv:cri-o:prerelease:v1.31:build`](https://build.opensuse.org/project/show/isv:cri-o:prerelease:v1.31:build): [`release-1.31`](https://github.com/cri-o/cri-o/commits/release-1.31) branch (Builder)
+  - [`isv:cri-o:prerelease:v1.30`](https://build.opensuse.org/project/show/isv:cri-o:prerelease:v1.30): [`release-1.30`](https://github.com/cri-o/cri-o/commits/release-1.30) branch (Prerelease)
+    - [`isv:cri-o:prerelease:v1.30:build`](https://build.opensuse.org/project/show/isv:cri-o:prerelease:v1.30:build): [`release-1.30`](https://github.com/cri-o/cri-o/commits/release-1.30) branch (Builder)
   - **End of life:**
-    - [`isv:kubernetes:addons:cri-o:prerelease:v1.29`](https://build.opensuse.org/project/show/isv:kubernetes:addons:cri-o:prerelease:v1.29): [`release-1.29`](https://github.com/cri-o/cri-o/commits/release-1.29) branch (Prerelease)
-      - [`isv:kubernetes:addons:cri-o:prerelease:v1.29:build`](https://build.opensuse.org/project/show/isv:kubernetes:addons:cri-o:prerelease:v1.29:build): [`release-1.29`](https://github.com/cri-o/cri-o/commits/release-1.29) branch (Builder)
-    - [`isv:kubernetes:addons:cri-o:prerelease:v1.28`](https://build.opensuse.org/project/show/isv:kubernetes:addons:cri-o:prerelease:v1.28): [`release-1.28`](https://github.com/cri-o/cri-o/commits/release-1.28) branch (Prerelease)
-      - [`isv:kubernetes:addons:cri-o:prerelease:v1.28:build`](https://build.opensuse.org/project/show/isv:kubernetes:addons:cri-o:prerelease:v1.28:build): [`release-1.28`](https://github.com/cri-o/cri-o/commits/release-1.28) branch (Builder)
+    - [`isv:cri-o:prerelease:v1.29`](https://build.opensuse.org/project/show/isv:cri-o:prerelease:v1.29): [`release-1.29`](https://github.com/cri-o/cri-o/commits/release-1.29) branch (Prerelease)
+      - [`isv:cri-o:prerelease:v1.29:build`](https://build.opensuse.org/project/show/isv:cri-o:prerelease:v1.29:build): [`release-1.29`](https://github.com/cri-o/cri-o/commits/release-1.29) branch (Builder)
+    - [`isv:cri-o:prerelease:v1.28`](https://build.opensuse.org/project/show/isv:cri-o:prerelease:v1.28): [`release-1.28`](https://github.com/cri-o/cri-o/commits/release-1.28) branch (Prerelease)
+      - [`isv:cri-o:prerelease:v1.28:build`](https://build.opensuse.org/project/show/isv:cri-o:prerelease:v1.28:build): [`release-1.28`](https://github.com/cri-o/cri-o/commits/release-1.28) branch (Builder)
 
 The `prerelease` projects are mainly used for `release-x.y` branches as well as
 the `main` branch of CRI-O. The `stable` projects are used for tagged releases.
@@ -107,11 +96,11 @@ The `build` projects are the builders for each project to be published, while
 the main repositories for them are on top. For example, the builder project for
 `main` is:
 
-- `isv:kubernetes:addons:cri-o:prerelease:main:build`
+- `isv:cri-o:prerelease:main:build`
 
 But end-users will consume:
 
-- `isv:kubernetes:addons:cri-o:prerelease:main`
+- `isv:cri-o:prerelease:main`
 
 All packages are based on the static binary bundles provided by the CRI-O CI.
 
@@ -119,22 +108,30 @@ All packages are based on the static binary bundles provided by the CRI-O CI.
 
 ### Available Streams
 
-[![v1.33](https://img.shields.io/badge/stable-v1.33-yellow?logo=github)](https://build.opensuse.org/project/show/isv:kubernetes:addons:cri-o:stable:v1.33)
-[![v1.32](https://img.shields.io/badge/stable-v1.32-brightgreen?logo=github)](https://build.opensuse.org/project/show/isv:kubernetes:addons:cri-o:stable:v1.32)
-[![v1.31](https://img.shields.io/badge/stable-v1.31-brightgreen?logo=github)](https://build.opensuse.org/project/show/isv:kubernetes:addons:cri-o:stable:v1.31)
-[![v1.30](https://img.shields.io/badge/stable-v1.30-brightgreen?logo=github)](https://build.opensuse.org/project/show/isv:kubernetes:addons:cri-o:stable:v1.30)
+#### Stable
 
-[![v1.29](https://img.shields.io/badge/end%20of%20life-v1.29-red?logo=github)](https://build.opensuse.org/project/show/isv:kubernetes:addons:cri-o:stable:v1.29)
-[![v1.28](https://img.shields.io/badge/end%20of%20life-v1.28-red?logo=github)](https://build.opensuse.org/project/show/isv:kubernetes:addons:cri-o:stable:v1.28)
+[![v1.33](https://img.shields.io/badge/stable-v1.33-yellow?logo=github)](https://build.opensuse.org/project/show/isv:cri-o:stable:v1.33)
+[![v1.32](https://img.shields.io/badge/stable-v1.32-brightgreen?logo=github)](https://build.opensuse.org/project/show/isv:cri-o:stable:v1.32)
+[![v1.31](https://img.shields.io/badge/stable-v1.31-brightgreen?logo=github)](https://build.opensuse.org/project/show/isv:cri-o:stable:v1.31)
+[![v1.30](https://img.shields.io/badge/stable-v1.30-brightgreen?logo=github)](https://build.opensuse.org/project/show/isv:cri-o:stable:v1.30)
 
-[![main](https://img.shields.io/badge/prerelease-main-blue?logo=git&logoColor=white)](https://build.opensuse.org/project/show/isv:kubernetes:addons:cri-o:prerelease:main)
-[![release-1.32](https://img.shields.io/badge/prerelease-release--1.33-blue?logo=git&logoColor=white)](https://build.opensuse.org/project/show/isv:kubernetes:addons:cri-o:prerelease:v1.33)
-[![release-1.32](https://img.shields.io/badge/prerelease-release--1.32-blue?logo=git&logoColor=white)](https://build.opensuse.org/project/show/isv:kubernetes:addons:cri-o:prerelease:v1.32)
-[![release-1.31](https://img.shields.io/badge/prerelease-release--1.31-blue?logo=git&logoColor=white)](https://build.opensuse.org/project/show/isv:kubernetes:addons:cri-o:prerelease:v1.31)
-[![release-1.30](https://img.shields.io/badge/prerelease-release--1.30-blue?logo=git&logoColor=white)](https://build.opensuse.org/project/show/isv:kubernetes:addons:cri-o:prerelease:v1.30)
+##### Deprecated
 
-[![release-1.29](https://img.shields.io/badge/end%20of%20life-release--1.29-red?logo=git&logoColor=white)](https://build.opensuse.org/project/show/isv:kubernetes:addons:cri-o:prerelease:v1.29)
-[![release-1.28](https://img.shields.io/badge/end%20of%20life-release--1.28-red?logo=git&logoColor=white)](https://build.opensuse.org/project/show/isv:kubernetes:addons:cri-o:prerelease:v1.28)
+[![v1.29](https://img.shields.io/badge/end%20of%20life-v1.29-red?logo=github)](https://build.opensuse.org/project/show/isv:cri-o:stable:v1.29)
+[![v1.28](https://img.shields.io/badge/end%20of%20life-v1.28-red?logo=github)](https://build.opensuse.org/project/show/isv:cri-o:stable:v1.28)
+
+#### Prerelease
+
+[![main](https://img.shields.io/badge/prerelease-main-blue?logo=git&logoColor=white)](https://build.opensuse.org/project/show/isv:cri-o:prerelease:main)
+[![release-1.32](https://img.shields.io/badge/prerelease-release--1.33-blue?logo=git&logoColor=white)](https://build.opensuse.org/project/show/isv:cri-o:prerelease:v1.33)
+[![release-1.32](https://img.shields.io/badge/prerelease-release--1.32-blue?logo=git&logoColor=white)](https://build.opensuse.org/project/show/isv:cri-o:prerelease:v1.32)
+[![release-1.31](https://img.shields.io/badge/prerelease-release--1.31-blue?logo=git&logoColor=white)](https://build.opensuse.org/project/show/isv:cri-o:prerelease:v1.31)
+[![release-1.30](https://img.shields.io/badge/prerelease-release--1.30-blue?logo=git&logoColor=white)](https://build.opensuse.org/project/show/isv:cri-o:prerelease:v1.30)
+
+##### Deprecated
+
+[![release-1.29](https://img.shields.io/badge/end%20of%20life-release--1.29-red?logo=git&logoColor=white)](https://build.opensuse.org/project/show/isv:cri-o:prerelease:v1.29)
+[![release-1.28](https://img.shields.io/badge/end%20of%20life-release--1.28-red?logo=git&logoColor=white)](https://build.opensuse.org/project/show/isv:cri-o:prerelease:v1.28)
 
 #### Define the Kubernetes version and used CRI-O stream
 
@@ -164,10 +161,10 @@ EOF
 cat <<EOF | tee /etc/yum.repos.d/cri-o.repo
 [cri-o]
 name=CRI-O
-baseurl=https://pkgs.k8s.io/addons:/cri-o:/stable:/$CRIO_VERSION/rpm/
+baseurl=https://download.opensuse.org/repositories/isv:/cri-o:/stable:/$CRIO_VERSION/rpm/
 enabled=1
 gpgcheck=1
-gpgkey=https://pkgs.k8s.io/addons:/cri-o:/stable:/$CRIO_VERSION/rpm/repodata/repomd.xml.key
+gpgkey=https://download.opensuse.org/repositories/isv:/cri-o:/stable:/$CRIO_VERSION/rpm/repodata/repomd.xml.key
 EOF
 ```
 
@@ -237,10 +234,10 @@ echo "deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.
 #### Add the CRI-O repository
 
 ```bash
-curl -fsSL https://pkgs.k8s.io/addons:/cri-o:/stable:/$CRIO_VERSION/deb/Release.key |
+curl -fsSL https://download.opensuse.org/repositories/isv:/cri-o:/stable:/$CRIO_VERSION/deb/Release.key |
     gpg --dearmor -o /etc/apt/keyrings/cri-o-apt-keyring.gpg
 
-echo "deb [signed-by=/etc/apt/keyrings/cri-o-apt-keyring.gpg] https://pkgs.k8s.io/addons:/cri-o:/stable:/$CRIO_VERSION/deb/ /" |
+echo "deb [signed-by=/etc/apt/keyrings/cri-o-apt-keyring.gpg] https://download.opensuse.org/repositories/isv:/cri-o:/stable:/$CRIO_VERSION/deb/ /" |
     tee /etc/apt/sources.list.d/cri-o.list
 ```
 
@@ -336,3 +333,24 @@ like the bundle itself, but suffixed with `.spdx`:
 ```text
 https://storage.googleapis.com/cri-o/artifacts/cri-o.$ARCH.$REV.tar.gz.spdx
 ```
+
+## More to read
+
+The following resources are great to understand the motivation behind the latest
+`deb` and `rpm` packaging efforts within the CRI-O and Kubernetes community:
+
+- **CRI-O is moving towards pkgs.k8s.io**:
+
+  https://k8s.io/blog/2023/10/10/cri-o-community-package-infrastructure
+
+- **Kubernetes Legacy Package Repositories Will Be Frozen On September 13, 2023**:
+
+  https://kubernetes.io/blog/2023/08/31/legacy-package-repository-deprecation/
+
+- **pkgs.k8s.io: Introducing Kubernetes Community-Owned Package Repositories**:
+
+  https://kubernetes.io/blog/2023/08/15/pkgs-k8s-io-introduction/
+
+- **Installing Kubernetes via `kubeadm`**:
+
+  https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/#dpkg-k8s-package-repo
