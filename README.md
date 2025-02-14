@@ -43,8 +43,8 @@ dedicated repository, following official Kubernetes guidelines by using the
 
 ## Project Layout
 
-CRI-O uses the same basic project layout in OBS as Kubernetes, but lives in a
-dedicated umbrella subproject called [`isv:cri-o`](https://build.opensuse.org/project/show/isv:cri-o).
+CRI-O uses the same basic layout in OBS as Kubernetes project [`isv:kubernetes`](https://build.opensuse.org/project/show/isv:kubernetes),
+but lives in a dedicated umbrella project called [`isv:cri-o`](https://build.opensuse.org/project/show/isv:cri-o).
 
 This project contains a bunch of other [subprojects](https://build.opensuse.org/project/subprojects/isv:cri-o):
 
