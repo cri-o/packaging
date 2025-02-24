@@ -28,9 +28,9 @@ install_osc() {
 }
 
 install_krel() {
-    KREL_VERSION=v0.17.10
+    KREL_VERSION=v0.18.0
     BINARY=krel
-    curl_retry https://storage.googleapis.com/k8s-artifacts-sig-release/kubernetes/release/$KREL_VERSION/$BINARY-amd64-linux -o $BINARY
+    curl_retry https://github.com/kubernetes/release/releases/download/$KREL_VERSION/$BINARY-amd64-linux -o $BINARY
     chmod +x $BINARY
     sudo cp $BINARY /usr/local/bin
     rm $BINARY
