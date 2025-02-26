@@ -123,7 +123,7 @@ dependencies:
         match: cni-plugins
 
   - name: conmon (latest)
-    version: v2.1.12
+    version: v2.1.13
     refPaths:
       - path: templates/latest/cri-o/bundle/versions
         match: conmon
