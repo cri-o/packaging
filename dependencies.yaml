@@ -147,7 +147,7 @@ dependencies:
         match: runc
 
   - name: crun (latest)
-    version: 1.20
+    version: 1.21
     refPaths:
       - path: templates/latest/cri-o/bundle/versions
         match: crun
