@@ -27,7 +27,7 @@ dependencies:
         match: KUBERNETES_VERSION
 
   - name: OSC
-    version: 1.13.0
+    version: 1.15.1
     refPaths:
       - path: scripts/helpers
         match: OSC_VERSION
