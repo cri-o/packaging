@@ -19,7 +19,7 @@ curl_retry() {
 }
 
 install_osc() {
-    OSC_VERSION=1.13.0
+    OSC_VERSION=1.15.1
     curl_retry https://github.com/openSUSE/osc/archive/refs/tags/$OSC_VERSION.tar.gz -o- | tar xfz -
     pushd osc-$OSC_VERSION
     sudo ./setup.py build
