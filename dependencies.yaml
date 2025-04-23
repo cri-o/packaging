@@ -105,10 +105,16 @@ dependencies:
   - name: bom
     version: v0.6.0
     refPaths:
-      - path: scripts/bundle/build
+      - path: scripts/helpers
         match: BOM_VERSION
       - path: .github/workflows/test.yml
         match: BOM_VERSION
+
+  - name: oras
+    version: v1.3.0-beta.2
+    refPaths:
+      - path: .github/workflows/obs.yml
+        match: oras/releases
 
   - name: debian base
     version: bookworm-v1.0.4

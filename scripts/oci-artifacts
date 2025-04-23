@@ -1,0 +1,93 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+source "$(dirname "${BASH_SOURCE[0]}")"/vars
+
+REGISTRY=ghcr.io/cri-o
+ARTIFACT=$REGISTRY/bundle
+
+ARCHES=(amd64 arm64 ppc64le s390x)
+BUNDLE_ARTIFACT_TYPE=application/vnd.cncf.cri-o.bundle.v1
+SBOM_ARTIFACT_TYPE=application/vnd.cncf.spdx.file.v1
+SBOM_FILE=sbom.spdx
+
+install_bom
+
+pushd "$ARCHIVE_PATH"
+
+VERSION=v$VERSION
+ANNOTATION_VERSION="org.cncf.cri-o.version=$VERSION"
+ANNOTATION_COMMIT="org.cncf.cri-o.commit=$COMMIT"
+ANNOTATION_BRANCH="org.cncf.cri-o.branch=$PROJECT_VERSION"
+
+ARCHIVE_ID=$COMMIT
+TAG=${COMMIT:0:7}
+if [[ $PROJECT_TYPE == stable ]]; then
+    ARCHIVE_ID="$VERSION"
+    TAG="$VERSION"
+fi
+
+ARTIFACTS=()
+for ARCH in "${ARCHES[@]}"; do
+    TARBALL_DIR=cri-o
+    TARBALL="$TARBALL_DIR.$ARCH.$ARCHIVE_ID.tar.gz"
+
+    mkdir "$ARCH"
+    mv "$TARBALL" "$ARCH"
+    mv "$TARBALL.spdx" "$ARCH/$SBOM_FILE"
+    pushd "$ARCH"
+
+    tar xf "$TARBALL"
+    bom validate -e "$SBOM_FILE" -d "$TARBALL_DIR"
+
+    ARGS=()
+    while IFS= read -r -d '' -u 9; do
+        MIME=$(file -b --mime-type "$REPLY")
+        ARGS+=("$REPLY:$MIME")
+    done 9< <(find "$TARBALL_DIR" -type f -exec printf '%s\0' {} +)
+
+    TARGET_ARTIFACT="$ARTIFACT:$TAG-$ARCH"
+    ARTIFACTS+=("$TARGET_ARTIFACT")
+
+    # shellcheck disable=SC2068
+    ARTIFACT_REF=$(oras push \
+        -a "$ANNOTATION_VERSION" \
+        -a "$ANNOTATION_COMMIT" \
+        -a "$ANNOTATION_BRANCH" \
+        --artifact-type "$BUNDLE_ARTIFACT_TYPE" \
+        --artifact-platform "linux/$ARCH" \
+        --format json \
+        "$TARGET_ARTIFACT,$COMMIT-$ARCH,$VERSION-$ARCH,$PROJECT_VERSION-$ARCH" \
+        ${ARGS[@]} | jq -r .reference)
+    cosign sign -y "$ARTIFACT_REF"
+
+    popd
+done
+
+# Multi-arch: https://github.com/oras-project/oras/blob/main/docs/proposals/multi-arch-image-mgmt.md
+# shellcheck disable=SC2068
+oras manifest index create \
+    -a "$ANNOTATION_VERSION" \
+    -a "$ANNOTATION_COMMIT" \
+    -a "$ANNOTATION_BRANCH" \
+    "$ARTIFACT:$TAG,$COMMIT,$VERSION,$PROJECT_VERSION" \
+    ${ARTIFACTS[@]} | tee -a out
+MANIFEST_REF=$(sed -n 's/Digest: //p' out)
+cosign sign -y "$ARTIFACT@$MANIFEST_REF"
+
+for ARCH in "${ARCHES[@]}"; do
+    pushd "$ARCH"
+    SBOM_REF=$(
+        oras attach \
+            -a "$ANNOTATION_VERSION" \
+            -a "$ANNOTATION_COMMIT" \
+            -a "$ANNOTATION_BRANCH" \
+            --platform "linux/$ARCH" \
+            --artifact-type "$SBOM_ARTIFACT_TYPE" \
+            "$ARTIFACT:$TAG" \
+            "$SBOM_FILE:application/spdx" \
+            --format json | jq -r .reference
+    )
+    popd
+    cosign sign -y "$SBOM_REF"
+done

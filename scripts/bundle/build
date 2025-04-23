@@ -148,18 +148,12 @@ for FILE in "$TMP_BIN"/*; do
     fi
 done
 
-# Install BOM
-BOM_VERSION=v0.6.0
-BOM="$GIT_ROOT/build/bom"
-curl_to "$BOM" \
-    "https://github.com/kubernetes-sigs/bom/releases/download/$BOM_VERSION/bom-amd64-linux"
-chmod +x "$BOM"
+install_bom
 
 # Create the SBOM
 pushd "$ARCHIVE_PATH"
 SPDX_FILE="$ARCHIVE.spdx"
-$BOM version
-$BOM generate \
+bom generate \
     -l Apache-2.0 \
     --name CRI-O \
     --namespace "https://storage.googleapis.com/cri-o/artifacts/$SPDX_FILE" \
@@ -179,8 +173,8 @@ rm -rf "$TMPDIR"
 echo "Testing archive"
 tar xf "$ARCHIVE"
 SPDX_PATH="$ARCHIVE_PATH/$SPDX_FILE"
-$BOM document outline "$SPDX_PATH"
-$BOM validate -e "$SPDX_PATH" -d "$CRIODIR"
+bom document outline "$SPDX_PATH"
+bom validate -e "$SPDX_PATH" -d "$CRIODIR"
 pushd "$TMPDIR"
 export DESTDIR=test/
 ./install

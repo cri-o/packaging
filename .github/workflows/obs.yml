@@ -179,6 +179,61 @@ jobs:
             build/bundle/*.sig
             build/bundle/*.cert
 
+  oci-artifacts-publish:
+    name: oci-artifacts / publish / ${{ inputs.revision || 'main' }}
+    runs-on: ubuntu-latest
+    needs:
+      - vars
+      - bundle-test
+    permissions:
+      contents: read
+      id-token: write
+      packages: write
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: docker/login-action@74a5d142397b4f367a81961eba4e8cd7edddf772 # v3.4.0
+        if: ${{ inputs.skip-bundles == false && github.event_name != 'pull_request' }}
+        with:
+          registry: ghcr.io/cri-o
+          username: cri-o
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - uses: sigstore/cosign-installer@3454372f43399081ed03b604cb2d021dabca52bb # v3.8.2
+        if: ${{ inputs.skip-bundles == false && github.event_name != 'pull_request' }}
+      - uses: oras-project/setup-oras@5c0b487ce3fe0ce3ab0d034e63669e426e294e4d # v1.2.2
+        if: ${{ inputs.skip-bundles == false && github.event_name != 'pull_request' }}
+        with:
+          url: https://github.com/oras-project/oras/releases/download/v1.3.0-beta.2/oras_1.3.0-beta.2_linux_amd64.tar.gz
+          checksum: 3f4258fc0e8a97a2ad07ba01f2d132b3702b48d9d0ab58c5b3321c904a8a1c03
+      - uses: actions/download-artifact@95815c38cf2ff2164869cbab79da8d1f422bc89e # v4.2.1
+        if: ${{ inputs.skip-bundles == false && github.event_name != 'pull_request' }}
+        with:
+          name: bundles-amd64
+          path: build/bundle
+      - uses: actions/download-artifact@95815c38cf2ff2164869cbab79da8d1f422bc89e # v4.2.1
+        if: ${{ inputs.skip-bundles == false && github.event_name != 'pull_request' }}
+        with:
+          name: bundles-arm64
+          path: build/bundle
+      - uses: actions/download-artifact@95815c38cf2ff2164869cbab79da8d1f422bc89e # v4.2.1
+        if: ${{ inputs.skip-bundles == false && github.event_name != 'pull_request' }}
+        with:
+          name: bundles-ppc64le
+          path: build/bundle
+      - uses: actions/download-artifact@95815c38cf2ff2164869cbab79da8d1f422bc89e # v4.2.1
+        if: ${{ inputs.skip-bundles == false && github.event_name != 'pull_request' }}
+        with:
+          name: bundles-s390x
+          path: build/bundle
+      - run: scripts/oci-artifacts
+        if: ${{ inputs.skip-bundles == false && github.event_name != 'pull_request' }}
+        env:
+          ARCHIVE_PATH: ${{ needs.vars.outputs.archive_path }}
+          COMMIT: ${{ needs.vars.outputs.commit }}
+          GIT_ROOT: ${{ needs.vars.outputs.git_root }}
+          PROJECT_TYPE: ${{ needs.vars.outputs.project_type }}
+          PROJECT_VERSION: ${{ needs.vars.outputs.project_version }}
+          VERSION: ${{ needs.vars.outputs.version }}
+
   stage:
     runs-on: ubuntu-latest
     name: stage / ${{ inputs.revision || 'main' }}
@@ -186,6 +241,7 @@ jobs:
     needs:
       - vars
       - bundles-publish
+      - oci-artifacts-publish
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
       - run: scripts/obs
