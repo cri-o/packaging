@@ -29,10 +29,18 @@ install_osc() {
 
 install_krel() {
     KREL_VERSION=v0.18.0
-    BINARY=krel
-    curl_retry https://github.com/kubernetes/release/releases/download/$KREL_VERSION/$BINARY-amd64-linux -o $BINARY
-    chmod +x $BINARY
-    sudo cp $BINARY /usr/local/bin
-    rm $BINARY
-    $BINARY version
+    install_binary https://github.com/kubernetes/release/releases/download/$KREL_VERSION/krel-amd64-linux krel
+}
+
+install_bom() {
+    BOM_VERSION=v0.6.0
+    install_binary https://github.com/kubernetes-sigs/bom/releases/download/$BOM_VERSION/bom-amd64-linux bom
+}
+
+install_binary() {
+    curl_retry "$1" -o "$2"
+    chmod +x "$2"
+    sudo cp "$2" /usr/local/bin
+    rm "$2"
+    "$2" version
 }
