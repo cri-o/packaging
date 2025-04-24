@@ -18,7 +18,8 @@ pushd "$ARCHIVE_PATH"
 VERSION=v$VERSION
 ANNOTATION_VERSION="org.cncf.cri-o.version=$VERSION"
 ANNOTATION_COMMIT="org.cncf.cri-o.commit=$COMMIT"
-ANNOTATION_BRANCH="org.cncf.cri-o.branch=$PROJECT_VERSION"
+ANNOTATION_BRANCH="org.cncf.cri-o.branch=$REVISION"
+ANNOTATION_PROJECT="org.cncf.cri-o.project=$PROJECT_VERSION"
 
 TAG_LATEST=
 if [[ "$PROJECT_VERSION" == main ]]; then
@@ -64,10 +65,11 @@ for ARCH in "${ARCHES[@]}"; do
         -a "$ANNOTATION_VERSION" \
         -a "$ANNOTATION_COMMIT" \
         -a "$ANNOTATION_BRANCH" \
+        -a "$ANNOTATION_PROJECT" \
         --artifact-type "$BUNDLE_ARTIFACT_TYPE" \
         --artifact-platform "linux/$ARCH" \
         --format json \
-        "$TARGET_ARTIFACT,$COMMIT-$ARCH,$VERSION-$ARCH,$PROJECT_VERSION-$ARCH$TAG_LATEST_ARCH" \
+        "$TARGET_ARTIFACT,$COMMIT-$ARCH,$VERSION-$ARCH,$REVISION-$ARCH,$PROJECT_VERSION-$ARCH$TAG_LATEST_ARCH" \
         ${ARGS[@]} | jq -r .reference)
     cosign sign -y "$ARTIFACT_REF"
 
@@ -80,7 +82,8 @@ oras manifest index create \
     -a "$ANNOTATION_VERSION" \
     -a "$ANNOTATION_COMMIT" \
     -a "$ANNOTATION_BRANCH" \
-    "$ARTIFACT:$TAG,$COMMIT,$VERSION,$PROJECT_VERSION$TAG_LATEST" \
+    -a "$ANNOTATION_PROJECT" \
+    "$ARTIFACT:$TAG,$COMMIT,$VERSION,$REVISION,$PROJECT_VERSION$TAG_LATEST" \
     ${ARTIFACTS[@]} | tee -a out
 MANIFEST_REF=$(sed -n 's/Digest: //p' out)
 cosign sign -y "$ARTIFACT@$MANIFEST_REF"
@@ -92,6 +95,7 @@ for ARCH in "${ARCHES[@]}"; do
             -a "$ANNOTATION_VERSION" \
             -a "$ANNOTATION_COMMIT" \
             -a "$ANNOTATION_BRANCH" \
+            -a "$ANNOTATION_PROJECT" \
             --platform "linux/$ARCH" \
             --artifact-type "$SBOM_ARTIFACT_TYPE" \
             "$ARTIFACT:$TAG" \
