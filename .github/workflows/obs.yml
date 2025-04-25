@@ -102,7 +102,7 @@ jobs:
       - bundles
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
-      - uses: actions/download-artifact@95815c38cf2ff2164869cbab79da8d1f422bc89e # v4.2.1
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
         if: ${{ inputs.skip-bundles == false }}
         with:
           name: bundles-amd64
@@ -132,22 +132,22 @@ jobs:
           credentials_json: ${{ secrets.GCS_CRIO_SA }}
       - uses: sigstore/cosign-installer@3454372f43399081ed03b604cb2d021dabca52bb # v3.8.2
         if: ${{ inputs.skip-bundles == false && github.event_name != 'pull_request' }}
-      - uses: actions/download-artifact@95815c38cf2ff2164869cbab79da8d1f422bc89e # v4.2.1
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
         if: ${{ inputs.skip-bundles == false && github.event_name != 'pull_request' }}
         with:
           name: bundles-amd64
           path: build/bundle
-      - uses: actions/download-artifact@95815c38cf2ff2164869cbab79da8d1f422bc89e # v4.2.1
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
         if: ${{ inputs.skip-bundles == false && github.event_name != 'pull_request' }}
         with:
           name: bundles-arm64
           path: build/bundle
-      - uses: actions/download-artifact@95815c38cf2ff2164869cbab79da8d1f422bc89e # v4.2.1
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
         if: ${{ inputs.skip-bundles == false && github.event_name != 'pull_request' }}
         with:
           name: bundles-ppc64le
           path: build/bundle
-      - uses: actions/download-artifact@95815c38cf2ff2164869cbab79da8d1f422bc89e # v4.2.1
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
         if: ${{ inputs.skip-bundles == false && github.event_name != 'pull_request' }}
         with:
           name: bundles-s390x
@@ -204,22 +204,22 @@ jobs:
         with:
           url: https://github.com/oras-project/oras/releases/download/v1.3.0-beta.2/oras_1.3.0-beta.2_linux_amd64.tar.gz
           checksum: 3f4258fc0e8a97a2ad07ba01f2d132b3702b48d9d0ab58c5b3321c904a8a1c03
-      - uses: actions/download-artifact@95815c38cf2ff2164869cbab79da8d1f422bc89e # v4.2.1
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
         if: ${{ inputs.skip-bundles == false && github.event_name != 'pull_request' }}
         with:
           name: bundles-amd64
           path: build/bundle
-      - uses: actions/download-artifact@95815c38cf2ff2164869cbab79da8d1f422bc89e # v4.2.1
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
         if: ${{ inputs.skip-bundles == false && github.event_name != 'pull_request' }}
         with:
           name: bundles-arm64
           path: build/bundle
-      - uses: actions/download-artifact@95815c38cf2ff2164869cbab79da8d1f422bc89e # v4.2.1
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
         if: ${{ inputs.skip-bundles == false && github.event_name != 'pull_request' }}
         with:
           name: bundles-ppc64le
           path: build/bundle
-      - uses: actions/download-artifact@95815c38cf2ff2164869cbab79da8d1f422bc89e # v4.2.1
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
         if: ${{ inputs.skip-bundles == false && github.event_name != 'pull_request' }}
         with:
           name: bundles-s390x
