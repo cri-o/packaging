@@ -38,6 +38,7 @@ dedicated repository, following official Kubernetes guidelines by using the
     - [Bootstrap a cluster](#bootstrap-a-cluster-1)
 - [Publishing](#publishing)
 - [Using the static binary bundles directly](#using-the-static-binary-bundles-directly)
+- [CRI-O bundles as OCI artifacts](#cri-o-bundles-as-oci-artifacts)
 - [More to read](#more-to-read)
 <!-- /toc -->
 
@@ -273,6 +274,9 @@ but it is also possible to trigger the package creation at a certain point in ti
 `obs` pipeline will:
 
 1. Build a static binary bundle which contains all necessary files.
+   1 Upload the bundle to the CNCF [Google Cloud Storage Bucket][bucket] as well
+   as the [GitHub container image registry as OCI
+   artifacts](https://github.com/cri-o/packaging/pkgs/container/bundle).
 1. Push the bundle and [spec file](templates/latest/cri-o/cri-o.spec) into the
    corresponding `build` project.
 1. Wait for the OBS builders to finish.
@@ -332,6 +336,92 @@ like the bundle itself, but suffixed with `.spdx`:
 
 ```text
 https://storage.googleapis.com/cri-o/artifacts/cri-o.$ARCH.$REV.tar.gz.spdx
+```
+
+## CRI-O bundles as OCI artifacts
+
+The [`obs` GitHub action workflow](https://github.com/cri-o/packaging/actions/workflows/obs.yml)
+publishes OCI artifacts within [GitHub container image
+registry](https://github.com/cri-o/packaging/pkgs/container/bundle). This means
+that the whole bundle can be retrieved by consuming the OCI artifacts from
+tools like [Podman](https://podman.io) or [ORAS](https://oras.land). All
+artifacts are pushed as multi-architecture OCI image indexes, which means that
+the corresponding tool can download the right architecture on the target
+platform immediately. The following tags are available:
+
+- `latest`, `main`: References the latest available commit on the CRI-O `main`
+  branch, for example:
+
+  - [`ghcr.io/cri-o/bundle:main`](https://explore.ggcr.dev/?image=ghcr.io/cri-o/bundle:main)
+  - [`ghcr.io/cri-o/bundle:latest`](https://explore.ggcr.dev/?image=ghcr.io/cri-o/bundle:latest)
+
+- A tag:
+
+  - [`ghcr.io/cri-o/bundle:v1.30.12`](https://explore.ggcr.dev/?image=ghcr.io/cri-o/bundle:v1.30.12)
+
+- A certain commit in long and short (7 characters) format:
+
+  - [`ghcr.io/cri-o/bundle:17ac08c0c9976930f7d66896307bf46249223b1c`](https://explore.ggcr.dev/?image=ghcr.io/cri-o/bundle:17ac08c0c9976930f7d66896307bf46249223b1c)
+  - [`ghcr.io/cri-o/bundle:17ac08c`](https://explore.ggcr.dev/?image=ghcr.io/cri-o/bundle:17ac08c)
+
+- The latest minor version, release branch or development version:
+
+  - [`ghcr.io/cri-o/bundle:v1.32`](https://explore.ggcr.dev/?image=ghcr.io/cri-o/bundle:v1.32)
+  - [`ghcr.io/cri-o/bundle:release-1.32`](https://explore.ggcr.dev/?image=ghcr.io/cri-o/bundle:release-1.32)
+  - [`ghcr.io/cri-o/bundle:v1.32.0-dev`](https://explore.ggcr.dev/?image=ghcr.io/cri-o/bundle:v1.32.3-dev)
+
+- The architecture derivates of the above:
+
+  - [`ghcr.io/cri-o/bundle:main-arm64`](https://explore.ggcr.dev/?image=ghcr.io/cri-o/bundle:main-arm64)
+  - [`ghcr.io/cri-o/bundle:latest-ppc64le`](https://explore.ggcr.dev/?image=ghcr.io/cri-o/bundle:latest-ppc64le)
+  - [`ghcr.io/cri-o/bundle:17ac08c0c9976930f7d66896307bf46249223b1c-s390x`](https://explore.ggcr.dev/?image=ghcr.io/cri-o/bundle:17ac08c0c9976930f7d66896307bf46249223b1c-s390x)
+  - [`ghcr.io/cri-o/bundle:17ac08c-amd64`](https://explore.ggcr.dev/?image=ghcr.io/cri-o/bundle:17ac08c-amd64)
+  - [`ghcr.io/cri-o/bundle:v1.32-amd64`](https://explore.ggcr.dev/?image=ghcr.io/cri-o/bundle:v1.32-amd64)
+  - [`ghcr.io/cri-o/bundle:release-1.32-arm64`](https://explore.ggcr.dev/?image=ghcr.io/cri-o/bundle:release-1.32-arm64)
+  - [`ghcr.io/cri-o/bundle:v1.32.0-dev-s390x`](https://explore.ggcr.dev/?image=ghcr.io/cri-o/bundle:v1.32.3-dev-s390x)
+
+All artifacts are annotated by corresponding metadata to allow proper
+identification:
+
+```console
+> oras manifest fetch ghcr.io/cri-o/bundle:main | jq .annotations
+{
+  "org.cncf.cri-o.branch": "main",
+  "org.cncf.cri-o.commit": "17ac08c0c9976930f7d66896307bf46249223b1c",
+  "org.cncf.cri-o.project": "main",
+  "org.cncf.cri-o.version": "v1.33.0-dev"
+}
+```
+
+The artifacts are also signed by [sigstore](https://www.sigstore.dev/):
+
+```console
+> cosign verify \
+        --certificate-identity https://github.com/cri-o/packaging/.github/workflows/obs.yml@refs/heads/main \
+        --certificate-oidc-issuer https://token.actions.githubusercontent.com \
+        ghcr.io/cri-o/bundle:main
+
+…
+```
+
+The corresponding Software Bill of Materials (SBOM) is attached to the related
+artifact:
+
+```console
+> oras discover --platform linux/amd64 ghcr.io/cri-o/bundle:main
+
+ghcr.io/cri-o/bundle@sha256:71c6fbca2330d73faeda5632bc8e1f137ecefc0faee644013009fd3104db146b
+└── application/vnd.cncf.spdx.file.v1
+    └── sha256:ca4ca75e9999997e5ab753bd606f81115678f67891611906d9a0ecfad42dfe07
+        └── [annotations]
+            ├── org.cncf.cri-o.project: main
+            ├── org.cncf.cri-o.version: v1.33.0-dev
+            ├── org.opencontainers.image.created: "2025-04-25T01:37:00Z"
+            ├── org.cncf.cri-o.branch: main
+            └── org.cncf.cri-o.commit: 17ac08c0c9976930f7d66896307bf46249223b1c
+
+> oras pull $(oras discover --platform linux/amd64 --format json ghcr.io/cri-o/bundle:main | jq -r .referrers[0].reference)
+…
 ```
 
 ## More to read
