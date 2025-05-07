@@ -355,9 +355,11 @@ platform immediately. The following tags are available:
   - [`ghcr.io/cri-o/bundle:main`](https://explore.ggcr.dev/?image=ghcr.io/cri-o/bundle:main)
   - [`ghcr.io/cri-o/bundle:latest`](https://explore.ggcr.dev/?image=ghcr.io/cri-o/bundle:latest)
 
-- A tag:
+- A specific tag:
 
-  - [`ghcr.io/cri-o/bundle:v1.30.12`](https://explore.ggcr.dev/?image=ghcr.io/cri-o/bundle:v1.30.12)
+  - [`ghcr.io/cri-o/bundle:v1.32.4`](https://explore.ggcr.dev/?image=ghcr.io/cri-o/bundle:v1.32.4)
+  - [`ghcr.io/cri-o/bundle:v1.31.8`](https://explore.ggcr.dev/?image=ghcr.io/cri-o/bundle:v1.31.8)
+  - [`ghcr.io/cri-o/bundle:v1.30.13`](https://explore.ggcr.dev/?image=ghcr.io/cri-o/bundle:v1.30.13)
 
 - A certain commit in long and short (7 characters) format:
 
@@ -387,9 +389,10 @@ identification:
 > oras manifest fetch ghcr.io/cri-o/bundle:main | jq .annotations
 {
   "org.cncf.cri-o.branch": "main",
-  "org.cncf.cri-o.commit": "17ac08c0c9976930f7d66896307bf46249223b1c",
+  "org.cncf.cri-o.commit": "2fe75a93f6526cf5c649476692cdecfc982e13e8",
   "org.cncf.cri-o.project": "main",
-  "org.cncf.cri-o.version": "v1.33.0-dev"
+  "org.cncf.cri-o.version": "v1.33.0-dev",
+  "org.opencontainers.image.created": "2025-05-06T01:37:13Z"
 }
 ```
 
