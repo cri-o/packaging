@@ -24,7 +24,7 @@ provision:
       test -e /etc/kubernetes/admin.conf && exit 0
 
         # Package configs
-        KUBERNETES_VERSION=v1.32
+        KUBERNETES_VERSION=v1.33
         PROJECT_PATH=prerelease:/main
 
         cat <<EOF | tee /etc/yum.repos.d/kubernetes.repo
