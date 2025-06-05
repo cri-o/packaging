@@ -19,7 +19,9 @@ curl_retry() {
 }
 
 install_osc() {
-    OSC_VERSION=1.15.1
+    OSC_VERSION=1.16.0
+    # Because of https://github.com/openSUSE/osc/issues/1819 , ruamel.yaml should be installed separately
+    sudo apt update -y && sudo apt install -y python3-ruamel.yaml
     curl_retry https://github.com/openSUSE/osc/archive/refs/tags/$OSC_VERSION.tar.gz -o- | tar xfz -
     pushd osc-$OSC_VERSION
     sudo ./setup.py build
