@@ -357,30 +357,25 @@ platform immediately. The following tags are available:
 
 - `latest`, `main`: References the latest available commit on the CRI-O `main`
   branch, for example:
-
   - [`ghcr.io/cri-o/bundle:main`](https://explore.ggcr.dev/?image=ghcr.io/cri-o/bundle:main)
   - [`ghcr.io/cri-o/bundle:latest`](https://explore.ggcr.dev/?image=ghcr.io/cri-o/bundle:latest)
 
 - A specific tag:
-
   - [`ghcr.io/cri-o/bundle:v1.33.0`](https://explore.ggcr.dev/?image=ghcr.io/cri-o/bundle:v1.33.0)
   - [`ghcr.io/cri-o/bundle:v1.32.4`](https://explore.ggcr.dev/?image=ghcr.io/cri-o/bundle:v1.32.4)
   - [`ghcr.io/cri-o/bundle:v1.31.8`](https://explore.ggcr.dev/?image=ghcr.io/cri-o/bundle:v1.31.8)
   - [`ghcr.io/cri-o/bundle:v1.30.13`](https://explore.ggcr.dev/?image=ghcr.io/cri-o/bundle:v1.30.13)
 
 - A certain commit in long and short (7 characters) format:
-
   - [`ghcr.io/cri-o/bundle:17ac08c0c9976930f7d66896307bf46249223b1c`](https://explore.ggcr.dev/?image=ghcr.io/cri-o/bundle:17ac08c0c9976930f7d66896307bf46249223b1c)
   - [`ghcr.io/cri-o/bundle:17ac08c`](https://explore.ggcr.dev/?image=ghcr.io/cri-o/bundle:17ac08c)
 
 - The latest minor version, release branch or development version:
-
   - [`ghcr.io/cri-o/bundle:v1.32`](https://explore.ggcr.dev/?image=ghcr.io/cri-o/bundle:v1.32)
   - [`ghcr.io/cri-o/bundle:release-1.32`](https://explore.ggcr.dev/?image=ghcr.io/cri-o/bundle:release-1.32)
   - [`ghcr.io/cri-o/bundle:v1.32.0-dev`](https://explore.ggcr.dev/?image=ghcr.io/cri-o/bundle:v1.32.3-dev)
 
 - The architecture derivates of the above:
-
   - [`ghcr.io/cri-o/bundle:main-arm64`](https://explore.ggcr.dev/?image=ghcr.io/cri-o/bundle:main-arm64)
   - [`ghcr.io/cri-o/bundle:latest-ppc64le`](https://explore.ggcr.dev/?image=ghcr.io/cri-o/bundle:latest-ppc64le)
   - [`ghcr.io/cri-o/bundle:17ac08c0c9976930f7d66896307bf46249223b1c-s390x`](https://explore.ggcr.dev/?image=ghcr.io/cri-o/bundle:17ac08c0c9976930f7d66896307bf46249223b1c-s390x)
