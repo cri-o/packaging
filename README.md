@@ -38,6 +38,7 @@ dedicated repository, following official Kubernetes guidelines by using the
     - [Bootstrap a cluster](#bootstrap-a-cluster-1)
 - [Publishing](#publishing)
 - [Using the static binary bundles directly](#using-the-static-binary-bundles-directly)
+- [Uninstall the static binary bundles](#uninstall-the-static-binary-bundles)
 - [CRI-O bundles as OCI artifacts](#cri-o-bundles-as-oci-artifacts)
 - [More to read](#more-to-read)
 <!-- /toc -->
@@ -342,6 +343,12 @@ like the bundle itself, but suffixed with `.spdx`:
 
 ```text
 https://storage.googleapis.com/cri-o/artifacts/cri-o.$ARCH.$REV.tar.gz.spdx
+```
+
+## Uninstall the static binary bundles
+
+```console
+> curl https://raw.githubusercontent.com/cri-o/packaging/main/get | bash -s -- -u
 ```
 
 ## CRI-O bundles as OCI artifacts
