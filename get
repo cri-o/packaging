@@ -18,10 +18,21 @@ usage() {
     printf "  -h\tShow this help message\n"
 }
 
+uninstall() {
+    while read -r file; do
+        echo "$file will be uninstalled."
+        rm -f "$file"
+        echo "$file have been uninstalled."
+    done <~/.crio-install
+
+    rm -f ~/.crio-install
+    echo "uninstall is finished!"
+}
+
 parse_args() {
     echo "Welcome to the CRI-O install script!"
 
-    while getopts 'a:b:t:h' OPTION; do
+    while getopts 'a:b:t:h:u' OPTION; do
         case "$OPTION" in
         a)
             ARCH="$OPTARG"
@@ -37,6 +48,10 @@ parse_args() {
             ;;
         h)
             usage
+            exit 0
+            ;;
+        u)
+            uninstall
             exit 0
             ;;
         ?)
@@ -240,6 +255,32 @@ install $SELINUX -D -m 644 -t "$DESTDIR$CONTAINERS_REGISTRIES_CONFD_DIR" contrib
 sed -i 's;/usr/bin;'"$DESTDIR$BINDIR"';g' "$DESTDIR$ETC_CRIO_DIR/crio.conf.d/10-crio.conf"
 sed -i 's;/usr/libexec;'"$DESTDIR$LIBEXECDIR"';g' "$DESTDIR$ETC_CRIO_DIR/crio.conf.d/10-crio.conf"
 sed -i 's;/etc/crio;'"$DESTDIR$ETC_CRIO_DIR"';g' "$DESTDIR$ETC_CRIO_DIR/crio.conf.d/10-crio.conf"
+
+touch ~/.crio-install
+cat <<EOF | tee ~/.crio-install
+$DESTDIR$OPT_CNI_BIN_DIR/*
+$DESTDIR$CNIDIR/10-crio-bridge.conflist.disabled
+$DESTDIR$LIBEXEC_CRIO_DIR/conmon
+$DESTDIR$LIBEXEC_CRIO_DIR/conmonrs
+$DESTDIR$LIBEXEC_CRIO_DIR/crun
+$DESTDIR$LIBEXEC_CRIO_DIR/runc
+$DESTDIR$BINDIR/crio
+$DESTDIR$BINDIR/pinns
+$DESTDIR$BINDIR/crictl
+$DESTDIR$ETCDIR/crictl.yaml
+$DESTDIR$OCIDIR/crio-umount.conf
+$DESTDIR$SYSCONFIGDIR/crio
+$DESTDIR$ETC_CRIO_DIR/policy.json
+$DESTDIR$ETC_CRIO_DIR/crio.conf.d/10-crio.conf
+$DESTDIR$MANDIR/man5/crio.conf.5
+$DESTDIR$MANDIR/man5/crio.conf.d.5
+$DESTDIR$MANDIR/man8/crio.8
+$DESTDIR$BASHINSTALLDIR/crio
+$DESTDIR$FISHINSTALLDIR/crio.fish
+$DESTDIR$ZSHINSTALLDIR/_crio
+$DESTDIR$SYSTEMDDIR/crio.service
+$DESTDIR$CONTAINERS_REGISTRIES_CONFD_DIR/registries.conf
+EOF
 
 if [ -n "$SELINUX" ]; then
     if command -v chcon >/dev/null; then
