@@ -41,7 +41,7 @@ dependencies:
         match: "- image: fedora"
 
   - name: CentOS test vagrant image
-    version: stream9
+    version: stream10
     refPaths:
       - path: test/rpm/Vagrantfile
         match: config.vm.box
