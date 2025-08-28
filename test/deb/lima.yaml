@@ -22,7 +22,7 @@ provision:
       test -e /etc/kubernetes/admin.conf && exit 0
 
         # Package configs
-        KUBERNETES_VERSION=v1.33
+        KUBERNETES_VERSION=v1.34
         PROJECT_PATH=prerelease:/main
 
         curl -fsSL https://pkgs.k8s.io/core:/stable:/$KUBERNETES_VERSION/deb/Release.key | gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
