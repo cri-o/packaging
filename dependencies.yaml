@@ -15,7 +15,7 @@ dependencies:
         match: ZEITGEIST_VERSION
 
   - name: Kubernetes test version
-    version: v1.33
+    version: v1.34
     refPaths:
       - path: test/scripts/versions.sh
         match: KUBERNETES_VERSION
