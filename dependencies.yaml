@@ -123,7 +123,7 @@ dependencies:
         match: image
 
   - name: cni-plugins (latest)
-    version: v1.7.1
+    version: v1.8.0
     refPaths:
       - path: templates/latest/cri-o/bundle/versions
         match: cni-plugins
