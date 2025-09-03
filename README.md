@@ -58,6 +58,10 @@ This project contains a bunch of other [subprojects](https://build.opensuse.org/
 
 ### Stable Versions
 
+> [!NOTE]
+> This list may contain yet-to-be-released versions of cri-o. See
+> [CRI-O releases](https://github.com/cri-o/cri-o/releases) for the latest stable release.
+
 - [`isv:cri-o:stable`](https://build.opensuse.org/project/show/isv:cri-o:stable): Stable Packages (Umbrella)
   - [`isv:cri-o:stable:v1.34`](https://build.opensuse.org/project/show/isv:cri-o:stable:v1.34): `v1.34.z` tags (Stable)
     - [`isv:cri-o:stable:v1.34:build`](https://build.opensuse.org/project/show/isv:cri-o:stable:v1.34:build): `v1.34.z` tags (Builder)
