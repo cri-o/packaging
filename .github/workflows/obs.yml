@@ -154,7 +154,7 @@ jobs:
           path: build/bundle
       - run: scripts/sign-artifacts
         if: ${{ inputs.skip-bundles == false && github.event_name != 'pull_request' }}
-      - uses: google-github-actions/upload-cloud-storage@7c73f5d6eae167341002e9c946f7479a609c588e # v2.2.3
+      - uses: google-github-actions/upload-cloud-storage@6397bd7208e18d13ba2619ee21b9873edc94427a # v3.0.0
         if: ${{ inputs.skip-bundles == false && github.event_name != 'pull_request' }}
         with:
           path: build/bundle
@@ -165,7 +165,7 @@ jobs:
         if: ${{ inputs.skip-bundles == false && github.event_name != 'pull_request' }}
         run: find . -type f -iname "cri-o.amd64.*.tar.gz" | sed -n 's;.*amd64.\(.*\).tar.gz;\1;p' > latest-bundle-${{ inputs.revision || 'main' }}.txt
       - name: Upload bundle marker
-        uses: google-github-actions/upload-cloud-storage@7c73f5d6eae167341002e9c946f7479a609c588e # v2.2.3
+        uses: google-github-actions/upload-cloud-storage@6397bd7208e18d13ba2619ee21b9873edc94427a # v3.0.0
         if: ${{ inputs.skip-bundles == false && github.event_name != 'pull_request' }}
         with:
           path: latest-bundle-${{ inputs.revision || 'main' }}.txt
