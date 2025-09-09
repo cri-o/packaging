@@ -111,10 +111,10 @@ dependencies:
         match: BOM_VERSION
 
   - name: oras
-    version: v1.3.0-beta.2
+    version: 1.3.0
     refPaths:
       - path: .github/workflows/obs.yml
-        match: oras/releases
+        match: version
 
   - name: debian base
     version: bookworm-v1.0.4
