@@ -1,7 +1,7 @@
 ---
 dependencies:
   - name: CRI-O
-    version: v1.33
+    version: v1.34
     refPaths:
       - path: README.md
         match: CRIO_VERSION
