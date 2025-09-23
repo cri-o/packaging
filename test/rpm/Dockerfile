@@ -1,4 +1,4 @@
-ARG FROM=fedora:39
+ARG FROM=fedora:42
 FROM $FROM
 
 ARG PROJECT_PATH=prerelease:/main
