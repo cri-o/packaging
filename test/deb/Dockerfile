@@ -1,4 +1,4 @@
-ARG FROM=ubuntu:22.04
+ARG FROM=ubuntu:24.04
 FROM $FROM
 
 ARG PROJECT_PATH=prerelease:/main

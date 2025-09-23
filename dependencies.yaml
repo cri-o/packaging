@@ -33,7 +33,7 @@ dependencies:
         match: OSC_VERSION
 
   - name: Fedora test image
-    version: 39
+    version: 42
     refPaths:
       - path: test/rpm/Dockerfile
         match: FROM=
@@ -53,7 +53,7 @@ dependencies:
         match: config.vm.box
 
   - name: Ubuntu test container image
-    version: 22.04
+    version: 24.04
     refPaths:
       - path: test/deb/Dockerfile
         match: FROM=
@@ -61,13 +61,13 @@ dependencies:
         match: "- image: ubuntu"
 
   - name: Debian test container image
-    version: 12
+    version: 13
     refPaths:
       - path: .github/workflows/obs.yml
         match: "- image: debian"
 
   - name: AlmaLinux test container image
-    version: "9.2"
+    version: "10"
     refPaths:
       - path: .github/workflows/obs.yml
         match: "- image: almalinux"

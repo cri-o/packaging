@@ -293,13 +293,13 @@ jobs:
       fail-fast: false
       matrix:
         run:
-          - image: almalinux:9.2
+          - image: almalinux:10
             type: rpm
-          - image: fedora:39
+          - image: fedora:42
             type: rpm
-          - image: debian:12
+          - image: debian:13
             type: deb
-          - image: ubuntu:22.04
+          - image: ubuntu:24.04
             type: deb
         arch:
           - amd64
