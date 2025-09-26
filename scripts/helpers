@@ -35,7 +35,7 @@ install_krel() {
 }
 
 install_bom() {
-    BOM_VERSION=v0.6.0
+    BOM_VERSION=v0.7.1
     install_binary https://github.com/kubernetes-sigs/bom/releases/download/$BOM_VERSION/bom-amd64-linux bom
 }
 
