@@ -123,6 +123,11 @@ curl_to - \
     "https://github.com/kubernetes-sigs/cri-tools/releases/download/${VERSIONS["cri-tools"]}/crictl-${VERSIONS["cri-tools"]}-linux-$ARCH.tar.gz" |
     tar xfz - -C "$TMP_BIN"
 
+# crio-credential-provider
+curl_to "$TMP_BIN/crio-credential-provider" \
+    "https://github.com/cri-o/crio-credential-provider/releases/download/${VERSIONS["crio-credential-provider"]}/crio-credential-provider-linux-$ARCH"
+chmod +x "$TMP_BIN/crio-credential-provider"
+
 # Check the architectures of the binaries
 if [[ $ARCH == "$ARCH_ARM64" ]]; then
     ELF_ARCH=aarch64
@@ -178,7 +183,7 @@ bom validate -e "$SPDX_PATH" -d "$CRIODIR"
 pushd "$TMPDIR"
 export DESTDIR=test/
 ./install
-EXP_CNT=73
+EXP_CNT=74
 if ! command -v runc; then
     EXP_CNT=$((EXP_CNT + 1))
 fi

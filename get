@@ -230,6 +230,7 @@ install $SELINUX -D -m 755 -t "$DESTDIR$LIBEXEC_CRIO_DIR" bin/conmon
 install $SELINUX -D -m 755 -t "$DESTDIR$LIBEXEC_CRIO_DIR" bin/conmonrs
 install $SELINUX -D -m 755 -t "$DESTDIR$LIBEXEC_CRIO_DIR" bin/crun
 install $SELINUX -D -m 755 -t "$DESTDIR$LIBEXEC_CRIO_DIR" bin/runc
+install $SELINUX -D -m 755 -t "$DESTDIR$LIBEXEC_CRIO_DIR" bin/crio-credential-provider
 install $SELINUX -d -m 755 "$DESTDIR$BASHINSTALLDIR"
 install $SELINUX -d -m 755 "$DESTDIR$FISHINSTALLDIR"
 install $SELINUX -d -m 755 "$DESTDIR$ZSHINSTALLDIR"
@@ -264,6 +265,7 @@ $DESTDIR$LIBEXEC_CRIO_DIR/conmon
 $DESTDIR$LIBEXEC_CRIO_DIR/conmonrs
 $DESTDIR$LIBEXEC_CRIO_DIR/crun
 $DESTDIR$LIBEXEC_CRIO_DIR/runc
+$DESTDIR$LIBEXEC_CRIO_DIR/crio-credential-provider
 $DESTDIR$BINDIR/crio
 $DESTDIR$BINDIR/pinns
 $DESTDIR$BINDIR/crictl
@@ -292,6 +294,7 @@ if [ -n "$SELINUX" ]; then
         chcon -u system_u -r object_r -t bin_t \
             "$DESTDIR$LIBEXEC_CRIO_DIR/conmon" \
             "$DESTDIR$LIBEXEC_CRIO_DIR/conmonrs" \
+            "$DESTDIR$LIBEXEC_CRIO_DIR/crio-credential-provider" \
             "$DESTDIR$BINDIR/crictl" \
             "$DESTDIR$BINDIR/pinns"
 
