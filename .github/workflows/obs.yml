@@ -76,7 +76,7 @@ jobs:
     name: bundle / build / ${{ inputs.revision || 'main' }} / ${{ matrix.arch }}
     steps:
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
-      - uses: sigstore/cosign-installer@d7543c93d881b35a8faa02e8e3605f69b7a1ce62 # v3.10.0
+      - uses: sigstore/cosign-installer@faadad0cce49287aee09b3a48701e75088a2c6ad # v4.0.0
       - run: scripts/bundle/build
         if: ${{ inputs.skip-bundles == false }}
         env:
@@ -130,7 +130,7 @@ jobs:
         if: ${{ inputs.skip-bundles == false && github.event_name != 'pull_request' }}
         with:
           credentials_json: ${{ secrets.GCS_CRIO_SA }}
-      - uses: sigstore/cosign-installer@d7543c93d881b35a8faa02e8e3605f69b7a1ce62 # v3.10.0
+      - uses: sigstore/cosign-installer@faadad0cce49287aee09b3a48701e75088a2c6ad # v4.0.0
         if: ${{ inputs.skip-bundles == false && github.event_name != 'pull_request' }}
       - uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0 # v5.0.0
         if: ${{ inputs.skip-bundles == false && github.event_name != 'pull_request' }}
@@ -197,7 +197,7 @@ jobs:
           registry: ghcr.io/cri-o
           username: cri-o
           password: ${{ secrets.GITHUB_TOKEN }}
-      - uses: sigstore/cosign-installer@d7543c93d881b35a8faa02e8e3605f69b7a1ce62 # v3.10.0
+      - uses: sigstore/cosign-installer@faadad0cce49287aee09b3a48701e75088a2c6ad # v4.0.0
         if: ${{ inputs.skip-bundles == false && github.event_name != 'pull_request' }}
       - uses: oras-project/setup-oras@22ce207df3b08e061f537244349aac6ae1d214f6 # v1.2.4
         if: ${{ inputs.skip-bundles == false && github.event_name != 'pull_request' }}
