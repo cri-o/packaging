@@ -157,3 +157,9 @@ dependencies:
     refPaths:
       - path: templates/latest/cri-o/bundle/versions
         match: crun
+
+  - name: crio-credential-provider (latest)
+    version: v0.1.1
+    refPaths:
+      - path: templates/latest/cri-o/bundle/versions
+        match: crio-credential-provider

@@ -56,6 +56,7 @@ install -p -m 755 %{archive_root}/bin/crun %{buildroot}%{libexecdir}/crio/crun
 install -p -m 755 %{archive_root}/bin/runc %{buildroot}%{libexecdir}/crio/runc
 install -p -m 755 %{archive_root}/bin/conmon %{buildroot}%{libexecdir}/crio/conmon
 install -p -m 755 %{archive_root}/bin/conmonrs %{buildroot}%{libexecdir}/crio/conmonrs
+install -p -m 755 %{archive_root}/bin/crio-credential-provider %{buildroot}%{libexecdir}/crio/crio-credential-provider
 
 # Completions
 install -d -m 755 %{buildroot}%{_datadir}/bash-completion/completions
@@ -125,6 +126,7 @@ install -D -m 644 -t %{buildroot}%{_mandir}/man8 %{archive_root}/man/crio.8
 %{libexecdir}/crio/conmonrs
 %{libexecdir}/crio/crun
 %{libexecdir}/crio/runc
+%{libexecdir}/crio/crio-credential-provider
 
 # Completions
 %{_datadir}/bash-completion/completions/crio
