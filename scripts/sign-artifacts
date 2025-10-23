@@ -10,7 +10,7 @@ done
 
 for SBOM in build/bundle/*.tar.gz.spdx; do
     cosign sign-blob -y "$SBOM" \
-        --bundle "$TARBALL.bundle" \
+        --bundle "$SBOM.bundle" \
         --output-signature "$SBOM.sig" \
         --output-certificate "$SBOM.cert"
 done
