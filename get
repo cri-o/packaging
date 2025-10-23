@@ -131,11 +131,9 @@ if command -v cosign >/dev/null; then
 
     FILES=(
         "$TARBALL"
-        "$TARBALL.sig"
-        "$TARBALL.cert"
+        "$TARBALL.bundle"
         "$SPDX"
-        "$SPDX.sig"
-        "$SPDX.cert"
+        "$SPDX.bundle"
     )
     for FILE in "${FILES[@]}"; do
         echo "Downloading $FILE"
@@ -155,8 +153,7 @@ if command -v cosign >/dev/null; then
             --certificate-oidc-issuer https://token.actions.githubusercontent.com \
             --certificate-github-workflow-repository cri-o/packaging \
             --certificate-github-workflow-ref "$GIT_REF" \
-            --signature "$BLOB.sig" \
-            --certificate "$BLOB.cert"
+            --bundle "$BLOB.bundle"
     done
 
     tar xfz "$TARBALL"
