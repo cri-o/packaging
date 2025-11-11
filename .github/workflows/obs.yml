@@ -77,8 +77,13 @@ jobs:
     steps:
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
       - uses: sigstore/cosign-installer@faadad0cce49287aee09b3a48701e75088a2c6ad # v4.0.0
-      - run: scripts/bundle/build
+      - uses: nick-fields/retry@ce71cc2ab81d554ebbe88c79ab5975992d79ba08 # v3.0.2
         if: ${{ inputs.skip-bundles == false }}
+        with:
+          timeout_minutes: 30
+          max_attempts: 3
+          retry_wait_seconds: 60
+          command: scripts/bundle/build
         env:
           ARCH: ${{ matrix.arch }}
           ARCHIVE_PATH: ${{ needs.vars.outputs.archive_path }}
@@ -314,8 +319,13 @@ jobs:
     steps:
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
       - uses: docker/setup-buildx-action@e468171a9de216ec08956ac3ada2f0791b6bd435 # v3.11.1
-      - run: scripts/test-architectures
+      - uses: nick-fields/retry@ce71cc2ab81d554ebbe88c79ab5975992d79ba08 # v3.0.2
         if: ${{ inputs.skip-tests == false }}
+        with:
+          timeout_minutes: 30
+          max_attempts: 3
+          retry_wait_seconds: 60
+          command: scripts/test-architectures
         env:
           IMAGE: ${{ matrix.run.image }}
           ARCH: ${{ matrix.arch }}
