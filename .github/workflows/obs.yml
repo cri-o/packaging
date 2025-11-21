@@ -43,7 +43,7 @@ jobs:
       project_version: ${{ steps.step.outputs.PROJECT_VERSION }}
       version: ${{ steps.step.outputs.VERSION }}
     steps:
-      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
+      - uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6.0.0
       - id: step
         run: |
           source scripts/vars
@@ -75,7 +75,7 @@ jobs:
           - s390x
     name: bundle / build / ${{ inputs.revision || 'main' }} / ${{ matrix.arch }}
     steps:
-      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
+      - uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6.0.0
       - uses: sigstore/cosign-installer@faadad0cce49287aee09b3a48701e75088a2c6ad # v4.0.0
       - uses: nick-fields/retry@ce71cc2ab81d554ebbe88c79ab5975992d79ba08 # v3.0.2
         if: ${{ inputs.skip-bundles == false }}
@@ -106,7 +106,7 @@ jobs:
       - vars
       - bundles
     steps:
-      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
+      - uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6.0.0
       - uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6.0.0
         if: ${{ inputs.skip-bundles == false }}
         with:
@@ -130,7 +130,7 @@ jobs:
     permissions:
       id-token: write
     steps:
-      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
+      - uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6.0.0
       - uses: google-github-actions/auth@7c6bc770dae815cd3e89ee6cdf493a5fab2cc093 # v3.0.0
         if: ${{ inputs.skip-bundles == false && github.event_name != 'pull_request' }}
         with:
@@ -195,7 +195,7 @@ jobs:
       id-token: write
       packages: write
     steps:
-      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
+      - uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6.0.0
       - uses: docker/login-action@5e57cd118135c172c3672efd75eb46360885c0ef # v3.6.0
         if: ${{ inputs.skip-bundles == false && github.event_name != 'pull_request' }}
         with:
@@ -247,7 +247,7 @@ jobs:
       - bundles-publish
       - oci-artifacts-publish
     steps:
-      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
+      - uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6.0.0
       - run: scripts/obs
         if: ${{ inputs.skip-stage == false && github.event_name != 'pull_request' }}
         env:
@@ -273,7 +273,7 @@ jobs:
           - rpm
     name: test / ${{ matrix.type }} / kubernetes / amd64
     steps:
-      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
+      - uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6.0.0
       - run: sudo scripts/github-actions-setup
         if: ${{ inputs.skip-tests == false }}
       - run: sudo -E scripts/test-kubernetes
@@ -317,7 +317,7 @@ jobs:
             arch: arm64 # takes forever
     name: test / ${{ matrix.run.type }} / ${{ matrix.run.image }} / ${{ matrix.arch }}
     steps:
-      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
+      - uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6.0.0
       - uses: docker/setup-buildx-action@e468171a9de216ec08956ac3ada2f0791b6bd435 # v3.11.1
       - uses: nick-fields/retry@ce71cc2ab81d554ebbe88c79ab5975992d79ba08 # v3.0.2
         if: ${{ inputs.skip-tests == false }}
@@ -346,7 +346,7 @@ jobs:
       - test-architectures
       - test-kubernetes
     steps:
-      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
+      - uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6.0.0
       - run: scripts/obs
         if: ${{ inputs.skip-release == false && github.event_name != 'pull_request' }}
         env:
