@@ -7,7 +7,7 @@ declare -A VERSIONS=(
     ["conmon"]=v2.1.13
     ["conmon-rs"]=v0.7.3
     ["cri-tools"]=v1.34.0
-    ["crun"]=1.25
+    ["crun"]=1.25.1
     ["runc"]=v1.3.3
     ["crio-credential-provider"]=v0.1.1
 )
