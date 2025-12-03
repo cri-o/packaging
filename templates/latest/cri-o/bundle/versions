@@ -9,6 +9,6 @@ declare -A VERSIONS=(
     ["cri-tools"]=v1.34.0
     ["crun"]=1.25.1
     ["runc"]=v1.4.0
-    ["crio-credential-provider"]=v0.1.1
+    ["crio-credential-provider"]=v0.1.2
 )
 export VERSIONS
