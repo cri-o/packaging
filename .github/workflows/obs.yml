@@ -107,7 +107,7 @@ jobs:
       - bundles
     steps:
       - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
-      - uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6.0.0
+      - uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7.0.0
         if: ${{ inputs.skip-bundles == false }}
         with:
           name: bundles-amd64
@@ -137,22 +137,22 @@ jobs:
           credentials_json: ${{ secrets.GCS_CRIO_SA }}
       - uses: sigstore/cosign-installer@faadad0cce49287aee09b3a48701e75088a2c6ad # v4.0.0
         if: ${{ inputs.skip-bundles == false && github.event_name != 'pull_request' }}
-      - uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6.0.0
+      - uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7.0.0
         if: ${{ inputs.skip-bundles == false && github.event_name != 'pull_request' }}
         with:
           name: bundles-amd64
           path: build/bundle
-      - uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6.0.0
+      - uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7.0.0
         if: ${{ inputs.skip-bundles == false && github.event_name != 'pull_request' }}
         with:
           name: bundles-arm64
           path: build/bundle
-      - uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6.0.0
+      - uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7.0.0
         if: ${{ inputs.skip-bundles == false && github.event_name != 'pull_request' }}
         with:
           name: bundles-ppc64le
           path: build/bundle
-      - uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6.0.0
+      - uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7.0.0
         if: ${{ inputs.skip-bundles == false && github.event_name != 'pull_request' }}
         with:
           name: bundles-s390x
@@ -208,22 +208,22 @@ jobs:
         if: ${{ inputs.skip-bundles == false && github.event_name != 'pull_request' }}
         with:
           version: 1.3.0
-      - uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6.0.0
+      - uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7.0.0
         if: ${{ inputs.skip-bundles == false && github.event_name != 'pull_request' }}
         with:
           name: bundles-amd64
           path: build/bundle
-      - uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6.0.0
+      - uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7.0.0
         if: ${{ inputs.skip-bundles == false && github.event_name != 'pull_request' }}
         with:
           name: bundles-arm64
           path: build/bundle
-      - uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6.0.0
+      - uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7.0.0
         if: ${{ inputs.skip-bundles == false && github.event_name != 'pull_request' }}
         with:
           name: bundles-ppc64le
           path: build/bundle
-      - uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6.0.0
+      - uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7.0.0
         if: ${{ inputs.skip-bundles == false && github.event_name != 'pull_request' }}
         with:
           name: bundles-s390x
