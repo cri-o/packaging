@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+set -euox pipefail
+
+source "$(dirname "${BASH_SOURCE[0]}")"/vars
+
+# Determine the VEX file name.
+ARCHIVE_ID=$COMMIT
+if [[ $PROJECT_TYPE == stable ]]; then
+    ARCHIVE_ID="$REVISION"
+fi
+
+# Download the OpenVEX report from the CRI-O CI artifacts.
+# Not every release branch publishes VEX information, so this is best-effort.
+VEX_URL="https://storage.googleapis.com/cri-o/artifacts/$COMMIT/cri-o.openvex.json"
+VEX_FILE="$ARCHIVE_PATH/cri-o.$ARCHIVE_ID.openvex.json"
+
+mkdir -p "$ARCHIVE_PATH"
+if curl_retry "$VEX_URL" -o "$VEX_FILE"; then
+    echo "VEX report downloaded to $VEX_FILE"
+else
+    echo "No VEX report available for commit $COMMIT, skipping"
+    rm -f "$VEX_FILE"
+fi

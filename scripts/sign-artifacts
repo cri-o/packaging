@@ -14,3 +14,12 @@ for SBOM in build/bundle/*.tar.gz.spdx; do
         --output-signature "$SBOM.sig" \
         --output-certificate "$SBOM.cert"
 done
+
+# Sign VEX file if available (not every release branch publishes one).
+VEX=$(echo build/bundle/*.openvex.json)
+if [[ -e "$VEX" ]]; then
+    cosign sign-blob -y "$VEX" \
+        --bundle "$VEX.bundle" \
+        --output-signature "$VEX.sig" \
+        --output-certificate "$VEX.cert"
+fi
