@@ -19,7 +19,7 @@ curl_retry() {
 }
 
 install_osc() {
-    OSC_VERSION=1.16.0
+    OSC_VERSION=1.25.0
     # Because of https://github.com/openSUSE/osc/issues/1819 , ruamel.yaml should be installed separately
     sudo apt update -y && sudo apt install -y python3-ruamel.yaml
     curl_retry https://github.com/openSUSE/osc/archive/refs/tags/$OSC_VERSION.tar.gz -o- | tar xfz -
@@ -30,7 +30,7 @@ install_osc() {
 }
 
 install_krel() {
-    KREL_VERSION=v0.18.0
+    KREL_VERSION=v0.20.1
     install_binary https://github.com/kubernetes/release/releases/download/$KREL_VERSION/krel-amd64-linux krel
 }
 
