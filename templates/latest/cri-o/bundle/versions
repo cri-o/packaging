@@ -3,12 +3,12 @@ set -euox pipefail
 
 # Versions to be used
 declare -A VERSIONS=(
-    ["cni-plugins"]=v1.8.0
-    ["conmon"]=v2.1.13
-    ["conmon-rs"]=v0.7.3
+    ["cni-plugins"]=v1.9.1
+    ["conmon"]=v2.2.1
+    ["conmon-rs"]=v0.8.0
     ["cri-tools"]=v1.35.0
-    ["crun"]=1.25.1
-    ["runc"]=v1.4.0
+    ["crun"]=1.26
+    ["runc"]=v1.4.1
     ["crio-credential-provider"]=v0.1.2
 )
 export VERSIONS
