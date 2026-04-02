@@ -348,6 +348,18 @@ like the bundle itself, but suffixed with `.spdx`:
 https://storage.googleapis.com/cri-o/artifacts/cri-o.$ARCH.$REV.tar.gz.spdx
 ```
 
+An [OpenVEX](https://openvex.dev) vulnerability report and [SLSA](https://slsa.dev)
+provenance attestation are available per release:
+
+```text
+https://storage.googleapis.com/cri-o/artifacts/cri-o.$REV.openvex.json
+https://storage.googleapis.com/cri-o/artifacts/cri-o.$REV.provenance.json
+```
+
+All artifacts and their attestations are signed using
+[sigstore](https://www.sigstore.dev/) and can be verified with
+[cosign](https://github.com/sigstore/cosign).
+
 ## Uninstall the static binary bundles
 
 ```console
@@ -419,22 +431,23 @@ The artifacts are also signed by [sigstore](https://www.sigstore.dev/):
 …
 ```
 
-The corresponding Software Bill of Materials (SBOM) is attached to the related
-artifact:
+The corresponding Software Bill of Materials (SBOM), [OpenVEX](https://openvex.dev)
+vulnerability report, and [SLSA](https://slsa.dev) provenance attestation are
+attached to the related artifact and signed:
 
 ```console
-> oras discover --platform linux/amd64 ghcr.io/cri-o/bundle:main
+> oras discover ghcr.io/cri-o/bundle:main
 
-ghcr.io/cri-o/bundle@sha256:71c6fbca2330d73faeda5632bc8e1f137ecefc0faee644013009fd3104db146b
-└── application/vnd.cncf.spdx.file.v1
-    └── sha256:ca4ca75e9999997e5ab753bd606f81115678f67891611906d9a0ecfad42dfe07
-        └── [annotations]
-            ├── org.cncf.cri-o.project: main
-            ├── org.cncf.cri-o.version: v1.33.0-dev
-            ├── org.opencontainers.image.created: "2025-04-25T01:37:00Z"
-            ├── org.cncf.cri-o.branch: main
-            └── org.cncf.cri-o.commit: 17ac08c0c9976930f7d66896307bf46249223b1c
+ghcr.io/cri-o/bundle@sha256:...
+├── application/vnd.cncf.spdx.file.v1
+├── application/vnd.cncf.openvex.file.v1
+└── application/vnd.cncf.slsa.provenance.v1
+```
 
+The SBOM is attached per architecture, while VEX and provenance are attached to
+the multi-arch index. To pull a specific attachment:
+
+```console
 > oras pull $(oras discover --platform linux/amd64 --format json ghcr.io/cri-o/bundle:main | jq -r .referrers[0].reference)
 …
 ```

@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+set -euox pipefail
+
+source "$(dirname "${BASH_SOURCE[0]}")"/vars
+
+# Determine the provenance file name.
+ARCHIVE_ID=$COMMIT
+if [[ "$PROJECT_TYPE" == "stable" ]]; then
+    ARCHIVE_ID="$REVISION"
+fi
+
+PROVENANCE_FILE="$ARCHIVE_PATH/cri-o.$ARCHIVE_ID.provenance.json"
+
+mkdir -p "$ARCHIVE_PATH"
+
+# Generate SLSA provenance attestation using tejolote.
+# The GitHub Actions run is referenced via the github:// scheme.
+# Use --wait=false because we are running inside the same workflow run,
+# waiting would deadlock. Point artifacts at the local build directory
+# since bundles have not been uploaded to GCS yet at this point.
+tejolote attest \
+    "github://cri-o/packaging/$GITHUB_RUN_ID" \
+    --artifacts "file://$ARCHIVE_PATH" \
+    --dependency "git+https://github.com/cri-o/cri-o@sha$COMMIT" \
+    --output "$PROVENANCE_FILE" \
+    --slsa 1.0 \
+    --wait=false
+
+echo "Provenance attestation generated at $PROVENANCE_FILE"

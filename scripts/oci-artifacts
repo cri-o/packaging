@@ -9,9 +9,9 @@ ARTIFACT=$REGISTRY/bundle
 ARCHES=(amd64 arm64 ppc64le s390x)
 BUNDLE_ARTIFACT_TYPE=application/vnd.cncf.cri-o.bundle.v1
 SBOM_ARTIFACT_TYPE=application/vnd.cncf.spdx.file.v1
+VEX_ARTIFACT_TYPE=application/vnd.cncf.openvex.file.v1
+PROVENANCE_ARTIFACT_TYPE=application/vnd.cncf.slsa.provenance.v1
 SBOM_FILE=sbom.spdx
-
-install_bom
 
 pushd "$ARCHIVE_PATH"
 
@@ -106,3 +106,37 @@ for ARCH in "${ARCHES[@]}"; do
     popd
     cosign sign -y "$SBOM_REF"
 done
+
+# Attach VEX report to multi-arch index if available.
+VEX_FILE="cri-o.$ARCHIVE_ID.openvex.json"
+if [[ -e "$VEX_FILE" ]]; then
+    VEX_REF=$(
+        oras attach \
+            -a "$ANNOTATION_VERSION" \
+            -a "$ANNOTATION_COMMIT" \
+            -a "$ANNOTATION_BRANCH" \
+            -a "$ANNOTATION_PROJECT" \
+            --artifact-type "$VEX_ARTIFACT_TYPE" \
+            "$ARTIFACT:$TAG" \
+            "$VEX_FILE:application/json" \
+            --format json | jq -r .reference
+    )
+    cosign sign -y "$VEX_REF"
+fi
+
+# Attach provenance attestation to multi-arch index if available.
+PROVENANCE_FILE="cri-o.$ARCHIVE_ID.provenance.json"
+if [[ -e "$PROVENANCE_FILE" ]]; then
+    PROVENANCE_REF=$(
+        oras attach \
+            -a "$ANNOTATION_VERSION" \
+            -a "$ANNOTATION_COMMIT" \
+            -a "$ANNOTATION_BRANCH" \
+            -a "$ANNOTATION_PROJECT" \
+            --artifact-type "$PROVENANCE_ARTIFACT_TYPE" \
+            "$ARTIFACT:$TAG" \
+            "$PROVENANCE_FILE:application/json" \
+            --format json | jq -r .reference
+    )
+    cosign sign -y "$PROVENANCE_REF"
+fi

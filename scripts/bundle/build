@@ -153,8 +153,6 @@ for FILE in "$TMP_BIN"/*; do
     fi
 done
 
-install_bom
-
 # Create the SBOM
 pushd "$ARCHIVE_PATH"
 SPDX_FILE="$ARCHIVE.spdx"
