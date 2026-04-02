@@ -23,3 +23,12 @@ if [[ -e "$VEX" ]]; then
         --output-signature "$VEX.sig" \
         --output-certificate "$VEX.cert"
 fi
+
+# Sign provenance attestation if available.
+PROVENANCE=$(echo build/bundle/*.provenance.json)
+if [[ -e "$PROVENANCE" ]]; then
+    cosign sign-blob -y "$PROVENANCE" \
+        --bundle "$PROVENANCE.bundle" \
+        --output-signature "$PROVENANCE.sig" \
+        --output-certificate "$PROVENANCE.cert"
+fi
