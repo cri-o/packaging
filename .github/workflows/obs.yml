@@ -237,7 +237,7 @@ jobs:
         if: ${{ inputs.skip-bundles == false && github.event_name != 'pull_request' }}
       - uses: kubernetes-sigs/release-actions/setup-bom@8753ea6bdadb814d779c6ec34eaca689dbfb492b # v0.4.3
         if: ${{ inputs.skip-bundles == false && github.event_name != 'pull_request' }}
-      - uses: oras-project/setup-oras@ee85e73e8681a75c6c5891210a501964ed91d1d2 # main (ORAS 1.3.1 support)
+      - uses: oras-project/setup-oras@36a6ade172947990146cfdafe6e249e4d2b8b254 # main (ORAS 1.3.1 support)
         if: ${{ inputs.skip-bundles == false && github.event_name != 'pull_request' }}
         with:
           version: 1.3.1
