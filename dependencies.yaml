@@ -15,7 +15,7 @@ dependencies:
         match: ZEITGEIST_VERSION
 
   - name: Kubernetes test version
-    version: v1.35
+    version: v1.36
     refPaths:
       - path: test/scripts/versions.sh
         match: KUBERNETES_VERSION
@@ -133,7 +133,7 @@ dependencies:
         match: conmon-rs
 
   - name: cri-tools (latest)
-    version: v1.35.0
+    version: v1.36.0
     refPaths:
       - path: templates/latest/cri-o/bundle/versions
         match: cri-tools
