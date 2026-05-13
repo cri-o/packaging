@@ -216,7 +216,7 @@ apt-get install -y software-properties-common curl
 
 ```bash
 curl -fsSL https://pkgs.k8s.io/core:/stable:/$KUBERNETES_VERSION/deb/Release.key |
-    gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+    gpg --batch --yes --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
 
 echo "deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/$KUBERNETES_VERSION/deb/ /" |
     tee /etc/apt/sources.list.d/kubernetes.list
@@ -226,7 +226,7 @@ echo "deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.
 
 ```bash
 curl -fsSL https://download.opensuse.org/repositories/isv:/cri-o:/stable:/$CRIO_VERSION/deb/Release.key |
-    gpg --dearmor -o /etc/apt/keyrings/cri-o-apt-keyring.gpg
+    gpg --batch --yes --dearmor -o /etc/apt/keyrings/cri-o-apt-keyring.gpg
 
 echo "deb [signed-by=/etc/apt/keyrings/cri-o-apt-keyring.gpg] https://download.opensuse.org/repositories/isv:/cri-o:/stable:/$CRIO_VERSION/deb/ /" |
     tee /etc/apt/sources.list.d/cri-o.list
