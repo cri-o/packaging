@@ -31,6 +31,8 @@ dependencies:
     refPaths:
       - path: scripts/helpers
         match: OSC_VERSION
+      - path: scripts/setup-osc
+        match: OSC_VERSION
 
   - name: Fedora test image
     version: 42
