@@ -36,6 +36,7 @@ dedicated repository, following official Kubernetes guidelines by using the
   - [Start CRI-O](#start-cri-o)
   - [Bootstrap a cluster](#bootstrap-a-cluster)
 - [Publishing](#publishing)
+- [CI Architecture](#ci-architecture)
 - [Using the static binary bundles directly](#using-the-static-binary-bundles-directly)
 - [Uninstall the static binary bundles](#uninstall-the-static-binary-bundles)
 - [CRI-O bundles as OCI artifacts](#cri-o-bundles-as-oci-artifacts)
@@ -293,6 +294,12 @@ but it is also possible to trigger the package creation at a certain point in ti
 1. Run package installation and usage tests for [Kubernetes](scripts/test-kubernetes)
    and [available architectures](scripts/test-architectures) for various Distributions.
 1. Publish the packages into the top level project.
+
+## CI Architecture
+
+For a detailed description of the packaging CI/CD pipelines, including the OBS
+workflow, artifact types, signing, version resolution, and the release lifecycle,
+see [`docs/ci.md`](docs/ci.md).
 
 ## Using the static binary bundles directly
 
