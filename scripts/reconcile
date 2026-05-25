@@ -3,21 +3,10 @@ set -euo pipefail
 
 source "$(dirname "${BASH_SOURCE[0]}")"/helpers
 
-OBS_PASSWORD=${OBS_PASSWORD:-}
-
-setup_osc() {
-    printf "[general]\napiurl = https://api.opensuse.org\n[https://api.opensuse.org]\n" >~/.oscrc
-    echo user=cri-o-release-bot >>~/.oscrc
-    echo "pass=$OBS_PASSWORD" >>~/.oscrc
-}
-
 submit_workflow() {
     echo "Running GitHub OBS workflow for revision: $1"
     gh workflow run obs -F revision="$1"
 }
-
-install_osc
-setup_osc
 
 PACKAGES=$(osc se --package cri-o)
 PROJECT_PREFIX=isv:cri-o

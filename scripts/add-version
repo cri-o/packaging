@@ -1,0 +1,108 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+source "$(dirname "${BASH_SOURCE[0]}")"/helpers
+
+GIT_ROOT=$(git rev-parse --show-toplevel)
+README="$GIT_ROOT/README.md"
+
+PROJECT_PREFIX=isv:cri-o
+
+infer_versions() {
+    PREV_MINOR=$(grep -oP 'stable-v1\.\K[0-9]+(?=-yellow)' "$README")
+    PREV_VERSION="v1.$PREV_MINOR"
+    NEW_VERSION="v1.$((PREV_MINOR + 1))"
+    echo "Previous version: $PREV_VERSION"
+    echo "New version: $NEW_VERSION"
+}
+
+create_obs_project() {
+    local src=$1 dst=$2
+    echo "Creating OBS project: $dst (from $src)"
+
+    local tmpfile
+    tmpfile=$(mktemp)
+
+    osc meta prj "$src" >"$tmpfile"
+    sed -i "s|$src|$dst|g" "$tmpfile"
+    sed -i "s|${PREV_VERSION#v}|${NEW_VERSION#v}|g" "$tmpfile"
+    osc meta prj "$dst" -F "$tmpfile"
+    rm -f "$tmpfile"
+}
+
+create_obs_package() {
+    local src_project=$1 dst_project=$2 package=$3
+    echo "Creating OBS package: $dst_project/$package (from $src_project/$package)"
+
+    local tmpfile
+    tmpfile=$(mktemp)
+
+    osc meta pkg "$src_project" "$package" >"$tmpfile"
+    sed -i "s|$src_project|$dst_project|g" "$tmpfile"
+    osc meta pkg "$dst_project" "$package" -F "$tmpfile"
+    rm -f "$tmpfile"
+}
+
+create_obs_projects() {
+    create_obs_project "$PROJECT_PREFIX:stable:$PREV_VERSION" "$PROJECT_PREFIX:stable:$NEW_VERSION"
+    create_obs_project "$PROJECT_PREFIX:stable:$PREV_VERSION:build" "$PROJECT_PREFIX:stable:$NEW_VERSION:build"
+    create_obs_project "$PROJECT_PREFIX:prerelease:$PREV_VERSION" "$PROJECT_PREFIX:prerelease:$NEW_VERSION"
+    create_obs_project "$PROJECT_PREFIX:prerelease:$PREV_VERSION:build" "$PROJECT_PREFIX:prerelease:$NEW_VERSION:build"
+
+    create_obs_package "$PROJECT_PREFIX:stable:$PREV_VERSION:build" "$PROJECT_PREFIX:stable:$NEW_VERSION:build" cri-o
+    create_obs_package "$PROJECT_PREFIX:prerelease:$PREV_VERSION:build" "$PROJECT_PREFIX:prerelease:$NEW_VERSION:build" cri-o
+}
+
+update_readme() {
+    echo "Updating README.md for $NEW_VERSION"
+
+    local new_minor=${NEW_VERSION#v1.}
+
+    # Add stable project entries after the umbrella line
+    sed -i "/^\- \[\`isv:cri-o:stable\`\]/a\\
+  - [\`isv:cri-o:stable:$NEW_VERSION\`](https://build.opensuse.org/project/show/isv:cri-o:stable:$NEW_VERSION): \`$NEW_VERSION.z\` tags (Stable)\\
+    - [\`isv:cri-o:stable:$NEW_VERSION:build\`](https://build.opensuse.org/project/show/isv:cri-o:stable:$NEW_VERSION:build): \`$NEW_VERSION.z\` tags (Builder)" "$README"
+
+    # Add prerelease project entries after the main:build line (match the linked version, not the plain text example)
+    sed -i "/isv:cri-o:prerelease:main:build.*branch (Builder)/a\\
+  - [\`isv:cri-o:prerelease:$NEW_VERSION\`](https://build.opensuse.org/project/show/isv:cri-o:prerelease:$NEW_VERSION): [\`release-1.$new_minor\`](https://github.com/cri-o/cri-o/commits/release-1.$new_minor) branch (Prerelease)\\
+    - [\`isv:cri-o:prerelease:$NEW_VERSION:build\`](https://build.opensuse.org/project/show/isv:cri-o:prerelease:$NEW_VERSION:build): [\`release-1.$new_minor\`](https://github.com/cri-o/cri-o/commits/release-1.$new_minor) branch (Builder)" "$README"
+
+    # Change previous yellow stable badge to brightgreen
+    sed -i "s|stable-$PREV_VERSION-yellow|stable-$PREV_VERSION-brightgreen|" "$README"
+
+    # Add new yellow stable badge before the previous one
+    sed -i "/stable-$PREV_VERSION-brightgreen/i\\
+[![$NEW_VERSION](https://img.shields.io/badge/stable-$NEW_VERSION-yellow?logo=github)](https://build.opensuse.org/project/show/isv:cri-o:stable:$NEW_VERSION)" "$README"
+
+    # Add new prerelease badge after the main badge
+    sed -i "/prerelease-main-blue/a\\
+[![release-1.$new_minor](https://img.shields.io/badge/prerelease-release--1.$new_minor-blue?logo=git\&logoColor=white)](https://build.opensuse.org/project/show/isv:cri-o:prerelease:$NEW_VERSION)" "$README"
+
+    echo "README.md updated"
+}
+
+if [[ ${1:-} != "" ]]; then
+    PREV_VERSION=""
+    NEW_VERSION=$1
+    if [[ ! $NEW_VERSION =~ ^v ]]; then
+        NEW_VERSION="v$NEW_VERSION"
+    fi
+    # Derive the previous version from the new one
+    local_minor=${NEW_VERSION#v1.}
+    PREV_VERSION="v1.$((local_minor - 1))"
+    echo "Using provided version: $NEW_VERSION (previous: $PREV_VERSION)"
+else
+    infer_versions
+fi
+
+if grep -q "stable:$NEW_VERSION" "$README"; then
+    echo "Version $NEW_VERSION already exists in README"
+    exit 1
+fi
+
+if [[ ${SKIP_OBS:-} != "1" ]]; then
+    create_obs_projects
+fi
+
+update_readme

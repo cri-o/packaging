@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+OBS_PASSWORD=${OBS_PASSWORD:-}
+if [[ -z "$OBS_PASSWORD" ]]; then
+    echo "OBS_PASSWORD is not set" >&2
+    exit 1
+fi
+
+OSC_VERSION=1.25.0
+sudo apt update -y && sudo apt install -y python3-ruamel.yaml
+curl -sSfL --retry 5 --retry-delay 3 \
+    "https://github.com/openSUSE/osc/archive/refs/tags/$OSC_VERSION.tar.gz" -o- | tar xfz -
+pushd "osc-$OSC_VERSION"
+sudo ./setup.py build
+sudo ./setup.py install
+popd
+
+umask 077
+printf "[general]\napiurl = https://api.opensuse.org\n[https://api.opensuse.org]\nuser=cri-o-release-bot\npass=%s\n" "$OBS_PASSWORD" >~/.oscrc
