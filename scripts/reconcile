@@ -1,9 +1,15 @@
 #!/usr/bin/env bash
-set -euo pipefail
 
 source "$(dirname "${BASH_SOURCE[0]}")"/helpers
 
 submit_workflow() {
+    for STATUS in queued in_progress; do
+        if gh run list -w obs -s "$STATUS" --json displayTitle \
+            -q '.[].displayTitle' | grep -qxF "publish on OBS / $1"; then
+            echo "Skipping, workflow already $STATUS for revision: $1"
+            return
+        fi
+    done
     echo "Running GitHub OBS workflow for revision: $1"
     gh workflow run obs -F revision="$1"
 }

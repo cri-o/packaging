@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-set -euox pipefail
 
 source "$(dirname "${BASH_SOURCE[0]}")"/../vars
 
