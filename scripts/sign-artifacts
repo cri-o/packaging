@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-set -euo pipefail
+
+source "$(dirname "${BASH_SOURCE[0]}")"/helpers
 
 for TARBALL in build/bundle/*.tar.gz; do
     cosign sign-blob -y "$TARBALL" \
@@ -15,20 +16,18 @@ for SBOM in build/bundle/*.tar.gz.spdx; do
         --output-certificate "$SBOM.cert"
 done
 
-# Sign VEX file if available (not every release branch publishes one).
-VEX=$(echo build/bundle/*.openvex.json)
-if [[ -e "$VEX" ]]; then
+for VEX in build/bundle/*.openvex.json; do
+    [[ -e "$VEX" ]] || continue
     cosign sign-blob -y "$VEX" \
         --bundle "$VEX.bundle" \
         --output-signature "$VEX.sig" \
         --output-certificate "$VEX.cert"
-fi
+done
 
-# Sign provenance attestation if available.
-PROVENANCE=$(echo build/bundle/*.provenance.json)
-if [[ -e "$PROVENANCE" ]]; then
+for PROVENANCE in build/bundle/*.provenance.json; do
+    [[ -e "$PROVENANCE" ]] || continue
     cosign sign-blob -y "$PROVENANCE" \
         --bundle "$PROVENANCE.bundle" \
         --output-signature "$PROVENANCE.sig" \
         --output-certificate "$PROVENANCE.cert"
-fi
+done

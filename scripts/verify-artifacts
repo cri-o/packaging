@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+
+source "$(dirname "${BASH_SOURCE[0]}")"/helpers
+
+IDENTITY="https://github.com/cri-o/packaging/.github/workflows/obs.yml@.*"
+ISSUER=https://token.actions.githubusercontent.com
+
+verify_blob() {
+    echo "Verifying $1"
+    cosign verify-blob "$1" \
+        --certificate-identity-regexp "$IDENTITY" \
+        --certificate-oidc-issuer "$ISSUER" \
+        --certificate-github-workflow-repository cri-o/packaging \
+        --bundle "$1.bundle"
+}
+
+for TARBALL in build/bundle/*.tar.gz; do
+    verify_blob "$TARBALL"
+done
+
+for SBOM in build/bundle/*.tar.gz.spdx; do
+    verify_blob "$SBOM"
+done
+
+for VEX in build/bundle/*.openvex.json; do
+    [[ -e "$VEX" ]] || continue
+    verify_blob "$VEX"
+done
+
+for PROVENANCE in build/bundle/*.provenance.json; do
+    [[ -e "$PROVENANCE" ]] || continue
+    verify_blob "$PROVENANCE"
+done

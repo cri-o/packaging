@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
-set -euo pipefail
-
-set -x
+set -euox pipefail
 
 retry_3() {
     for _ in 1 2 3; do
