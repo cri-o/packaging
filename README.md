@@ -17,9 +17,7 @@ dedicated repository, following official Kubernetes guidelines by using the
 - [Usage](#usage)
   - [Available Streams](#available-streams)
     - [Stable](#stable)
-      - [Deprecated](#deprecated)
     - [Prerelease](#prerelease)
-      - [Deprecated](#deprecated-1)
     - [Define the Kubernetes version and used CRI-O stream](#define-the-kubernetes-version-and-used-cri-o-stream)
   - [Distributions using <code>rpm</code> packages](#distributions-using-rpm-packages)
     - [Add the Kubernetes repository](#add-the-kubernetes-repository)
@@ -71,19 +69,24 @@ This project contains a bunch of other [subprojects](https://build.opensuse.org/
     - [`isv:cri-o:stable:v1.35:build`](https://build.opensuse.org/project/show/isv:cri-o:stable:v1.35:build): `v1.35.z` tags (Builder)
   - [`isv:cri-o:stable:v1.34`](https://build.opensuse.org/project/show/isv:cri-o:stable:v1.34): `v1.34.z` tags (Stable)
     - [`isv:cri-o:stable:v1.34:build`](https://build.opensuse.org/project/show/isv:cri-o:stable:v1.34:build): `v1.34.z` tags (Builder)
-  - [`isv:cri-o:stable:v1.33`](https://build.opensuse.org/project/show/isv:cri-o:stable:v1.33): `v1.33.z` tags (Stable)
-    - [`isv:cri-o:stable:v1.33:build`](https://build.opensuse.org/project/show/isv:cri-o:stable:v1.33:build): `v1.33.z` tags (Builder)
-  - **End of life:**
-    - [`isv:cri-o:stable:v1.32`](https://build.opensuse.org/project/show/isv:cri-o:stable:v1.32): `v1.32.z` tags (Stable)
-      - [`isv:cri-o:stable:v1.32:build`](https://build.opensuse.org/project/show/isv:cri-o:stable:v1.32:build): `v1.32.z` tags (Builder)
-    - [`isv:cri-o:stable:v1.31`](https://build.opensuse.org/project/show/isv:cri-o:stable:v1.31): `v1.31.z` tags (Stable)
-      - [`isv:cri-o:stable:v1.31:build`](https://build.opensuse.org/project/show/isv:cri-o:stable:v1.31:build): `v1.31.z` tags (Builder)
-    - [`isv:cri-o:stable:v1.30`](https://build.opensuse.org/project/show/isv:cri-o:stable:v1.30): `v1.30.z` tags (Stable)
-      - [`isv:cri-o:stable:v1.30:build`](https://build.opensuse.org/project/show/isv:cri-o:stable:v1.30:build): `v1.30.z` tags (Builder)
-    - [`isv:cri-o:stable:v1.29`](https://build.opensuse.org/project/show/isv:cri-o:stable:v1.29): `v1.29.z` tags (Stable)
-      - [`isv:cri-o:stable:v1.29:build`](https://build.opensuse.org/project/show/isv:cri-o:stable:v1.29:build): `v1.29.z` tags (Builder)
-    - [`isv:cri-o:stable:v1.28`](https://build.opensuse.org/project/show/isv:cri-o:stable:v1.28): `v1.28.z` tags (Stable)
-      - [`isv:cri-o:stable:v1.28:build`](https://build.opensuse.org/project/show/isv:cri-o:stable:v1.28:build): `v1.28.z` tags (Builder)
+
+<details>
+<summary><b>End of life</b></summary>
+
+- [`isv:cri-o:stable:v1.33`](https://build.opensuse.org/project/show/isv:cri-o:stable:v1.33): `v1.33.z` tags (Stable)
+  - [`isv:cri-o:stable:v1.33:build`](https://build.opensuse.org/project/show/isv:cri-o:stable:v1.33:build): `v1.33.z` tags (Builder)
+- [`isv:cri-o:stable:v1.32`](https://build.opensuse.org/project/show/isv:cri-o:stable:v1.32): `v1.32.z` tags (Stable)
+  - [`isv:cri-o:stable:v1.32:build`](https://build.opensuse.org/project/show/isv:cri-o:stable:v1.32:build): `v1.32.z` tags (Builder)
+- [`isv:cri-o:stable:v1.31`](https://build.opensuse.org/project/show/isv:cri-o:stable:v1.31): `v1.31.z` tags (Stable)
+  - [`isv:cri-o:stable:v1.31:build`](https://build.opensuse.org/project/show/isv:cri-o:stable:v1.31:build): `v1.31.z` tags (Builder)
+- [`isv:cri-o:stable:v1.30`](https://build.opensuse.org/project/show/isv:cri-o:stable:v1.30): `v1.30.z` tags (Stable)
+  - [`isv:cri-o:stable:v1.30:build`](https://build.opensuse.org/project/show/isv:cri-o:stable:v1.30:build): `v1.30.z` tags (Builder)
+- [`isv:cri-o:stable:v1.29`](https://build.opensuse.org/project/show/isv:cri-o:stable:v1.29): `v1.29.z` tags (Stable)
+  - [`isv:cri-o:stable:v1.29:build`](https://build.opensuse.org/project/show/isv:cri-o:stable:v1.29:build): `v1.29.z` tags (Builder)
+- [`isv:cri-o:stable:v1.28`](https://build.opensuse.org/project/show/isv:cri-o:stable:v1.28): `v1.28.z` tags (Stable)
+  - [`isv:cri-o:stable:v1.28:build`](https://build.opensuse.org/project/show/isv:cri-o:stable:v1.28:build): `v1.28.z` tags (Builder)
+
+</details>
 
 ### Prereleases
 
@@ -98,19 +101,24 @@ This project contains a bunch of other [subprojects](https://build.opensuse.org/
     - [`isv:cri-o:prerelease:v1.35:build`](https://build.opensuse.org/project/show/isv:cri-o:prerelease:v1.35:build): [`release-1.35`](https://github.com/cri-o/cri-o/commits/release-1.35) branch (Builder)
   - [`isv:cri-o:prerelease:v1.34`](https://build.opensuse.org/project/show/isv:cri-o:prerelease:v1.34): [`release-1.34`](https://github.com/cri-o/cri-o/commits/release-1.34) branch (Prerelease)
     - [`isv:cri-o:prerelease:v1.34:build`](https://build.opensuse.org/project/show/isv:cri-o:prerelease:v1.34:build): [`release-1.34`](https://github.com/cri-o/cri-o/commits/release-1.34) branch (Builder)
-  - [`isv:cri-o:prerelease:v1.33`](https://build.opensuse.org/project/show/isv:cri-o:prerelease:v1.33): [`release-1.33`](https://github.com/cri-o/cri-o/commits/release-1.33) branch (Prerelease)
-    - [`isv:cri-o:prerelease:v1.33:build`](https://build.opensuse.org/project/show/isv:cri-o:prerelease:v1.33:build): [`release-1.33`](https://github.com/cri-o/cri-o/commits/release-1.33) branch (Builder)
-  - **End of life:**
-    - [`isv:cri-o:prerelease:v1.32`](https://build.opensuse.org/project/show/isv:cri-o:prerelease:v1.32): [`release-1.32`](https://github.com/cri-o/cri-o/commits/release-1.32) branch (Prerelease)
-      - [`isv:cri-o:prerelease:v1.32:build`](https://build.opensuse.org/project/show/isv:cri-o:prerelease:v1.32:build): [`release-1.32`](https://github.com/cri-o/cri-o/commits/release-1.32) branch (Builder)
-    - [`isv:cri-o:prerelease:v1.31`](https://build.opensuse.org/project/show/isv:cri-o:prerelease:v1.31): [`release-1.31`](https://github.com/cri-o/cri-o/commits/release-1.31) branch (Prerelease)
-      - [`isv:cri-o:prerelease:v1.31:build`](https://build.opensuse.org/project/show/isv:cri-o:prerelease:v1.31:build): [`release-1.31`](https://github.com/cri-o/cri-o/commits/release-1.31) branch (Builder)
-    - [`isv:cri-o:prerelease:v1.30`](https://build.opensuse.org/project/show/isv:cri-o:prerelease:v1.30): [`release-1.30`](https://github.com/cri-o/cri-o/commits/release-1.30) branch (Prerelease)
-      - [`isv:cri-o:prerelease:v1.30:build`](https://build.opensuse.org/project/show/isv:cri-o:prerelease:v1.30:build): [`release-1.30`](https://github.com/cri-o/cri-o/commits/release-1.30) branch (Builder)
-    - [`isv:cri-o:prerelease:v1.29`](https://build.opensuse.org/project/show/isv:cri-o:prerelease:v1.29): [`release-1.29`](https://github.com/cri-o/cri-o/commits/release-1.29) branch (Prerelease)
-      - [`isv:cri-o:prerelease:v1.29:build`](https://build.opensuse.org/project/show/isv:cri-o:prerelease:v1.29:build): [`release-1.29`](https://github.com/cri-o/cri-o/commits/release-1.29) branch (Builder)
-    - [`isv:cri-o:prerelease:v1.28`](https://build.opensuse.org/project/show/isv:cri-o:prerelease:v1.28): [`release-1.28`](https://github.com/cri-o/cri-o/commits/release-1.28) branch (Prerelease)
-      - [`isv:cri-o:prerelease:v1.28:build`](https://build.opensuse.org/project/show/isv:cri-o:prerelease:v1.28:build): [`release-1.28`](https://github.com/cri-o/cri-o/commits/release-1.28) branch (Builder)
+
+<details>
+<summary><b>End of life</b></summary>
+
+- [`isv:cri-o:prerelease:v1.33`](https://build.opensuse.org/project/show/isv:cri-o:prerelease:v1.33): [`release-1.33`](https://github.com/cri-o/cri-o/commits/release-1.33) branch (Prerelease)
+  - [`isv:cri-o:prerelease:v1.33:build`](https://build.opensuse.org/project/show/isv:cri-o:prerelease:v1.33:build): [`release-1.33`](https://github.com/cri-o/cri-o/commits/release-1.33) branch (Builder)
+- [`isv:cri-o:prerelease:v1.32`](https://build.opensuse.org/project/show/isv:cri-o:prerelease:v1.32): [`release-1.32`](https://github.com/cri-o/cri-o/commits/release-1.32) branch (Prerelease)
+  - [`isv:cri-o:prerelease:v1.32:build`](https://build.opensuse.org/project/show/isv:cri-o:prerelease:v1.32:build): [`release-1.32`](https://github.com/cri-o/cri-o/commits/release-1.32) branch (Builder)
+- [`isv:cri-o:prerelease:v1.31`](https://build.opensuse.org/project/show/isv:cri-o:prerelease:v1.31): [`release-1.31`](https://github.com/cri-o/cri-o/commits/release-1.31) branch (Prerelease)
+  - [`isv:cri-o:prerelease:v1.31:build`](https://build.opensuse.org/project/show/isv:cri-o:prerelease:v1.31:build): [`release-1.31`](https://github.com/cri-o/cri-o/commits/release-1.31) branch (Builder)
+- [`isv:cri-o:prerelease:v1.30`](https://build.opensuse.org/project/show/isv:cri-o:prerelease:v1.30): [`release-1.30`](https://github.com/cri-o/cri-o/commits/release-1.30) branch (Prerelease)
+  - [`isv:cri-o:prerelease:v1.30:build`](https://build.opensuse.org/project/show/isv:cri-o:prerelease:v1.30:build): [`release-1.30`](https://github.com/cri-o/cri-o/commits/release-1.30) branch (Builder)
+- [`isv:cri-o:prerelease:v1.29`](https://build.opensuse.org/project/show/isv:cri-o:prerelease:v1.29): [`release-1.29`](https://github.com/cri-o/cri-o/commits/release-1.29) branch (Prerelease)
+  - [`isv:cri-o:prerelease:v1.29:build`](https://build.opensuse.org/project/show/isv:cri-o:prerelease:v1.29:build): [`release-1.29`](https://github.com/cri-o/cri-o/commits/release-1.29) branch (Builder)
+- [`isv:cri-o:prerelease:v1.28`](https://build.opensuse.org/project/show/isv:cri-o:prerelease:v1.28): [`release-1.28`](https://github.com/cri-o/cri-o/commits/release-1.28) branch (Prerelease)
+  - [`isv:cri-o:prerelease:v1.28:build`](https://build.opensuse.org/project/show/isv:cri-o:prerelease:v1.28:build): [`release-1.28`](https://github.com/cri-o/cri-o/commits/release-1.28) branch (Builder)
+
+</details>
 
 The `prerelease` projects are mainly used for `release-x.y` branches as well as
 the `main` branch of CRI-O. The `stable` projects are used for tagged releases.
@@ -136,15 +144,18 @@ All packages are based on the static binary bundles provided by the CRI-O CI.
 [![v1.36](https://img.shields.io/badge/stable-v1.36-brightgreen?logo=github)](https://build.opensuse.org/project/show/isv:cri-o:stable:v1.36)
 [![v1.35](https://img.shields.io/badge/stable-v1.35-brightgreen?logo=github)](https://build.opensuse.org/project/show/isv:cri-o:stable:v1.35)
 [![v1.34](https://img.shields.io/badge/stable-v1.34-brightgreen?logo=github)](https://build.opensuse.org/project/show/isv:cri-o:stable:v1.34)
-[![v1.33](https://img.shields.io/badge/stable-v1.33-brightgreen?logo=github)](https://build.opensuse.org/project/show/isv:cri-o:stable:v1.33)
 
-##### Deprecated
+<details>
+<summary>Deprecated</summary>
 
+[![v1.33](https://img.shields.io/badge/end%20of%20life-v1.33-red?logo=github)](https://build.opensuse.org/project/show/isv:cri-o:stable:v1.33)
 [![v1.32](https://img.shields.io/badge/end%20of%20life-v1.32-red?logo=github)](https://build.opensuse.org/project/show/isv:cri-o:stable:v1.32)
 [![v1.31](https://img.shields.io/badge/end%20of%20life-v1.31-red?logo=github)](https://build.opensuse.org/project/show/isv:cri-o:stable:v1.31)
 [![v1.30](https://img.shields.io/badge/end%20of%20life-v1.30-red?logo=github)](https://build.opensuse.org/project/show/isv:cri-o:stable:v1.30)
 [![v1.29](https://img.shields.io/badge/end%20of%20life-v1.29-red?logo=github)](https://build.opensuse.org/project/show/isv:cri-o:stable:v1.29)
 [![v1.28](https://img.shields.io/badge/end%20of%20life-v1.28-red?logo=github)](https://build.opensuse.org/project/show/isv:cri-o:stable:v1.28)
+
+</details>
 
 #### Prerelease
 
@@ -153,15 +164,18 @@ All packages are based on the static binary bundles provided by the CRI-O CI.
 [![release-1.36](https://img.shields.io/badge/prerelease-release--1.36-blue?logo=git&logoColor=white)](https://build.opensuse.org/project/show/isv:cri-o:prerelease:v1.36)
 [![release-1.35](https://img.shields.io/badge/prerelease-release--1.35-blue?logo=git&logoColor=white)](https://build.opensuse.org/project/show/isv:cri-o:prerelease:v1.35)
 [![release-1.34](https://img.shields.io/badge/prerelease-release--1.34-blue?logo=git&logoColor=white)](https://build.opensuse.org/project/show/isv:cri-o:prerelease:v1.34)
-[![release-1.33](https://img.shields.io/badge/prerelease-release--1.33-blue?logo=git&logoColor=white)](https://build.opensuse.org/project/show/isv:cri-o:prerelease:v1.33)
 
-##### Deprecated
+<details>
+<summary>Deprecated</summary>
 
+[![release-1.33](https://img.shields.io/badge/end%20of%20life-release--1.33-red?logo=git&logoColor=white)](https://build.opensuse.org/project/show/isv:cri-o:prerelease:v1.33)
 [![release-1.32](https://img.shields.io/badge/end%20of%20life-release--1.32-red?logo=git&logoColor=white)](https://build.opensuse.org/project/show/isv:cri-o:prerelease:v1.32)
 [![release-1.31](https://img.shields.io/badge/end%20of%20life-release--1.31-red?logo=git&logoColor=white)](https://build.opensuse.org/project/show/isv:cri-o:prerelease:v1.31)
 [![release-1.30](https://img.shields.io/badge/end%20of%20life-release--1.30-red?logo=git&logoColor=white)](https://build.opensuse.org/project/show/isv:cri-o:prerelease:v1.30)
 [![release-1.29](https://img.shields.io/badge/end%20of%20life-release--1.29-red?logo=git&logoColor=white)](https://build.opensuse.org/project/show/isv:cri-o:prerelease:v1.29)
 [![release-1.28](https://img.shields.io/badge/end%20of%20life-release--1.28-red?logo=git&logoColor=white)](https://build.opensuse.org/project/show/isv:cri-o:prerelease:v1.28)
+
+</details>
 
 #### Define the Kubernetes version and used CRI-O stream
 
