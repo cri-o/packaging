@@ -47,7 +47,7 @@ jobs:
       project_version: ${{ steps.step.outputs.PROJECT_VERSION }}
       version: ${{ steps.step.outputs.VERSION }}
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
       - id: step
         run: |
           source scripts/vars
@@ -79,7 +79,7 @@ jobs:
           - s390x
     name: bundle / build / ${{ inputs.revision || 'main' }} / ${{ matrix.arch }}
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
       - uses: sigstore/cosign-installer@6f9f17788090df1f26f669e9d70d6ae9567deba6 # v4.1.2
       - uses: kubernetes-sigs/release-actions/setup-bom@8753ea6bdadb814d779c6ec34eaca689dbfb492b # v0.4.3
         if: ${{ inputs.skip-bundles == false }}
@@ -112,7 +112,7 @@ jobs:
       - vars
       - bundles
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
       - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         if: ${{ inputs.skip-bundles == false }}
         with:
@@ -138,7 +138,7 @@ jobs:
     permissions:
       id-token: write
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
       - uses: google-github-actions/auth@7c6bc770dae815cd3e89ee6cdf493a5fab2cc093 # v3.0.0
         if: ${{ inputs.skip-bundles == false && github.event_name != 'pull_request' }}
         with:
@@ -228,7 +228,7 @@ jobs:
       id-token: write
       packages: write
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
       - uses: docker/login-action@650006c6eb7dba73a995cc03b0b2d7f5ca915bee # v4.2.0
         if: ${{ inputs.skip-bundles == false && github.event_name != 'pull_request' }}
         with:
@@ -287,7 +287,7 @@ jobs:
       - bundles-publish
       - oci-artifacts-publish
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
       - run: scripts/obs
         if: ${{ inputs.skip-stage == false && github.event_name != 'pull_request' }}
         env:
@@ -313,7 +313,7 @@ jobs:
           - rpm
     name: test / ${{ matrix.type }} / kubernetes / amd64
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
       - run: sudo scripts/github-actions-setup
         if: ${{ inputs.skip-tests == false }}
       - run: sudo -E scripts/test-kubernetes
@@ -360,7 +360,7 @@ jobs:
             arch: s390x # QEMU emulation segfault
     name: test / ${{ matrix.run.type }} / ${{ matrix.run.image }} / ${{ matrix.arch }}
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
       - uses: docker/setup-buildx-action@d7f5e7f509e45cec5c76c4d5afdd7de93d0b3df5 # v4.1.0
       - uses: nick-fields/retry@ad984534de44a9489a53aefd81eb77f87c70dc60 # v4.0.0
         if: ${{ inputs.skip-tests == false }}
@@ -389,7 +389,7 @@ jobs:
       - test-architectures
       - test-kubernetes
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
       - run: scripts/obs
         if: ${{ inputs.skip-release == false && github.event_name != 'pull_request' }}
         env:
