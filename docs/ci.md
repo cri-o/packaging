@@ -20,6 +20,7 @@ GitHub releases), see the
 - [Version Resolution](#version-resolution)
 - [Release Lifecycle](#release-lifecycle)
 - [OBS Project Structure](#obs-project-structure)
+
 <!-- /toc -->
 
 ## Upstream Interface
