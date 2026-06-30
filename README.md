@@ -39,6 +39,7 @@ dedicated repository, following official Kubernetes guidelines by using the
 - [Uninstall the static binary bundles](#uninstall-the-static-binary-bundles)
 - [CRI-O bundles as OCI artifacts](#cri-o-bundles-as-oci-artifacts)
 - [More to read](#more-to-read)
+
 <!-- /toc -->
 
 ## Project Layout
