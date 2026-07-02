@@ -8,7 +8,7 @@ Vagrant.configure("2") do |config|
   cpus = 4
 
   config.vm.provider :virtualbox do |v, override|
-    override.vm.box_url = "https://cloud.centos.org/centos/10-stream/x86_64/images/CentOS-Stream-Vagrant-10-latest.x86_64.vagrant-virtualbox.box"
+    override.vm.box_url = "https://cloud.centos.org/centos/10-stream/x86_64/images/CentOS-Stream-Vagrant-10-20260622.0.x86_64.vagrant-virtualbox.box"
     v.memory = memory
     v.cpus = cpus
   end
