@@ -128,8 +128,15 @@ dependencies:
       - path: templates/latest/cri-o/bundle/versions
         match: conmon
 
-  - name: conmon-rs (latest)
+  # TODO: remove once CRI-O v1.36 goes EOL
+  - name: conmon-rs (CRI-O <= v1.36)
     version: v0.8.0
+    refPaths:
+      - path: templates/latest/cri-o/bundle/versions
+        match: conmon-rs
+
+  - name: conmon-rs (CRI-O >= v1.37)
+    version: v1.0.1
     refPaths:
       - path: templates/latest/cri-o/bundle/versions
         match: conmon-rs
