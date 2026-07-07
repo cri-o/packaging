@@ -98,7 +98,7 @@ curl_to "$TMP_BIN/conmon" \
 chmod +x "$TMP_BIN/conmon"
 
 # conmon-rs
-curl_retry https://raw.githubusercontent.com/containers/conmon-rs/main/scripts/get |
+curl_retry "https://raw.githubusercontent.com/containers/conmon-rs/${VERSIONS["conmon-rs"]}/scripts/get" |
     bash -s -- -n -a "$ARCH" -l "${VERSIONS["conmon-rs"]}" -o "$TMP_BIN/conmonrs"
 
 # runc
