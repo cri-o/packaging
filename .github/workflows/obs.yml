@@ -81,7 +81,7 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: sigstore/cosign-installer@6f9f17788090df1f26f669e9d70d6ae9567deba6 # v4.1.2
-      - uses: kubernetes-sigs/release-actions/setup-bom@8753ea6bdadb814d779c6ec34eaca689dbfb492b # v0.4.3
+      - uses: kubernetes-sigs/release-actions/setup-bom@c130b4494862d330a1aa4de320076c666d0708da # v0.4.4
         if: ${{ inputs.skip-bundles == false }}
       - uses: nick-fields/retry@ad984534de44a9489a53aefd81eb77f87c70dc60 # v4.0.0
         if: ${{ inputs.skip-bundles == false }}
@@ -237,7 +237,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
       - uses: sigstore/cosign-installer@6f9f17788090df1f26f669e9d70d6ae9567deba6 # v4.1.2
         if: ${{ inputs.skip-bundles == false && github.event_name != 'pull_request' }}
-      - uses: kubernetes-sigs/release-actions/setup-bom@8753ea6bdadb814d779c6ec34eaca689dbfb492b # v0.4.3
+      - uses: kubernetes-sigs/release-actions/setup-bom@c130b4494862d330a1aa4de320076c666d0708da # v0.4.4
         if: ${{ inputs.skip-bundles == false && github.event_name != 'pull_request' }}
       - uses: oras-project/setup-oras@1d808f7d7f6995cc68b7bf507bfe5c5446e1dc9d # main (ORAS 1.3.1 support)
         if: ${{ inputs.skip-bundles == false && github.event_name != 'pull_request' }}

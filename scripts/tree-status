@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-STATUS=$(git status --porcelain)
+STATUS=$(git status --porcelain -uno)
 if [[ -z $STATUS ]]; then
     echo tree is clean
 else
