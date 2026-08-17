@@ -18,6 +18,10 @@ pushd cri-o
 # Install and prepare config
 ./install
 
+# Enable the default CNI bridge configuration
+sudo mv /etc/cni/net.d/10-crio-bridge.conflist.disabled \
+    /etc/cni/net.d/10-crio-bridge.conflist
+
 # Start CRI-O
 systemctl daemon-reload
 systemctl start crio || (journalctl -xeu crio.service && exit 1)
@@ -41,7 +45,7 @@ if [[ ! $(crictl pods --name "$POD_NAME" -s Ready -q) ]]; then
 fi
 
 CONTAINER_NAME=$(jq -r .metadata.name "$CONTAINER_JSON")
-if [[ ! $(crictl ps --name "$CONTAINER_NAME" --state Exited -q) ]]; then
+if [[ ! $(crictl ps -a --name "$CONTAINER_NAME" -q) ]]; then
     echo "No container found"
     exit 1
 fi
