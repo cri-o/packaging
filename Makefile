@@ -1,7 +1,7 @@
 CONTAINER_RUNTIME ?= podman
 
-ZEITGEIST_VERSION = v0.5.4
-SHFMT_VERSION := v3.13.0
+ZEITGEIST_VERSION = v0.8.0
+SHFMT_VERSION := v3.13.1
 SHELLCHECK_VERSION := v0.11.0
 MDTOC_VERSION := v1.4.0
 
@@ -23,7 +23,7 @@ clean:
 	rm -rf $(BUILD_DIR)
 
 $(ZEITGEIST): $(BUILD_DIR)
-	$(call curl_to,https://storage.googleapis.com/k8s-artifacts-sig-release/kubernetes-sigs/zeitgeist/$(ZEITGEIST_VERSION)/zeitgeist-amd64-linux,$(ZEITGEIST))
+	$(call curl_to,https://github.com/kubernetes-sigs/zeitgeist/releases/download/$(ZEITGEIST_VERSION)/zeitgeist-amd64-linux,$(ZEITGEIST))
 	chmod +x $(ZEITGEIST)
 
 $(SHFMT): $(BUILD_DIR)
