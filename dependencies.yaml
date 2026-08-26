@@ -4,35 +4,33 @@ dependencies:
     version: v1.36
     refPaths:
       - path: README.md
-        match: CRIO_VERSION
-      - path: README.md
-        match: bash -s -- -t
+        match: CRIO_VERSION=
 
   - name: zeitgeist
-    version: v0.5.4
+    version: v0.8.0
     refPaths:
       - path: Makefile
-        match: ZEITGEIST_VERSION
+        match: ZEITGEIST_VERSION =
 
   - name: Kubernetes test version
     version: v1.36
     refPaths:
       - path: test/scripts/versions.sh
-        match: KUBERNETES_VERSION
+        match: KUBERNETES_VERSION=
       - path: test/deb/lima.yaml
-        match: KUBERNETES_VERSION
+        match: KUBERNETES_VERSION=
       - path: test/rpm/lima.yaml
-        match: KUBERNETES_VERSION
+        match: KUBERNETES_VERSION=
       - path: README.md
-        match: KUBERNETES_VERSION
+        match: KUBERNETES_VERSION=
 
   - name: OSC
-    version: 1.25.0
+    version: 1.27.3
     refPaths:
       - path: scripts/helpers
-        match: OSC_VERSION
+        match: OSC_VERSION=
       - path: scripts/setup-osc
-        match: OSC_VERSION
+        match: OSC_VERSION=
 
   - name: Fedora test image
     version: 42
@@ -78,43 +76,43 @@ dependencies:
     version: 7.2.0-1
     refPaths:
       - path: scripts/test-architectures
-        match: QEMUVERSION
+        match: QEMUVERSION=
 
   - name: shellcheck
     version: v0.11.0
     refPaths:
       - path: Makefile
-        match: SHELLCHECK_VERSION
+        match: SHELLCHECK_VERSION :=
 
   - name: shellfmt
-    version: v3.13.0
+    version: v3.13.1
     refPaths:
       - path: Makefile
-        match: SHFMT_VERSION
+        match: SHFMT_VERSION :=
 
   - name: mdtoc
     version: v1.4.0
     refPaths:
       - path: Makefile
-        match: MDTOC_VERSION
+        match: MDTOC_VERSION :=
 
   - name: krel
-    version: v0.20.1
+    version: v0.21.1
     refPaths:
       - path: scripts/helpers
-        match: KREL_VERSION
+        match: KREL_VERSION=
 
   - name: oras
-    version: 1.3.1
+    version: 1.3.3
     refPaths:
       - path: .github/workflows/obs.yml
-        match: version
+        match: "version: 1."
 
   - name: debian base
     version: bookworm-v1.0.7
     refPaths:
       - path: test/testdata/container.json
-        match: image
+        match: debian-base
 
   - name: cni-plugins (latest)
     version: v1.9.1
@@ -126,20 +124,20 @@ dependencies:
     version: v2.2.1
     refPaths:
       - path: templates/latest/cri-o/bundle/versions
-        match: conmon
+        match: '"conmon"'
 
   # TODO: remove once CRI-O v1.36 goes EOL
   - name: conmon-rs (CRI-O <= v1.36)
     version: v0.8.0
     refPaths:
       - path: templates/latest/cri-o/bundle/versions
-        match: conmon-rs
+        match: '"conmon-rs"]=v0'
 
   - name: conmon-rs (CRI-O >= v1.37)
     version: v1.0.1
     refPaths:
       - path: templates/latest/cri-o/bundle/versions
-        match: conmon-rs
+        match: '"conmon-rs"]=v1'
 
   - name: cri-tools (latest)
     version: v1.36.0
@@ -148,13 +146,13 @@ dependencies:
         match: cri-tools
 
   - name: runc (latest)
-    version: v1.4.2
+    version: v1.5.1
     refPaths:
       - path: templates/latest/cri-o/bundle/versions
         match: runc
 
   - name: crun (latest)
-    version: 1.26
+    version: 1.29.1
     refPaths:
       - path: templates/latest/cri-o/bundle/versions
         match: crun

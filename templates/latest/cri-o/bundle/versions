@@ -7,8 +7,8 @@ declare -A VERSIONS=(
     ["conmon"]=v2.2.1
     ["conmon-rs"]=v0.8.0
     ["cri-tools"]=v1.36.0
-    ["crun"]=1.26
-    ["runc"]=v1.4.2
+    ["crun"]=1.29.1
+    ["runc"]=v1.5.1
     ["crio-credential-provider"]=v0.1.2
 )
 # TODO: remove the conditional override and set the default to v1.0.1 once
