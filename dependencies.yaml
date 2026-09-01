@@ -140,7 +140,7 @@ dependencies:
         match: '"conmon-rs"]=v1'
 
   - name: cri-tools (latest)
-    version: v1.36.0
+    version: v1.37.0
     refPaths:
       - path: templates/latest/cri-o/bundle/versions
         match: cri-tools
