@@ -139,7 +139,7 @@ prepare() {
 prepare "$@"
 
 TARBALL=cri-o.$ARCH.$VERSION.tar.gz
-SPDX=$TARBALL.spdx
+SPDX=$TARBALL.spdx.json
 BASE_URL=$GCB_URL/artifacts
 
 TMPDIR="$(mktemp -d)"
@@ -148,6 +148,11 @@ trap 'rm -rf -- "$TMPDIR"' EXIT
 if command -v cosign >/dev/null; then
     echo "Found cosign, verifying signatures"
     pushd "$TMPDIR" >/dev/null
+
+    # Bundles built before the switch to SPDX 3 only provide a tag-value SBOM
+    if [[ $(curl -sSL --retry 5 --retry-delay 3 -I -o /dev/null -w "%{http_code}" "$BASE_URL/$SPDX") == 404 ]]; then
+        SPDX=$TARBALL.spdx
+    fi
 
     FILES=(
         "$TARBALL"

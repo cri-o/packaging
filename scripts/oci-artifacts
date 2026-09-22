@@ -10,7 +10,7 @@ BUNDLE_ARTIFACT_TYPE=application/vnd.cncf.cri-o.bundle.v1
 SBOM_ARTIFACT_TYPE=application/vnd.cncf.spdx.file.v1
 VEX_ARTIFACT_TYPE=application/vnd.cncf.openvex.file.v1
 PROVENANCE_ARTIFACT_TYPE=application/vnd.cncf.slsa.provenance.v1
-SBOM_FILE=sbom.spdx
+SBOM_FILE=sbom.spdx.json
 
 pushd "$ARCHIVE_PATH"
 
@@ -39,7 +39,7 @@ for ARCH in "${ARCHES[@]}"; do
 
     mkdir -p "$ARCH"
     mv "$TARBALL" "$ARCH"
-    mv "$TARBALL.spdx" "$ARCH/$SBOM_FILE"
+    mv "$TARBALL.spdx.json" "$ARCH/$SBOM_FILE"
     pushd "$ARCH"
 
     tar xf "$TARBALL"
@@ -99,7 +99,7 @@ for ARCH in "${ARCHES[@]}"; do
             --platform "linux/$ARCH" \
             --artifact-type "$SBOM_ARTIFACT_TYPE" \
             "$ARTIFACT:$TAG" \
-            "$SBOM_FILE:application/spdx" \
+            "$SBOM_FILE:application/spdx+json" \
             --format json | jq -r .reference
     )
     popd

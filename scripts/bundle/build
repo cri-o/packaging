@@ -183,9 +183,9 @@ done
 
 # Create the SBOM
 pushd "$ARCHIVE_PATH"
-SPDX_FILE="$ARCHIVE.spdx"
+SPDX_FILE="$ARCHIVE.spdx.json"
 bom generate \
-    -l Apache-2.0 \
+    --format spdx3-json \
     --name CRI-O \
     --namespace "https://storage.googleapis.com/cri-o/artifacts/$SPDX_FILE" \
     -d "$CRIODIR" \

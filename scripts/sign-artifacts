@@ -13,7 +13,7 @@ sign_blob() {
 }
 
 for ARTIFACT in "$BUNDLE_DIR"/*.tar.gz "$BUNDLE_DIR"/*.tar.gz.sha256sum \
-    "$BUNDLE_DIR"/*.tar.gz.spdx "$BUNDLE_DIR"/*.openvex.json \
+    "$BUNDLE_DIR"/*.tar.gz.spdx.json "$BUNDLE_DIR"/*.openvex.json \
     "$BUNDLE_DIR"/*.provenance.json; do
     [[ -e "$ARTIFACT" ]] || continue
     sign_blob "$ARTIFACT"
