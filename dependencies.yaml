@@ -212,7 +212,7 @@ dependencies:
         match: '"runc-'
 
   - name: crun (latest)
-    version: 1.29.1
+    version: 1.30
     upstream:
       flavour: github
       url: containers/crun
