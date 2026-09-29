@@ -140,7 +140,7 @@ The following table lists all artifact types flowing through the CI system:
 | Version markers                   | Plain text                 | cri-o CI `upload-artifacts`       | `gs://cri-o/latest-*.txt`                           | Packaging `reconcile`, `vars` |
 | OpenVEX report                    | JSON (OpenVEX)             | cri-o CI `govulncheck`            | `gs://cri-o/artifacts/<commit>/cri-o.openvex.json`  | Packaging `vex` script        |
 | Binary bundles                    | tar.gz                     | Packaging `bundle/build`          | `gs://cri-o/artifacts/cri-o.<arch>.<id>.tar.gz`     | OBS, `get` script, users      |
-| SBOM                              | SPDX JSON                  | Packaging `bundle/build`          | `cri-o.<arch>.<id>.tar.gz.spdx`                     | OCI registry, users           |
+| SBOM                              | SPDX 3.0.1 JSON-LD         | Packaging `bundle/build`          | `cri-o.<arch>.<id>.tar.gz.spdx.json`                | OCI registry, users           |
 | Cosign signatures                 | `.sig`, `.cert`, `.bundle` | Packaging `sign-artifacts`        | Alongside each artifact in GCS                      | Users (verification)          |
 | SLSA provenance                   | JSON (SLSA 1.0)            | Packaging `provenance` (tejolote) | `cri-o.<id>.provenance.json`                        | OCI registry, users           |
 | OCI bundles                       | Multi-arch OCI image index | Packaging `oci-artifacts`         | `ghcr.io/cri-o/bundle:<tag>`                        | Users (ORAS, Podman)          |
@@ -198,7 +198,7 @@ produced:
 The following artifacts are signed:
 
 - Binary bundle tarballs (`.tar.gz`, per architecture)
-- SBOMs (`.tar.gz.spdx`, per architecture)
+- SBOMs (`.tar.gz.spdx.json`, per architecture)
 - OpenVEX report (`.openvex.json`, if available)
 - SLSA provenance (`.provenance.json`, if available)
 

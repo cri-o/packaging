@@ -349,9 +349,9 @@ The script automatically verifies the uploaded sigstore signatures as well, if
 the local system has [`cosign`](https://github.com/sigstore/cosign) available in
 its `$PATH`. The same applies to the [SPDX](https://spdx.org) based bill of
 materials (SBOM), which gets automatically verified if the
-[bom](https://sigs.k8s.io/bom) tool is in `$PATH`. Without `cosign`, the script
-falls back to verifying the published SHA256 checksum. Pass `-v` to require
-signature verification and fail if `cosign` is unavailable:
+[bom](https://sigs.k8s.io/bom) tool (v0.8.0 or later) is in `$PATH`. Without
+`cosign`, the script falls back to verifying the published SHA256 checksum. Pass
+`-v` to require signature verification and fail if `cosign` is unavailable:
 
 ```shell
 curl https://raw.githubusercontent.com/cri-o/packaging/main/get | bash -s -- -v
@@ -391,11 +391,14 @@ can be any git SHA or tag.
 
 We also provide a Software Bill of Materials (SBOM) in the [SPDX
 format](https://spdx.org) for each bundle. The SBOM is available at the same URL
-like the bundle itself, but suffixed with `.spdx`:
+like the bundle itself, but suffixed with `.spdx.json`:
 
 ```text
-https://storage.googleapis.com/cri-o/artifacts/cri-o.$ARCH.$REV.tar.gz.spdx
+https://storage.googleapis.com/cri-o/artifacts/cri-o.$ARCH.$REV.tar.gz.spdx.json
 ```
+
+Bundles built before the switch to SPDX 3 only provide an SPDX 2.3 tag-value
+SBOM suffixed with `.spdx`.
 
 An [OpenVEX](https://openvex.dev) vulnerability report and [SLSA](https://slsa.dev)
 provenance attestation are available per release:

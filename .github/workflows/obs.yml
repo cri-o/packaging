@@ -83,6 +83,8 @@ jobs:
       - uses: sigstore/cosign-installer@6f9f17788090df1f26f669e9d70d6ae9567deba6 # v4.1.2
       - uses: kubernetes-sigs/release-actions/setup-bom@b5b8280a60e6e20607f77068011269b982c60971 # v0.4.5
         if: ${{ inputs.skip-bundles == false }}
+        with:
+          bom-release: 0.8.0
       - uses: nick-fields/retry@ad984534de44a9489a53aefd81eb77f87c70dc60 # v4.0.0
         if: ${{ inputs.skip-bundles == false }}
         with:
@@ -228,6 +230,8 @@ jobs:
         if: ${{ inputs.skip-bundles == false && github.event_name != 'pull_request' }}
       - uses: kubernetes-sigs/release-actions/setup-bom@b5b8280a60e6e20607f77068011269b982c60971 # v0.4.5
         if: ${{ inputs.skip-bundles == false && github.event_name != 'pull_request' }}
+        with:
+          bom-release: 0.8.0
       - uses: oras-project/setup-oras@1d808f7d7f6995cc68b7bf507bfe5c5446e1dc9d # v2.0.1
         if: ${{ inputs.skip-bundles == false && github.event_name != 'pull_request' }}
         with:
