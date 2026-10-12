@@ -101,7 +101,7 @@ jobs:
           PROJECT_TYPE: ${{ needs.vars.outputs.project_type }}
           PROJECT_VERSION: ${{ needs.vars.outputs.project_version }}
           VERSION: ${{ needs.vars.outputs.version }}
-      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         if: ${{ inputs.skip-bundles == false }}
         with:
           name: bundles-${{ matrix.arch }}
@@ -193,14 +193,14 @@ jobs:
           path: latest-bundle-${{ inputs.revision || 'main' }}.txt
           destination: cri-o
           process_gcloudignore: false
-      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         if: ${{ inputs.skip-bundles == false && github.event_name != 'pull_request' }}
         with:
           name: signatures
           path: |
             build/bundle/*.sig
             build/bundle/*.cert
-      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         if: ${{ inputs.skip-bundles == false && github.event_name != 'pull_request' }}
         with:
           name: attestations
