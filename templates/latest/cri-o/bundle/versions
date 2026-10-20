@@ -11,13 +11,17 @@ declare -A VERSIONS=(
     ["runc"]=v1.5.2
     ["crio-credential-provider"]=v0.1.2
 )
-# TODO: remove the conditional override and set the default to v1.0.1 once
-# CRI-O v1.36 goes EOL.
-# conmon-rs v1.0.0+ requires CRI-O v1.37+
-if [[ "${PROJECT_VERSION:-}" == "main" ]] ||
-    { [[ "${PROJECT_VERSION:-}" =~ ^v([0-9]+)\.([0-9]+)$ ]] &&
-        [[ ${BASH_REMATCH[1]} -ge 2 || (${BASH_REMATCH[1]} -eq 1 && ${BASH_REMATCH[2]} -ge 37) ]]; }; then
-    VERSIONS["conmon-rs"]=v1.0.1
+# TODO: remove the conditional overrides and set the default to the newest
+# conmon-rs once CRI-O v1.37 goes EOL.
+# conmon-rs v1.0.0+ requires CRI-O v1.37+, v1.1.0+ is used by CRI-O v1.38+
+if [[ "${PROJECT_VERSION:-}" == "main" ]]; then
+    VERSIONS["conmon-rs"]=v1.1.1
+elif [[ "${PROJECT_VERSION:-}" =~ ^v([0-9]+)\.([0-9]+)$ ]]; then
+    if [[ ${BASH_REMATCH[1]} -ge 2 || (${BASH_REMATCH[1]} -eq 1 && ${BASH_REMATCH[2]} -ge 38) ]]; then
+        VERSIONS["conmon-rs"]=v1.1.1
+    elif [[ ${BASH_REMATCH[1]} -eq 1 && ${BASH_REMATCH[2]} -eq 37 ]]; then
+        VERSIONS["conmon-rs"]=v1.0.1
+    fi
 fi
 
 export VERSIONS
