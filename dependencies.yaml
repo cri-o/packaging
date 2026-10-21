@@ -189,25 +189,16 @@ dependencies:
       - path: scripts/bundle/digests
         match: '"conmon-rs-v0'
 
-  # TODO: remove once CRI-O v1.37 goes EOL
-  - name: conmon-rs (CRI-O v1.37)
-    version: v1.0.1
-    refPaths:
-      - path: templates/latest/cri-o/bundle/versions
-        match: '"conmon-rs"]=v1.0'
-      - path: scripts/bundle/digests
-        match: '"conmon-rs-v1.0'
-
-  - name: conmon-rs (CRI-O >= v1.38)
+  - name: conmon-rs (CRI-O >= v1.37)
     version: v1.1.1
     upstream:
       flavour: github
       url: containers/conmon-rs
     refPaths:
       - path: templates/latest/cri-o/bundle/versions
-        match: '"conmon-rs"]=v1.1'
+        match: '"conmon-rs"]=v1'
       - path: scripts/bundle/digests
-        match: '"conmon-rs-v1.1'
+        match: '"conmon-rs-v1'
 
   - name: cri-tools (latest)
     version: v1.37.0
