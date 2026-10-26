@@ -11,8 +11,8 @@ ARCHES=(amd64 arm64 ppc64le s390x)
 
 # The versions file picks a different conmon-rs depending on the CRI-O release,
 # so digests have to be pinned for every version that can be selected.
-# TODO: reduce to "main" once CRI-O v1.37 goes EOL.
-PROJECT_VERSIONS=(main v1.37 v1.36)
+# TODO: reduce to "main" once CRI-O v1.36 goes EOL.
+PROJECT_VERSIONS=(main v1.36)
 
 collect_versions() {
     (
