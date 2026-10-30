@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+
+source "$(dirname "${BASH_SOURCE[0]}")"/../helpers
+
+# Check whether the bundles are already published with the same content, which
+# is the case if neither the CRI-O commit nor the components changed, for
+# example on main and a freshly branched release. Signing them again would
+# replace the signatures of the published files for no reason.
+#
+# Only the checksums are compared, they get uploaded after all other files, so
+# a published checksum means that its bundle, SBOM and signatures are complete.
+# An SBOM of a newer bom or a VEX report that CRI-O adds later for the same
+# commit is therefore not published until the bundle changes.
+BUNDLE_DIR=${ARCHIVE_PATH:-build/bundle}
+
+# The JSON API is not cached like the public URLs of the bucket
+API_URL="https://storage.googleapis.com/download/storage/v1/b/cri-o/o/artifacts%2F"
+
+UNCHANGED=true
+for FILE in "$BUNDLE_DIR"/*.tar.gz.sha256sum; do
+    NAME=$(basename "$FILE")
+    if ! curl_retry "$API_URL$NAME?alt=media" | cmp -s - "$FILE"; then
+        echo "$NAME is not published yet or changed"
+        UNCHANGED=false
+        break
+    fi
+    echo "$NAME is already published"
+done
+
+echo "unchanged=$UNCHANGED" >>"$GITHUB_OUTPUT"

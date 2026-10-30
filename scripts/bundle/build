@@ -51,6 +51,11 @@ trap 'rm -rf -- "$TMPDIR_CRIO"' EXIT
 curl_retry "https://github.com/cri-o/cri-o/archive/$COMMIT.tar.gz" -o- |
     tar xfz - -C "$TMPDIR_CRIO" --strip-components=1
 
+# Build the bundle reproducibly, the same CRI-O commit and components result in
+# the same files. The files of the GitHub archive have the commit time.
+SOURCE_DATE_EPOCH=$(stat -c %Y "$TMPDIR_CRIO/LICENSE")
+export SOURCE_DATE_EPOCH
+
 cp -r "$TMPDIR_CRIO/completions" "$BUNDLE_DIR"
 
 make -C "$TMPDIR_CRIO" docs
@@ -195,7 +200,9 @@ bom generate \
 
 # Create the archive
 rm -f "$ARCHIVE"
-tar cfz "$ARCHIVE" "$CRIODIR"
+tar cf - --format=gnu --sort=name --mtime="@$SOURCE_DATE_EPOCH" \
+    --owner=0 --group=0 --numeric-owner --mode=go+rX,go-w "$CRIODIR" |
+    gzip -n >"$ARCHIVE"
 echo "Created $ARCHIVE_PATH/$ARCHIVE"
 sha256sum "$ARCHIVE" >"$ARCHIVE_SHA256SUM"
 echo "Created $ARCHIVE_PATH/$ARCHIVE_SHA256SUM"
