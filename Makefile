@@ -1,20 +1,22 @@
 CONTAINER_RUNTIME ?= podman
 
 ZEITGEIST_VERSION = v0.8.0
-SHFMT_VERSION := v3.13.1
+SHFMT_VERSION := v3.14.1
 SHELLCHECK_VERSION := v0.11.0
 MDTOC_VERSION := v1.4.0
 ACTIONLINT_VERSION := v1.7.12
-ZIZMOR_VERSION := v1.30.1
+ZIZMOR_VERSION := v1.31.1
+PRETTIER_VERSION := 3.9.10
+NODE_IMAGE := docker.io/library/node:26-alpine@sha256:c6ad9e9c1d80f6eb607c26b4b0a132ff7a2344fad1c78ea3baa2a7d4c8de6d94
 
 # Pinned so that a compromised or swapped release cannot silently change the
 # tooling used to verify this repository.
 ZEITGEIST_SHA256 := 3899d666a6dc8ccfa99bfbb468ee282de56925c6b58a4c5937c763b14a7cae35
-SHFMT_SHA256 := fb096c5d1ac6beabbdbaa2874d025badb03ee07929f0c9ff67563ce8c75398b1
+SHFMT_SHA256 := 76e77641faa025814b77f153b29796b8e6fa2fca03e0c76a691608b86c7ea7bf
 SHELLCHECK_SHA256 := 8c3be12b05d5c177a04c29e3c78ce89ac86f1595681cab149b65b97c4e227198
 MDTOC_SHA256 := 2c13e079505fdc34d814a9822813fc7e2cc5a00d1844683c77b531aa08f6986a
 ACTIONLINT_SHA256 := 8aca8db96f1b94770f1b0d72b6dddcb1ebb8123cb3712530b08cc387b349a3d8
-ZIZMOR_SHA256 := e65324f4430c2717591937edcec90ccbefaf14c174f8ec9415e03ca875b46e1a
+ZIZMOR_SHA256 := d185f726bdaf92df78273217dfdd24ebcd6b0ef48cf3ce776ff5762b6e138c99
 
 BUILD_DIR := build
 ZEITGEIST := $(BUILD_DIR)/zeitgeist
@@ -85,8 +87,8 @@ update-digests: ## Refresh the pinned digests of the bundled components
 
 .PHONY: prettier
 prettier:
-	$(CONTAINER_RUNTIME) run -it --privileged -v ${PWD}:/w -w /w --entrypoint bash node:latest -c \
-		'npm install -g prettier && prettier -w .'
+	$(CONTAINER_RUNTIME) run --rm -v ${PWD}:/w:Z -w /w $(NODE_IMAGE) \
+		npx --yes prettier@$(PRETTIER_VERSION) --write .
 
 .PHONY: verify-dependencies
 verify-dependencies: $(ZEITGEIST) ## Verify external dependencies

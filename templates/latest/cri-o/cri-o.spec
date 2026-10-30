@@ -121,7 +121,6 @@ install -D -m 644 -t %{buildroot}%{_mandir}/man8 %{archive_root}/man/crio.8
 # Binaries
 %{_bindir}/crio
 %{_bindir}/pinns
-%dir %{libexecdir}
 %dir %{libexecdir}/crio
 %{libexecdir}/crio/conmon
 %{libexecdir}/crio/conmonrs
@@ -152,7 +151,7 @@ install -D -m 644 -t %{buildroot}%{_mandir}/man8 %{archive_root}/man/crio.8
 %dir %{_sysconfdir}/crio
 %dir %{_sysconfdir}/crio/crio.conf.d
 %{_sysconfdir}/crio/crio.conf.d/10-crio.conf
-%{_sysconfdir}/crio/policy.json
+%config(noreplace) %{_sysconfdir}/crio/policy.json
 %dir %{_datadir}/oci-umount
 %dir %{_datadir}/oci-umount/oci-umount.d
 %{_datadir}/oci-umount/oci-umount.d/crio-umount.conf

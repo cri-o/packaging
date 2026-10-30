@@ -20,7 +20,7 @@ mkdir -p "$ARCHIVE_PATH"
 tejolote attest \
     "github://cri-o/packaging/$GITHUB_RUN_ID" \
     --artifacts "file://$ARCHIVE_PATH" \
-    --dependency "git+https://github.com/cri-o/cri-o@sha$COMMIT" \
+    --dependency "git+https://github.com/cri-o/cri-o@$COMMIT" \
     --output "$PROVENANCE_FILE" \
     --slsa 1.0 \
     --wait=false

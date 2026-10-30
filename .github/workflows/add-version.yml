@@ -15,6 +15,7 @@ jobs:
   add-version:
     if: github.ref == 'refs/heads/main' && github.repository == 'cri-o/packaging'
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     permissions:
       contents: write
       pull-requests: write

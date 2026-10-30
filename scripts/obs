@@ -3,11 +3,12 @@
 source "$(dirname "${BASH_SOURCE[0]}")"/vars
 
 # Setup a tmp work dir, plus a separate one for the patched templates so that
-# they stay out of the krel workspace
-TMPDIR="$(mktemp -d)"
+# they stay out of the krel workspace. Not called TMPDIR, an exported one would
+# make mktemp create the template dir inside of the workspace.
+WORKDIR="$(mktemp -d)"
 TEMPLATE_WORKDIR="$(mktemp -d)"
-trap 'sudo rm -rf -- "$TMPDIR" "$TEMPLATE_WORKDIR"' EXIT
-pushd "$TMPDIR"
+trap 'sudo rm -rf -- "$WORKDIR" "$TEMPLATE_WORKDIR"' EXIT
+pushd "$WORKDIR"
 
 # Package options
 TEMPLATE_DIR="$GIT_ROOT/templates/latest"

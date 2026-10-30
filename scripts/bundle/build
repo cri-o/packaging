@@ -28,9 +28,11 @@ ARCHIVE_SHA256SUM="$ARCHIVE.sha256sum"
 
 mkdir -p "$ARCHIVE_PATH"
 CRIODIR=cri-o
-TMPDIR="$ARCHIVE_PATH/$CRIODIR"
-rm -rf "$TMPDIR"
-mkdir -p "$TMPDIR"/{bin,contrib,etc,man}
+# Not called TMPDIR, an exported one would make mktemp create the CRI-O sources
+# inside of the bundle
+BUNDLE_DIR="$ARCHIVE_PATH/$CRIODIR"
+rm -rf "$BUNDLE_DIR"
+mkdir -p "$BUNDLE_DIR"/{bin,contrib,etc,man}
 
 BIN_URL="https://storage.googleapis.com/cri-o/artifacts/$COMMIT/$ARCH"
 FILES_BIN=(
@@ -39,7 +41,7 @@ FILES_BIN=(
 )
 
 for FILE in "${FILES_BIN[@]}"; do
-    DEST_PATH="$TMPDIR/bin/$FILE"
+    DEST_PATH="$BUNDLE_DIR/bin/$FILE"
     curl_retry "$BIN_URL/$FILE" -o "$DEST_PATH"
     chmod +x "$DEST_PATH"
 done
@@ -49,7 +51,7 @@ trap 'rm -rf -- "$TMPDIR_CRIO"' EXIT
 curl_retry "https://github.com/cri-o/cri-o/archive/$COMMIT.tar.gz" -o- |
     tar xfz - -C "$TMPDIR_CRIO" --strip-components=1
 
-cp -r "$TMPDIR_CRIO/completions" "$TMPDIR"
+cp -r "$TMPDIR_CRIO/completions" "$BUNDLE_DIR"
 
 make -C "$TMPDIR_CRIO" docs
 FILES_MAN=(
@@ -59,7 +61,7 @@ FILES_MAN=(
 )
 
 for FILE in "${FILES_MAN[@]}"; do
-    cp "$FILE" "$TMPDIR/man"
+    cp "$FILE" "$BUNDLE_DIR/man"
 done
 
 FILES_ETC=(
@@ -70,7 +72,7 @@ FILES_ETC=(
 )
 
 for FILE in "${FILES_ETC[@]}"; do
-    cp "$FILE" "$TMPDIR/etc"
+    cp "$FILE" "$BUNDLE_DIR/etc"
 done
 
 FILES_CONTRIB=(
@@ -81,16 +83,16 @@ FILES_CONTRIB=(
 )
 
 for FILE in "${FILES_CONTRIB[@]}"; do
-    cp "$FILE" "$TMPDIR/contrib"
+    cp "$FILE" "$BUNDLE_DIR/contrib"
 done
 
-sed -i 's;PREFIX;/usr/local/bin;g' "$TMPDIR/contrib/crio.service"
+sed -i 's;PREFIX;/usr/local/bin;g' "$BUNDLE_DIR/contrib/crio.service"
 
-cp "$TEMPLATES_DIR/Makefile" "$TMPDIR"
-cp "$TEMPLATES_DIR/README.md" "$TMPDIR"
-cp "$TEMPLATES_DIR/install" "$TMPDIR/install"
-sed -i "s/-amd64/-$ARCH/" "$TMPDIR/install"
-cp "$TMPDIR_CRIO/LICENSE" "$TMPDIR"
+cp "$TEMPLATES_DIR/Makefile" "$BUNDLE_DIR"
+cp "$TEMPLATES_DIR/README.md" "$BUNDLE_DIR"
+cp "$TEMPLATES_DIR/install" "$BUNDLE_DIR/install"
+sed -i "s/-amd64/-$ARCH/" "$BUNDLE_DIR/install"
+cp "$TMPDIR_CRIO/LICENSE" "$BUNDLE_DIR"
 
 # Verify a downloaded component against its pinned digest. Bundled components
 # are the only inputs that are not already covered by a signature, so a
@@ -125,7 +127,7 @@ download_component() {
     verify_digest "$name" "$version" "$dest"
 }
 
-TMP_BIN=$TMPDIR/bin
+TMP_BIN=$BUNDLE_DIR/bin
 
 # conmon
 download_component conmon "$TMP_BIN/conmon"
@@ -144,9 +146,9 @@ download_component crun "$TMP_BIN/crun"
 chmod +x "$TMP_BIN/crun"
 
 # CNI plugins
-mkdir -p "$TMPDIR/cni-plugins"
+mkdir -p "$BUNDLE_DIR/cni-plugins"
 download_component cni-plugins "$TMPDIR_CRIO/cni-plugins.tgz"
-tar xfz "$TMPDIR_CRIO/cni-plugins.tgz" -C "$TMPDIR/cni-plugins"
+tar xfz "$TMPDIR_CRIO/cni-plugins.tgz" -C "$BUNDLE_DIR/cni-plugins"
 
 # crictl
 download_component cri-tools "$TMPDIR_CRIO/crictl.tar.gz"
@@ -194,11 +196,10 @@ bom generate \
 # Create the archive
 rm -f "$ARCHIVE"
 tar cfz "$ARCHIVE" "$CRIODIR"
-rm -rf "$TMPDIR"
 echo "Created $ARCHIVE_PATH/$ARCHIVE"
 sha256sum "$ARCHIVE" >"$ARCHIVE_SHA256SUM"
 echo "Created $ARCHIVE_PATH/$ARCHIVE_SHA256SUM"
-rm -rf "$TMPDIR"
+rm -rf "$BUNDLE_DIR"
 
 # Test the archive
 echo "Testing archive"
@@ -206,7 +207,7 @@ tar xf "$ARCHIVE"
 SPDX_PATH="$ARCHIVE_PATH/$SPDX_FILE"
 bom document outline "$SPDX_PATH"
 bom validate -e "$SPDX_PATH" -d "$CRIODIR"
-pushd "$TMPDIR"
+pushd "$BUNDLE_DIR"
 export DESTDIR=test/
 ./install
 
@@ -220,4 +221,4 @@ if [[ "$RECORDED" != "$INSTALLED" ]]; then
     exit 1
 fi
 popd
-rm -rf "$TMPDIR"
+rm -rf "$BUNDLE_DIR"

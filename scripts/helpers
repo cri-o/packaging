@@ -21,32 +21,27 @@ verify_sha256() {
 }
 
 install_osc() {
-    OSC_VERSION=1.27.3
-    OSC_SHA256=72e90ff3d278fc072f640223cf911635eed58c7ecbac4da722205a0ebf83ddf0
-    # Because of https://github.com/openSUSE/osc/issues/1819 , ruamel.yaml should be installed separately
-    sudo apt update -y && sudo apt install -y python3-ruamel.yaml
+    OSC_VERSION=1.28.0
+    OSC_SHA256=c2c6b0a11991250a4beb26b02628d9c668d94591f65e03a5f903b29c699084c1
+    # The build and runtime dependencies come from the distribution, so that
+    # pip does not pull anything unpinned from PyPI. ruamel.yaml is required
+    # because of https://github.com/openSUSE/osc/issues/1819
 
-    # Build in a temporary directory, unpacking into the current one would
-    # leave the sources behind in the repository checkout
+    sudo apt-get update -y
+    sudo apt-get install -y python3-pip python3-setuptools python3-cryptography python3-rpm python3-ruamel.yaml python3-urllib3
+
     local workdir
     workdir=$(mktemp -d)
 
     curl_retry "https://github.com/openSUSE/osc/archive/refs/tags/$OSC_VERSION.tar.gz" -o "$workdir/osc.tar.gz"
     verify_sha256 "$workdir/osc.tar.gz" "$OSC_SHA256"
-    tar xfz "$workdir/osc.tar.gz" -C "$workdir"
-
-    pushd "$workdir/osc-$OSC_VERSION"
-    sudo ./setup.py build
-    sudo ./setup.py install
-    popd
-
-    # The build and install steps leave root owned files behind
-    sudo rm -rf -- "$workdir"
+    sudo python3 -m pip install --no-deps --no-build-isolation --break-system-packages --root-user-action=ignore "$workdir/osc.tar.gz"
+    rm -rf -- "$workdir"
 }
 
 install_krel() {
-    KREL_VERSION=v0.21.1
-    KREL_SHA256=a136ff2ed00ba4079ffa2a4c9ad3757347ed991e01e6cf03ed9c0c40b5fd84dd
+    KREL_VERSION=v0.22.0
+    KREL_SHA256=a67b8aeca616b94d1bc2c14c4e2851b796538601c735dd7391c39d7655632c48
     install_binary https://github.com/kubernetes/release/releases/download/$KREL_VERSION/krel-amd64-linux krel $KREL_SHA256
 }
 

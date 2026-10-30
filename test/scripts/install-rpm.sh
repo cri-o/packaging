@@ -2,7 +2,7 @@
 
 set -euxo pipefail
 
-# This script installs the required deb packages to bootstrap a Kubernetes cluster
+# This script installs the required rpm packages to bootstrap a Kubernetes cluster
 # It takes an optional --crio-only argument, that when set, it only installs the cri-o package; this is used from the Dockerfile
 # It is referenced from ../rpm/Vagrantfile and ../rpm/Dockerfile
 

@@ -4,13 +4,14 @@ source "$(dirname "${BASH_SOURCE[0]}")"/helpers
 
 BUNDLE_DIR=${ARCHIVE_PATH:-build/bundle}
 
-IDENTITY="https://github.com/cri-o/packaging/.github/workflows/obs.yml@.*"
+# Same identity as the get script and the docs expect
+IDENTITY=https://github.com/cri-o/packaging/.github/workflows/obs.yml@refs/heads/main
 ISSUER=https://token.actions.githubusercontent.com
 
 verify_blob() {
     echo "Verifying $1"
     cosign verify-blob "$1" \
-        --certificate-identity-regexp "$IDENTITY" \
+        --certificate-identity "$IDENTITY" \
         --certificate-oidc-issuer "$ISSUER" \
         --certificate-github-workflow-repository cri-o/packaging \
         --bundle "$1.bundle"

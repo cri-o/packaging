@@ -28,12 +28,13 @@ NEXT_VERSION=$(curl_retry $VERSION_URL | sed -En "s/.*(const|var) Version = \"([
 echo "Found next version: $NEXT_VERSION"
 
 echo "Iterating prerelease packages"
-for PROJECT in $(echo "$PACKAGES" | grep "$PROJECT_PRERELEASE_PREFIX:.*:build.*cri-o" | tr -s '[:blank:]', '/'); do
+for PROJECT in $(echo "$PACKAGES" | grep "$PROJECT_PRERELEASE_PREFIX:.*:build.*cri-o" | tr -s '[:blank:]' '/'); do
     echo "Searching project: $PROJECT"
     VERSION=${PROJECT#"$PROJECT_PRERELEASE_PREFIX:"}
     VERSION=${VERSION%"$BUILD_PROJECT_SUFFIX"}
 
-    if [[ "$VERSION" != "$BRANCH_MAIN" && "${VERSION#v}" != "$NEXT_VERSION" && "$ACTIVE_VERSIONS" != *"${VERSION#v}"* ]]; then
+    # Match the quoted list entry, otherwise 1.3 would match 1.35
+    if [[ "$VERSION" != "$BRANCH_MAIN" && "${VERSION#v}" != "$NEXT_VERSION" && "$ACTIVE_VERSIONS" != *"\"${VERSION#v}\""* ]]; then
         echo "Skipping unsupported prerelease version: $VERSION"
         continue
     fi
@@ -68,7 +69,7 @@ SUFFIX=.orig.tar.gz
 PROJECT_STABLE_PREFIX=$PROJECT_PREFIX:stable
 
 echo "Iterating stable packages"
-for PROJECT in $(echo "$PACKAGES" | grep "$PROJECT_STABLE_PREFIX:.*:build.*cri-o" | tr -s '[:blank:]', '/'); do
+for PROJECT in $(echo "$PACKAGES" | grep "$PROJECT_STABLE_PREFIX:.*:build.*cri-o" | tr -s '[:blank:]' '/'); do
     echo "Searching project: $PROJECT"
     VERSION=
     for FILE in $(osc ls "$PROJECT"); do
