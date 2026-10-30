@@ -4,12 +4,12 @@ source "$(dirname "${BASH_SOURCE[0]}")"/helpers
 
 BUNDLE_DIR=${ARCHIVE_PATH:-build/bundle}
 
+# Rekor may store an entry but time out on the response, the internal retry of
+# cosign then fails with a conflict. Signing again uses a fresh ephemeral key,
+# which results in a new transparency log entry.
 sign_blob() {
     echo "Signing $1"
-    cosign sign-blob -y "$1" \
-        --bundle "$1.bundle" \
-        --output-signature "$1.sig" \
-        --output-certificate "$1.cert"
+    retry_3 cosign sign-blob -y "$1" --bundle "$1.bundle"
 }
 
 for ARTIFACT in "$BUNDLE_DIR"/*.tar.gz "$BUNDLE_DIR"/*.tar.gz.sha256sum \

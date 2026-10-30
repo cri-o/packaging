@@ -70,7 +70,7 @@ for ARCH in "${ARCHES[@]}"; do
         --format json \
         "$TARGET_ARTIFACT,$COMMIT-$ARCH,$VERSION-$ARCH,$REVISION-$ARCH,$PROJECT_VERSION-$ARCH$TAG_LATEST_ARCH" \
         ${ARGS[@]} | jq -r .reference)
-    cosign sign -y "$ARTIFACT_REF"
+    retry_3 cosign sign -y "$ARTIFACT_REF"
 
     popd
 done
@@ -86,7 +86,7 @@ oras manifest index create \
     "$ARTIFACT:$TAG,$COMMIT,$VERSION,$REVISION,$PROJECT_VERSION$TAG_LATEST" \
     ${ARTIFACTS[@]} | tee out
 MANIFEST_REF=$(sed -n 's/Digest: //p' out)
-cosign sign -y "$ARTIFACT@$MANIFEST_REF"
+retry_3 cosign sign -y "$ARTIFACT@$MANIFEST_REF"
 
 for ARCH in "${ARCHES[@]}"; do
     pushd "$ARCH"
@@ -103,7 +103,7 @@ for ARCH in "${ARCHES[@]}"; do
             --format json | jq -r .reference
     )
     popd
-    cosign sign -y "$SBOM_REF"
+    retry_3 cosign sign -y "$SBOM_REF"
 done
 
 # Attach VEX report to multi-arch index if available.
@@ -120,7 +120,7 @@ if [[ -e "$VEX_FILE" ]]; then
             "$VEX_FILE:application/json" \
             --format json | jq -r .reference
     )
-    cosign sign -y "$VEX_REF"
+    retry_3 cosign sign -y "$VEX_REF"
 fi
 
 # Attach provenance attestation to multi-arch index if available.
@@ -137,5 +137,5 @@ if [[ -e "$PROVENANCE_FILE" ]]; then
             "$PROVENANCE_FILE:application/json" \
             --format json | jq -r .reference
     )
-    cosign sign -y "$PROVENANCE_REF"
+    retry_3 cosign sign -y "$PROVENANCE_REF"
 fi
