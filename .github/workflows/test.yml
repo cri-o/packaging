@@ -59,7 +59,7 @@ jobs:
         with:
           bom-release: 0.8.0
       - run: make verify-get-script
-      - run: sudo -E PATH="$PATH" ./get
+      - run: sudo PATH="$PATH" ./get
       - run: crio version
 
   mdtoc:
