@@ -141,7 +141,7 @@ The following table lists all artifact types flowing through the CI system:
 | OpenVEX report                    | JSON (OpenVEX)             | cri-o CI `govulncheck`            | `gs://cri-o/artifacts/<commit>/cri-o.openvex.json`  | Packaging `vex` script        |
 | Binary bundles                    | tar.gz                     | Packaging `bundle/build`          | `gs://cri-o/artifacts/cri-o.<arch>.<id>.tar.gz`     | OBS, `get` script, users      |
 | SBOM                              | SPDX 3.0.1 JSON-LD         | Packaging `bundle/build`          | `cri-o.<arch>.<id>.tar.gz.spdx.json`                | OCI registry, users           |
-| Cosign signatures                 | `.sig`, `.cert`, `.bundle` | Packaging `sign-artifacts`        | Alongside each artifact in GCS                      | Users (verification)          |
+| Cosign signatures                 | `.bundle`                  | Packaging `sign-artifacts`        | Alongside each artifact in GCS                      | Users (verification)          |
 | SLSA provenance                   | JSON (SLSA 1.0)            | Packaging `provenance` (tejolote) | `cri-o.<id>.provenance.json`                        | OCI registry, users           |
 | OCI bundles                       | Multi-arch OCI image index | Packaging `oci-artifacts`         | `ghcr.io/cri-o/bundle:<tag>`                        | Users (ORAS, Podman)          |
 | RPM/DEB packages                  | `.rpm`, `.deb`             | OBS builders                      | `download.opensuse.org/repositories/isv:/cri-o:/*/` | End users                     |
@@ -186,14 +186,9 @@ Identity: https://github.com/cri-o/packaging/.github/workflows/obs.yml@refs/head
 ### What gets signed
 
 [`scripts/sign-artifacts`](../scripts/sign-artifacts) uses `cosign sign-blob` to
-sign every artifact uploaded to GCS. For each file, three signature files are
-produced:
-
-| File                | Content                                                                     |
-| ------------------- | --------------------------------------------------------------------------- |
-| `<artifact>.sig`    | Detached signature                                                          |
-| `<artifact>.cert`   | Signing certificate (from Fulcio)                                           |
-| `<artifact>.bundle` | Complete Sigstore bundle (signature + certificate + transparency log entry) |
+sign every artifact uploaded to GCS. For each file, a `<artifact>.bundle` is
+produced, which is a Sigstore bundle containing the signature, the signing
+certificate from Fulcio and the transparency log entry.
 
 The following artifacts are signed:
 
