@@ -121,6 +121,10 @@ install -D -m 644 -t %{buildroot}%{_mandir}/man8 %{archive_root}/man/crio.8
 # Binaries
 %{_bindir}/crio
 %{_bindir}/pinns
+# Own /usr/libexec where the filesystem package does not, like on SLE 15
+%if "%{_libexecdir}" != "%{libexecdir}"
+%dir %{libexecdir}
+%endif
 %dir %{libexecdir}/crio
 %{libexecdir}/crio/conmon
 %{libexecdir}/crio/conmonrs
