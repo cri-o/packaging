@@ -16,5 +16,12 @@ PROJECT_PATH="$PROJECT_TYPE:/$PROJECT_VERSION"
 export PROJECT_PATH
 echo "Testing packages from project path: $PROJECT_PATH"
 
+# Start from a fresh machine on every attempt, because a vagrant up on an
+# already provisioned machine skips the tests and succeeds. Chain the commands,
+# set -e does not apply within the if condition of retry_3.
+vagrant_up() {
+    vagrant destroy -f && vagrant up
+}
+
 pushd "$TESTDIR"
-retry_3 vagrant up
+retry_3 vagrant_up

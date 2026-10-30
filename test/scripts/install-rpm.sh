@@ -42,4 +42,7 @@ EOF
 dnf install -y cri-o jq
 if [ -z $CRIO_ONLY ]; then
     dnf install -y container-selinux kubelet kubeadm kubectl
+    # br_netfilter is part of kernel-modules-extra, which is only available
+    # for the latest kernel. The Vagrantfile reboots the machine into it.
+    dnf install -y kernel-modules-extra
 fi

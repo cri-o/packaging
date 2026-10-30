@@ -46,6 +46,12 @@ dependencies:
       - path: test/rpm/Vagrantfile
         match: config.vm.box
 
+  - name: CentOS test vagrant box version
+    version: 20260728.1
+    refPaths:
+      - path: test/rpm/Vagrantfile
+        match: box_version =
+
   - name: Ubuntu test vagrant image
     version: ubuntu-26.04
     refPaths:

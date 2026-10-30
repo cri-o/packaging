@@ -4,17 +4,19 @@
 # Vagrant box for testing
 Vagrant.configure("2") do |config|
   config.vm.box = "centos/stream10"
+  box_version = "20260728.1"
+  box_url = "https://cloud.centos.org/centos/10-stream/x86_64/images/CentOS-Stream-Vagrant-10-#{box_version}.x86_64.vagrant"
   memory = 8192
   cpus = 4
 
   config.vm.provider :virtualbox do |v, override|
-    override.vm.box_url = "https://cloud.centos.org/centos/10-stream/x86_64/images/CentOS-Stream-Vagrant-10-20260728.1.x86_64.vagrant-virtualbox.box"
+    override.vm.box_url = "#{box_url}-virtualbox.box"
     v.memory = memory
     v.cpus = cpus
   end
 
   config.vm.provider :libvirt do |v, override|
-    override.vm.box_url = "https://cloud.centos.org/centos/10-stream/x86_64/images/CentOS-Stream-Vagrant-10-latest.x86_64.vagrant-libvirt.box"
+    override.vm.box_url = "#{box_url}-libvirt.box"
     v.memory = memory
     v.cpus = cpus
   end
@@ -25,6 +27,6 @@ Vagrant.configure("2") do |config|
   # Defaults to prerelease:/main when run outside of CI, see scripts/test-kubernetes
   project_path = ENV.fetch("PROJECT_PATH", "prerelease:/main")
 
-  config.vm.provision "install packages", type: "shell", env: {"PROJECT_PATH" => project_path}, inline: "cd /tmp/provision && ./install-rpm.sh", run: "once"
+  config.vm.provision "install packages", type: "shell", env: {"PROJECT_PATH" => project_path}, inline: "cd /tmp/provision && ./install-rpm.sh", run: "once", reboot: true
   config.vm.provision "run tests", type: "shell", inline: "/tmp/provision/test.sh", run: "once"
 end
