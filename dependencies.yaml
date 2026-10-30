@@ -190,7 +190,7 @@ dependencies:
         match: '"conmon-rs-v0'
 
   - name: conmon-rs (CRI-O >= v1.37)
-    version: v1.1.1
+    version: v1.2.1
     upstream:
       flavour: github
       url: containers/conmon-rs
