@@ -19,12 +19,12 @@ dependencies:
     version: v1.37
     refPaths:
       - path: test/scripts/versions.sh
-        match: KUBERNETES_VERSION=
+        match: ^KUBERNETES_VERSION=
       - path: README.md
         match: KUBERNETES_VERSION=
 
   - name: OSC
-    version: 1.27.3
+    version: 1.28.0
     upstream:
       flavour: github
       url: openSUSE/osc
@@ -33,7 +33,7 @@ dependencies:
         match: OSC_VERSION=
 
   - name: Fedora test image
-    version: 42
+    version: 44
     refPaths:
       - path: test/rpm/Dockerfile
         match: FROM=
@@ -47,18 +47,24 @@ dependencies:
         match: config.vm.box
 
   - name: Ubuntu test vagrant image
-    version: ubuntu2204
+    version: ubuntu-26.04
     refPaths:
       - path: test/deb/Vagrantfile
         match: config.vm.box
 
   - name: Ubuntu test container image
-    version: 24.04
+    version: 26.04
     refPaths:
       - path: test/deb/Dockerfile
         match: FROM=
       - path: .github/workflows/obs.yml
-        match: "- image: ubuntu"
+        match: "- image: ubuntu:26"
+
+  - name: Ubuntu previous LTS test container image
+    version: 24.04
+    refPaths:
+      - path: .github/workflows/obs.yml
+        match: "- image: ubuntu:24"
 
   - name: Debian test container image
     version: 13
@@ -72,12 +78,6 @@ dependencies:
       - path: .github/workflows/obs.yml
         match: "- image: almalinux"
 
-  - name: qemu
-    version: 7.2.0-1
-    refPaths:
-      - path: scripts/test-architectures
-        match: QEMUVERSION=
-
   - name: shellcheck
     version: v0.11.0
     upstream:
@@ -88,7 +88,7 @@ dependencies:
         match: SHELLCHECK_VERSION :=
 
   - name: shellfmt
-    version: v3.13.1
+    version: v3.14.1
     upstream:
       flavour: github
       url: mvdan/sh
@@ -115,7 +115,7 @@ dependencies:
         match: ACTIONLINT_VERSION :=
 
   - name: zizmor
-    version: v1.30.1
+    version: v1.31.1
     upstream:
       flavour: github
       url: zizmorcore/zizmor
@@ -123,8 +123,23 @@ dependencies:
       - path: Makefile
         match: ZIZMOR_VERSION :=
 
+  - name: node image for prettier
+    version: 26-alpine
+    refPaths:
+      - path: Makefile
+        match: NODE_IMAGE :=
+
+  - name: prettier
+    version: 3.9.10
+    upstream:
+      flavour: github
+      url: prettier/prettier
+    refPaths:
+      - path: Makefile
+        match: PRETTIER_VERSION :=
+
   - name: krel
-    version: v0.21.1
+    version: v0.22.0
     upstream:
       flavour: github
       url: kubernetes/release
@@ -144,7 +159,7 @@ dependencies:
         match: "bom-release: "
 
   - name: oras
-    version: 1.3.3
+    version: 1.3.6
     upstream:
       flavour: github
       url: oras-project/oras
@@ -153,7 +168,7 @@ dependencies:
         match: "version: 1."
 
   - name: debian base
-    version: bookworm-v1.0.7
+    version: trixie-v1.0.1
     refPaths:
       - path: test/testdata/container.json
         match: debian-base

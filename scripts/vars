@@ -17,8 +17,11 @@ REVISION=${REVISION:-$CRIO_MAIN_BRANCH}
 
 # Change the project based on the provided revision
 if [[ "$REVISION" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-    COMMIT=$(curl_retry https://api.github.com/repos/cri-o/cri-o/tags | jq -r '.[] | select(.name == "'"$REVISION"'") | .commit.sha')
-    PROJECT_VERSION=$(echo "$REVISION" | cut -c1-5)
+    # The tags API is paginated and rate limited, ask git instead. Annotated
+    # tags are listed twice, the peeled ref (^{}) sorts last and points to the
+    # commit.
+    COMMIT=$(git ls-remote https://github.com/cri-o/cri-o "refs/tags/$REVISION" "refs/tags/$REVISION^{}" | sort -k2 | tail -1 | cut -f1)
+    PROJECT_VERSION=${REVISION%.*}
     VERSION=${REVISION#v}
     PROJECT_TYPE=stable
 elif [[ "$REVISION" =~ ^release-[0-9]+\.[0-9]+$ ]]; then
@@ -34,6 +37,11 @@ elif [[ "$REVISION" == "$CRIO_MAIN_BRANCH" ]]; then
     PROJECT_TYPE=prerelease
 else
     echo "Unsupported revision: $REVISION"
+    exit 1
+fi
+
+if [[ $COMMIT == "" ]]; then
+    echo "Unable to resolve the commit for revision: $REVISION"
     exit 1
 fi
 

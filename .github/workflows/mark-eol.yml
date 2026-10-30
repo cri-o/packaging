@@ -18,6 +18,7 @@ jobs:
   mark-eol:
     if: github.ref == 'refs/heads/main' && github.repository == 'cri-o/packaging'
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     permissions:
       contents: write
       pull-requests: write

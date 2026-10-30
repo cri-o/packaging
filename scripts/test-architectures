@@ -7,7 +7,6 @@ TYPE=${TYPE:-}
 ARCH=${ARCH:-amd64}
 
 TESTDIR="test/$TYPE"
-QEMUVERSION=7.2.0-1
 
 if [[ $IMAGE == "" ]]; then
     echo "IMAGE is not set"
@@ -19,10 +18,9 @@ if [[ $TYPE == "" ]]; then
     exit 1
 fi
 
-docker run --rm --privileged multiarch/qemu-user-static:$QEMUVERSION --reset -p yes
+# Emulation and the builder are set up by the workflow via setup-qemu-action
+# and setup-buildx-action
 docker buildx version
-BUILDER=$(docker buildx create --use)
-trap 'docker buildx rm $BUILDER' EXIT
 
 docker buildx build \
     --pull \

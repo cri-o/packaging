@@ -1,4 +1,4 @@
-#/usr/bin/env sh
+#!/usr/bin/env bash
 set -ex
 
 DESTDIR=${DESTDIR:-}
@@ -18,10 +18,11 @@ FISHINSTALLDIR=${FISHINSTALLDIR:-$PREFIX/share/fish/completions}
 ZSHINSTALLDIR=${ZSHINSTALLDIR:-$PREFIX/share/zsh/site-functions}
 OPT_CNI_BIN_DIR=${OPT_CNI_BIN_DIR:-/opt/cni/bin}
 
-# Adjust SYSCONFIGDIR if we're running on debian based distributions
+# Adjust SYSCONFIGDIR if we're running on debian based distributions, the
+# unit has to read the environment file from the same place
 if dpkg -l >/dev/null 2>&1; then
     SYSCONFIGDIR=${SYSCONFIGDIR:-$ETCDIR/default}
-    sed -i "s;sysconfig/crio;default/crio;g" etc/crio
+    sed -i "s;sysconfig/crio;default/crio;g" etc/crio contrib/crio.service
 else
     SYSCONFIGDIR=${SYSCONFIGDIR:-$ETCDIR/sysconfig}
 fi
@@ -69,7 +70,13 @@ install $SELINUX -D -m 644 -t "$DESTDIR$BASHINSTALLDIR" completions/bash/crio
 install $SELINUX -D -m 644 -t "$DESTDIR$FISHINSTALLDIR" completions/fish/crio.fish
 install $SELINUX -D -m 644 -t "$DESTDIR$ZSHINSTALLDIR" completions/zsh/_crio
 install $SELINUX -D -m 644 -t "$DESTDIR$SYSTEMDDIR" contrib/crio.service
-install $SELINUX -D -m 644 -t "$DESTDIR$CONTAINERS_REGISTRIES_CONFD_DIR" contrib/registries.conf
+# Same name as in the distribution packages. Older bundles used the name of the
+# source file, remove that one unless it has been changed.
+install $SELINUX -D -m 644 contrib/registries.conf "$DESTDIR$CONTAINERS_REGISTRIES_CONFD_DIR/crio.conf"
+OLD_REGISTRIES_CONF="$DESTDIR$CONTAINERS_REGISTRIES_CONFD_DIR/registries.conf"
+if cmp -s contrib/registries.conf "$OLD_REGISTRIES_CONF"; then
+    rm -f "$OLD_REGISTRIES_CONF"
+fi
 
 # Update the DESTDIR in the CRI-O configuration
 sed -i 's;/usr/bin;'"$DESTDIR$BINDIR"';g' "$DESTDIR$ETC_CRIO_DIR/crio.conf.d/10-crio.conf"
@@ -101,7 +108,7 @@ $DESTDIR$BASHINSTALLDIR/crio
 $DESTDIR$FISHINSTALLDIR/crio.fish
 $DESTDIR$ZSHINSTALLDIR/_crio
 $DESTDIR$SYSTEMDDIR/crio.service
-$DESTDIR$CONTAINERS_REGISTRIES_CONFD_DIR/registries.conf
+$DESTDIR$CONTAINERS_REGISTRIES_CONFD_DIR/crio.conf
 EOF
 } | tee ~/.crio-install
 
