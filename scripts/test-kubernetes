@@ -20,7 +20,12 @@ echo "Testing packages from project path: $PROJECT_PATH"
 # already provisioned machine skips the tests and succeeds. Chain the commands,
 # set -e does not apply within the if condition of retry_3.
 vagrant_up() {
-    vagrant destroy -f && vagrant up
+    if vagrant destroy -f && vagrant up; then
+        return
+    fi
+    # The serial console of the machine, if the Vagrantfile logs it.
+    cat .vagrant/console.log 2>/dev/null || true
+    return 1
 }
 
 pushd "$TESTDIR"
