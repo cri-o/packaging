@@ -299,8 +299,11 @@ sed -i 's;/usr/libexec;'"$DESTDIR$LIBEXECDIR"';g' "$DESTDIR$ETC_CRIO_DIR/crio.co
 sed -i 's;/etc/crio;'"$DESTDIR$ETC_CRIO_DIR"';g' "$DESTDIR$ETC_CRIO_DIR/crio.conf.d/10-crio.conf"
 
 {
-    # Expand the CNI plugins so that every one of them can be removed again
-    printf '%s\n' "$DESTDIR$OPT_CNI_BIN_DIR"/*
+    # Record only the CNI plugins of the bundle, the directory is shared with
+    # other software and uninstalling must not remove their plugins
+    for PLUGIN in cni-plugins/*; do
+        echo "$DESTDIR$OPT_CNI_BIN_DIR/${PLUGIN##*/}"
+    done
     cat <<EOF
 $DESTDIR$CNIDIR/10-crio-bridge.conflist.disabled
 $DESTDIR$LIBEXEC_CRIO_DIR/conmon

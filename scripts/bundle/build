@@ -216,7 +216,14 @@ bom document outline "$SPDX_PATH"
 bom validate -e "$SPDX_PATH" -d "$CRIODIR"
 pushd "$BUNDLE_DIR"
 export DESTDIR=test/
+
+# A plugin of other software in the shared CNI directory must survive an
+# uninstall, so the installer must not record it.
+FOREIGN_CNI_PLUGIN=test/opt/cni/bin/foreign-plugin
+mkdir -p "$(dirname "$FOREIGN_CNI_PLUGIN")"
+touch "$FOREIGN_CNI_PLUGIN"
 ./install
+rm "$FOREIGN_CNI_PLUGIN"
 
 # The installer records every file it writes so that it can uninstall them
 # again. Both views have to agree, otherwise uninstalling leaves files behind.
