@@ -7,7 +7,7 @@ dependencies:
         match: CRIO_VERSION=
 
   - name: zeitgeist
-    version: v0.8.0
+    version: v0.9.0
     upstream:
       flavour: github
       url: kubernetes-sigs/zeitgeist
@@ -121,7 +121,7 @@ dependencies:
         match: ACTIONLINT_VERSION :=
 
   - name: zizmor
-    version: v1.31.1
+    version: v1.32.0
     upstream:
       flavour: github
       url: zizmorcore/zizmor
@@ -136,7 +136,7 @@ dependencies:
         match: NODE_IMAGE :=
 
   - name: prettier
-    version: 3.9.10
+    version: 3.10.1
     upstream:
       flavour: github
       url: prettier/prettier
@@ -145,7 +145,7 @@ dependencies:
         match: PRETTIER_VERSION :=
 
   - name: krel
-    version: v0.22.0
+    version: v0.23.0
     upstream:
       flavour: github
       url: kubernetes/release
@@ -180,7 +180,7 @@ dependencies:
         match: debian-base
 
   - name: cni-plugins (latest)
-    version: v1.9.1
+    version: v1.10.0
     upstream:
       flavour: github
       url: containernetworking/plugins
