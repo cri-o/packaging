@@ -40,8 +40,8 @@ install_osc() {
 }
 
 install_krel() {
-    KREL_VERSION=v0.22.0
-    KREL_SHA256=a67b8aeca616b94d1bc2c14c4e2851b796538601c735dd7391c39d7655632c48
+    KREL_VERSION=v0.23.0
+    KREL_SHA256=5dc333ec3b55f9fc22fad5d2564bfc8149a58df2bb704a5c878c1c423c8f344b
     install_binary https://github.com/kubernetes/release/releases/download/$KREL_VERSION/krel-amd64-linux krel $KREL_SHA256
 }
 
